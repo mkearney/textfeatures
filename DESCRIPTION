@@ -1,0 +1,20 @@
+Package: textfeatures
+Type: Package
+Title: Extracts features from text
+Version: 0.1.0
+Authors@R: person("Michael W.", "Kearney", "", "kearneymw@missouri.edu", c("aut", "cre"))
+Description: A useful tool for extracting some common features from character vectors.
+Depends:
+    R (>= 3.1.0)
+Imports:
+    dplyr,
+    rlang,
+    tibble
+License: MIT + file LICENSE
+URL: https://github.com/mkearney/textfeatures
+BugReports: https://github.com/mkearney/textfeatures/issues
+Encoding: UTF-8
+Suggests:
+VignetteBuilder: knitr
+LazyData: yes
+RoxygenNote: 6.0.1.9000
