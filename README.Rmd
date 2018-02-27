@@ -56,6 +56,30 @@ textfeatures(rt)
 gdf <- rtweet::get_timelines(
   c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 100)
 
-## group by user id and return text features
-textfeatures(dplyr::group_by(rt, user_id))
+## group by screen_name and return text features
+f <- textfeatures(dplyr::group_by(gdf, screen_name))
+
+## load ggplot
+suppressPackageStartupMessages(library(tidyverse))
+
+## standardize function
+scale_standard <- function(x) {
+  (x - 0) / (max(x, na.rm = TRUE) - 0)
+}
+
+## convert to long (tidy) form and plot
+f %>%
+  mutate_if(is.numeric, scale_standard) %>%
+  gather(var, val, -screen_name) %>%
+  ggplot(aes(x = var, y = val, fill = screen_name)) + 
+  geom_col(width = .8) + 
+  theme_bw(base_family = "Roboto Condensed") + 
+  facet_grid(. ~ screen_name) + 
+  coord_flip() + 
+  theme(legend.position = "none",
+    axis.text = element_text(colour = "black"),
+    plot.title = element_text(face = "bold")) + 
+  labs(y = NULL, x = NULL,
+    title = "Variables extracted by textfeatures, a simple R package for extracting features from text",
+    subtitle = "Features extracted from text of the most recent 100 tweets posted by each news media account")
 ```

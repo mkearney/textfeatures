@@ -56,16 +56,16 @@ textfeatures(rt)
     ## # A tibble: 100 x 17
     ##    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
     ##      <int>    <int>    <int>      <int>         <int>      <int>    <int>
-    ##  1      71        1        4          0             1          1       54
-    ##  2     110        1        0          0             1          0       94
-    ##  3     110        0        0          0             1          0       81
-    ##  4      62        0        0          1             3          2       44
-    ##  5      37        0        4          0             2          2       25
-    ##  6     127        1        1          0             3          2      117
-    ##  7      35        0        4          0             1          2       25
-    ##  8      81        0        0          0             4          1       66
-    ##  9      36        0        0          0             2          3       33
-    ## 10      62        0        0          1             1          2       50
+    ##  1      36        0        0          0             2          2       34
+    ##  2      64        0        0          1             2          2       50
+    ##  3     108        1        1          0             2          0       94
+    ##  4      37        0        4          0             2          2       25
+    ##  5      73        1        4          0             2          1       54
+    ##  6     108        1        1          0             2          0       94
+    ##  7     111        0        0          0             1          0       91
+    ##  8     108        1        1          0             2          0       94
+    ##  9      74        0        1          0             2          1       57
+    ## 10      47        0        0          0             2          3       38
     ## # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
     ## #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
     ## #   n_caps <int>, n_noasciis <int>, n_puncts <int>, n_capsp <dbl>,
@@ -78,24 +78,32 @@ textfeatures(rt)
 gdf <- rtweet::get_timelines(
   c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 100)
 
-## group by user id and return text features
-textfeatures(dplyr::group_by(rt, user_id))
+## group by screen_name and return text features
+f <- textfeatures(dplyr::group_by(gdf, screen_name))
+
+## load ggplot
+suppressPackageStartupMessages(library(tidyverse))
+
+## standardize function
+scale_standard <- function(x) {
+  (x - 0) / (max(x, na.rm = TRUE) - 0)
+}
+
+## convert to long (tidy) form and plot
+f %>%
+  mutate_if(is.numeric, scale_standard) %>%
+  gather(var, val, -screen_name) %>%
+  ggplot(aes(x = var, y = val, fill = screen_name)) + 
+  geom_col(width = .8) + 
+  theme_bw(base_family = "Roboto Condensed") + 
+  facet_grid(. ~ screen_name) + 
+  coord_flip() + 
+  theme(legend.position = "none",
+    axis.text = element_text(colour = "black"),
+    plot.title = element_text(face = "bold")) + 
+  labs(y = NULL, x = NULL,
+    title = "Variables extracted by textfeatures, a simple R package for extracting features from text",
+    subtitle = "Features extracted from text of the most recent 100 tweets posted by each news media account")
 ```
 
-    ## # A tibble: 65 x 18
-    ##    user_id   n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags
-    ##    <chr>       <dbl>    <dbl>    <dbl>      <dbl>         <dbl>      <dbl>
-    ##  1 100640404   103       2.00     0          1.00          2.00          0
-    ##  2 113498828   110       1.00     0          0             1.00          0
-    ##  3 114142293   111       0        0          0             1.00          0
-    ##  4 11953392     29.0     0        1.00       0             2.00          0
-    ##  5 12296332    111       0        0          0             1.00          0
-    ##  6 13489282    110       1.00     0          0             1.00          0
-    ##  7 136522450    75.0     0        0          0             4.00          0
-    ##  8 139578999   110       0        0          0             1.00          0
-    ##  9 140384362   110       1.00     0          0             1.00          0
-    ## 10 144592995    42.5     0        2.00       0             1.00          0
-    ## # ... with 55 more rows, and 11 more variables: n_lowers <dbl>,
-    ## #   n_lowersp <dbl>, n_mentions <dbl>, n_periods <dbl>, n_urls <dbl>,
-    ## #   n_words <dbl>, n_caps <dbl>, n_noasciis <dbl>, n_puncts <dbl>,
-    ## #   n_capsp <dbl>, n_charsperword <dbl>
+![](README_files/figure-markdown_github/gdf-1.png)
