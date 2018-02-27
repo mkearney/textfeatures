@@ -41,7 +41,7 @@ textfeatures.data.frame <- function(x) {
     n_extraspaces = n_extraspaces(text2),
     n_hashtags = n_hashtags(text),
     n_lowers = n_lowers(text2),
-    n_lowersp = n_lowers / n_chars,
+    n_lowersp = (n_lowers + 1L) / (n_chars + 1L),
     n_mentions = n_mentions(text),
     n_periods = n_periods(text2),
     n_urls = n_urls(text),
@@ -49,8 +49,8 @@ textfeatures.data.frame <- function(x) {
     n_caps = n_caps(text2),
     n_noasciis = n_nonasciis(text2),
     n_puncts = n_puncts(text2),
-    n_capsp = n_caps / n_chars,
-    n_charsperword = n_chars / n_words
+    n_capsp = (n_caps + 1L) / (n_chars + 1L),
+    n_charsperword = (n_chars + 1L) / (n_words + 1L)
   ))
 }
 
@@ -81,7 +81,7 @@ textfeatures.grouped_df <- function(x) {
     n_extraspaces = n_extraspaces(text2),
     n_hashtags = n_hashtags(text),
     n_lowers = n_lowers(text2),
-    n_lowersp = n_lowers / n_chars,
+    n_lowersp = (n_lowers + 1L) / (n_chars + 1L),
     n_mentions = n_mentions(text),
     n_periods = n_periods(text2),
     n_urls = n_urls(text),
@@ -89,10 +89,10 @@ textfeatures.grouped_df <- function(x) {
     n_caps = n_caps(text2),
     n_noasciis = n_nonasciis(text2),
     n_puncts = n_puncts(text2),
-    n_capsp = n_caps / n_chars,
-    n_charsperword = n_chars / n_words
+    n_capsp = (n_caps + 1L) / (n_chars + 1L),
+    n_charsperword = (n_chars + 1L) / (n_words + 1L)
   ))
-  dplyr::summarise_all(x, mean)
+  dplyr::summarise_all(x, mean, na.rm = TRUE)
 }
 
 
