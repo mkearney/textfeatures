@@ -1,3 +1,5 @@
+utils::globalVariables(c("text2", "n_chars", "text"))
+
 #' textfeatures
 #'
 #' Extracts features from text vector.
@@ -47,7 +49,7 @@ textfeatures.data.frame <- function(x) {
     n_urls = n_urls(text),
     n_words = n_words(text2),
     n_caps = n_caps(text2),
-    n_noasciis = n_nonasciis(text2),
+    n_nonasciis = n_nonasciis(text2),
     n_puncts = n_puncts(text2),
     n_capsp = (n_caps + 1L) / (n_chars + 1L),
     n_charsperword = (n_chars + 1L) / (n_words + 1L)
@@ -87,7 +89,7 @@ textfeatures.grouped_df <- function(x) {
     n_urls = n_urls(text),
     n_words = n_words(text2),
     n_caps = n_caps(text2),
-    n_noasciis = n_nonasciis(text2),
+    n_nonasciis = n_nonasciis(text2),
     n_puncts = n_puncts(text2),
     n_capsp = (n_caps + 1L) / (n_chars + 1L),
     n_charsperword = (n_chars + 1L) / (n_words + 1L)

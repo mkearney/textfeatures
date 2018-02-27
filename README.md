@@ -41,7 +41,7 @@ textfeatures(x)
     ## 3      38        0        0          2             4          0       28
     ## # ... with 10 more variables: n_lowersp <dbl>, n_mentions <int>,
     ## #   n_periods <int>, n_urls <int>, n_words <int>, n_caps <int>,
-    ## #   n_noasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>
+    ## #   n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>
 
 ### Input: `data.frame`
 
@@ -56,19 +56,19 @@ textfeatures(rt)
     ## # A tibble: 100 x 17
     ##    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
     ##      <int>    <int>    <int>      <int>         <int>      <int>    <int>
-    ##  1     108        1        1          0             2          0       94
-    ##  2      94        1        0          0             1          0       84
-    ##  3      36        0        0          0             2          2       34
-    ##  4      64        0        0          1             2          2       50
-    ##  5     108        1        1          0             2          0       94
-    ##  6      37        0        4          0             2          2       25
-    ##  7      73        1        4          0             2          1       54
-    ##  8     108        1        1          0             2          0       94
-    ##  9     111        0        0          0             1          0       91
-    ## 10     108        1        1          0             2          0       94
+    ##  1      36        0        0          0             2          3       33
+    ##  2      79        0        1          0             3          1       65
+    ##  3     113        0        0          1             1          0      103
+    ##  4      83        0        0          0             2          5       73
+    ##  5      29        0        0          0             2          7       22
+    ##  6      64        0        0          0             2          1       61
+    ##  7      89        0        0          0             2          1       81
+    ##  8      77        0        0          0             2          2       70
+    ##  9      92        1        0          0             2          2       75
+    ## 10      37        0        0          0             2          2       32
     ## # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
     ## #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
-    ## #   n_caps <int>, n_noasciis <int>, n_puncts <int>, n_capsp <dbl>,
+    ## #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
     ## #   n_charsperword <dbl>
 
 ### Input: `grouped_df`
@@ -106,4 +106,4 @@ f %>%
     subtitle = "Features extracted from text of the most recent 200 tweets posted by each news media account")
 ```
 
-![](README_files/figure-markdown_github/gdf-1.png)
+![](tools/readme/readme.png)

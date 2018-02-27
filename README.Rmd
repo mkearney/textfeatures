@@ -51,7 +51,7 @@ textfeatures(rt)
 
 ### Input: `grouped_df`
 
-```{r gdf}
+```{r gdf, eval=FALSE}
 ## data frame with up to two hundred tweets for each of 5 users
 gdf <- rtweet::get_timelines(
   c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 200)
@@ -83,3 +83,5 @@ f %>%
     title = "{textfeatures}: an R package for easy feature extraction",
     subtitle = "Features extracted from text of the most recent 200 tweets posted by each news media account")
 ```
+
+![](tools/readme/readme.png)
