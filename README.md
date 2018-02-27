@@ -56,16 +56,16 @@ textfeatures(rt)
     ## # A tibble: 100 x 17
     ##    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
     ##      <int>    <int>    <int>      <int>         <int>      <int>    <int>
-    ##  1      94        1        0          0             1          0       84
-    ##  2      36        0        0          0             2          2       34
-    ##  3      64        0        0          1             2          2       50
-    ##  4     108        1        1          0             2          0       94
-    ##  5      37        0        4          0             2          2       25
-    ##  6      73        1        4          0             2          1       54
-    ##  7     108        1        1          0             2          0       94
-    ##  8     111        0        0          0             1          0       91
-    ##  9     108        1        1          0             2          0       94
-    ## 10      74        0        1          0             2          1       57
+    ##  1     108        1        1          0             2          0       94
+    ##  2      94        1        0          0             1          0       84
+    ##  3      36        0        0          0             2          2       34
+    ##  4      64        0        0          1             2          2       50
+    ##  5     108        1        1          0             2          0       94
+    ##  6      37        0        4          0             2          2       25
+    ##  7      73        1        4          0             2          1       54
+    ##  8     108        1        1          0             2          0       94
+    ##  9     111        0        0          0             1          0       91
+    ## 10     108        1        1          0             2          0       94
     ## # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
     ## #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
     ## #   n_caps <int>, n_noasciis <int>, n_puncts <int>, n_capsp <dbl>,
@@ -94,15 +94,15 @@ f %>%
   mutate_if(is.numeric, scale_standard) %>%
   gather(var, val, -screen_name) %>%
   ggplot(aes(x = var, y = val, fill = screen_name)) + 
-  geom_col(width = .8) + 
+  geom_col(width = .65) + 
   theme_bw(base_family = "Roboto Condensed") + 
-  facet_grid(. ~ screen_name) + 
+  facet_wrap( ~ screen_name, nrow = 1) + 
   coord_flip() + 
   theme(legend.position = "none",
     axis.text = element_text(colour = "black"),
     plot.title = element_text(face = "bold")) + 
   labs(y = NULL, x = NULL,
-    title = "Variables extracted by {textfeatures}, an R package for easy feature extraction",
+    title = "{textfeatures}: an R package for easy feature extraction",
     subtitle = "Features extracted from text of the most recent 200 tweets posted by each news media account")
 ```
 
