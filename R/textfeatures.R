@@ -39,7 +39,7 @@ textfeatures.data.frame <- function(x) {
     n_digits = n_digits(text2),
     n_exclaims = n_exclaims(text2),
     n_extraspaces = n_extraspaces(text2),
-    n_hashtags = n_hashtags(text2),
+    n_hashtags = n_hashtags(text),
     n_lowers = n_lowers(text2),
     n_lowersp = n_lowers / n_chars,
     n_mentions = n_mentions(text),

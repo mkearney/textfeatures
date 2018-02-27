@@ -14,9 +14,12 @@ A simple package for extracting useful features from character objects.
 ## Install
 
 ```{r install, eval=FALSE}
+## download devtools if necessary
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
+
+## install from github
 devtools::install_github("mkearney/textfeatures")
 ```
 
@@ -39,7 +42,7 @@ textfeatures(x)
 
 ```{r df}
 ## data frame with up to one hundred tweets
-rt <- rtweet::search_tweets("rstats", n = 100)
+rt <- rtweet::search_tweets("rstats", n = 100, verbose = FALSE)
 
 ## get text features
 textfeatures(rt)
@@ -56,6 +59,3 @@ gdf <- rtweet::get_timelines(
 ## group by user id and return text features
 textfeatures(dplyr::group_by(rt, user_id))
 ```
-
-
-
