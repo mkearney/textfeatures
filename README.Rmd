@@ -1,0 +1,61 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(textfeatures)
+```
+
+## textfeatures
+
+A simple package for extracting useful features from character objects.
+
+## Install
+
+```{r install, eval=FALSE}
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+devtools::install_github("mkearney/textfeatures")
+```
+
+## Usage
+
+### Input: `character`
+
+```{r chr}
+## vector of some text
+x <- c(
+  "this is A!\t sEntence https://github.com about #rstats @github",
+  "doh", "THe following list:\n- one\n- two\n- three\nOkay!?!"
+)
+
+## get text features
+textfeatures(x)
+```
+
+### Input: `data.frame`
+
+```{r df}
+## data frame with up to one hundred tweets
+rt <- rtweet::search_tweets("rstats", n = 100)
+
+## get text features
+textfeatures(rt)
+```
+
+
+### Input: `grouped_df`
+
+```{r gdf}
+## data frame with up to one hundred tweets for each of 5 users
+gdf <- rtweet::get_timelines(
+  c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 100)
+
+## group by user id and return text features
+textfeatures(dplyr::group_by(rt, user_id))
+```
+
+
+
