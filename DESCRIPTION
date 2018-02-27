@@ -5,7 +5,8 @@ Version: 0.1.0
 Authors@R: person("Michael Wayne", "Kearney", , 
     "kearneymw@missouri.edu", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-0730-4694"))
-Description: A useful tool for extracting some common features from character vectors.
+Description: A simple tool for extracting common features from strings of text
+    as is often done in machine learning applications.
 License: MIT + file LICENSE
 URL: https://github.com/mkearney/textfeatures
 BugReports: https://github.com/mkearney/textfeatures/issues
