@@ -56,16 +56,16 @@ textfeatures(rt)
     ## # A tibble: 100 x 17
     ##    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
     ##      <int>    <int>    <int>      <int>         <int>      <int>    <int>
-    ##  1      36        0        0          0             2          2       34
-    ##  2      64        0        0          1             2          2       50
-    ##  3     108        1        1          0             2          0       94
-    ##  4      37        0        4          0             2          2       25
-    ##  5      73        1        4          0             2          1       54
-    ##  6     108        1        1          0             2          0       94
-    ##  7     111        0        0          0             1          0       91
-    ##  8     108        1        1          0             2          0       94
-    ##  9      74        0        1          0             2          1       57
-    ## 10      47        0        0          0             2          3       38
+    ##  1      94        1        0          0             1          0       84
+    ##  2      36        0        0          0             2          2       34
+    ##  3      64        0        0          1             2          2       50
+    ##  4     108        1        1          0             2          0       94
+    ##  5      37        0        4          0             2          2       25
+    ##  6      73        1        4          0             2          1       54
+    ##  7     108        1        1          0             2          0       94
+    ##  8     111        0        0          0             1          0       91
+    ##  9     108        1        1          0             2          0       94
+    ## 10      74        0        1          0             2          1       57
     ## # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
     ## #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
     ## #   n_caps <int>, n_noasciis <int>, n_puncts <int>, n_capsp <dbl>,
@@ -74,9 +74,9 @@ textfeatures(rt)
 ### Input: `grouped_df`
 
 ``` r
-## data frame with up to one hundred tweets for each of 5 users
+## data frame with up to two hundred tweets for each of 5 users
 gdf <- rtweet::get_timelines(
-  c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 100)
+  c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 200)
 
 ## group by screen_name and return text features
 f <- textfeatures(dplyr::group_by(gdf, screen_name))
@@ -102,8 +102,8 @@ f %>%
     axis.text = element_text(colour = "black"),
     plot.title = element_text(face = "bold")) + 
   labs(y = NULL, x = NULL,
-    title = "Variables extracted by textfeatures, a simple R package for extracting features from text",
-    subtitle = "Features extracted from text of the most recent 100 tweets posted by each news media account")
+    title = "Variables extracted by {textfeatures}, an R package for easy feature extraction",
+    subtitle = "Features extracted from text of the most recent 200 tweets posted by each news media account")
 ```
 
 ![](README_files/figure-markdown_github/gdf-1.png)
