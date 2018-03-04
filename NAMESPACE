@@ -2,7 +2,9 @@
 
 S3method(textfeatures,character)
 S3method(textfeatures,data.frame)
+S3method(textfeatures,factor)
 S3method(textfeatures,grouped_df)
+S3method(textfeatures,list)
 export(textfeatures)
 importFrom(dplyr,summarise_all)
 importFrom(dplyr,transmute)

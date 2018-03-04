@@ -7,11 +7,13 @@
 textfeatures(x)
 }
 \arguments{
-\item{x}{Input data. Should be character vector or data frame/grouped data
-frame with variable of interest named "text"}
+\item{x}{Input data. Should be character vector, data frame, or grouped data
+frame (grouped_df) with character variable of interest named "text". If
+grouped_df is provided, then features will be averaged across all
+observations for each group.}
 }
 \value{
-A tibble data frame with extracted features as columns
+A tibble data frame with extracted features as columns.
 }
 \description{
 Extracts features from text vector.
