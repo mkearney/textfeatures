@@ -54,7 +54,7 @@ textfeatures(rt)
 ```{r gdf, eval=FALSE}
 ## data frame with up to two hundred tweets for each of 5 users
 gdf <- rtweet::get_timelines(
-  c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 200)
+  c("wapo", "cnn", "nytimes", "foxnews", "latimes"), n = 1000)
 
 ## group by screen_name and return text features
 f <- textfeatures(dplyr::group_by(gdf, screen_name))
@@ -63,12 +63,10 @@ f <- textfeatures(dplyr::group_by(gdf, screen_name))
 suppressPackageStartupMessages(library(tidyverse))
 
 ## standardize function
-scale_standard <- function(x) {
-  (x - 0) / (max(x, na.rm = TRUE) - 0)
-}
+scale_standard <- function(x) (x - 0) / (max(x, na.rm = TRUE) - 0)
 
 ## convert to long (tidy) form and plot
-f %>%
+p <- f %>%
   mutate_if(is.numeric, scale_standard) %>%
   gather(var, val, -screen_name) %>%
   ggplot(aes(x = var, y = val, fill = screen_name)) + 
@@ -80,8 +78,11 @@ f %>%
     axis.text = element_text(colour = "black"),
     plot.title = element_text(face = "bold")) + 
   labs(y = NULL, x = NULL,
-    title = "{textfeatures}: an R package for easy feature extraction",
-    subtitle = "Features extracted from text of the most recent 200 tweets posted by each news media account")
+    title = "{textfeatures}: Extract Features from Text",
+    subtitle = "Features extracted from text of the most recent 1,000 tweets posted by each news media account")
+
+## save plot
+ggsave("tools/readme/readme.png", p, width = 7, height = 7, units = "in")
 ```
 
 ![](tools/readme/readme.png)

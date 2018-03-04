@@ -1,12 +1,13 @@
 Package: textfeatures
 Type: Package
-Title: Extracts features from text
+Title: Extracts Features from Text
 Version: 0.1.0
 Authors@R: person("Michael Wayne", "Kearney", , 
     "kearneymw@missouri.edu", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-0730-4694"))
-Description: A simple tool for extracting common features from strings of text
-    as is often done in machine learning applications.
+Description: A tool for extracting some generic features (e.g., number of 
+    words, line breaks, characters per word, URLs, lower case, upper case, 
+    commas, periods, exclamation points, etc.) from strings of text.
 License: MIT + file LICENSE
 URL: https://github.com/mkearney/textfeatures
 BugReports: https://github.com/mkearney/textfeatures/issues
@@ -16,12 +17,11 @@ Imports:
     dplyr,
     rlang,
     tibble
-Encoding: UTF-8
 Suggests: 
     knitr,
     roxygen2,
     testthat
-VignetteBuilder: knitr
+Encoding: UTF-8
 LazyData: yes
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1.9000
