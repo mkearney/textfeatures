@@ -18,3 +18,35 @@ A tibble data frame with extracted features as columns.
 \description{
 Extracts features from text vector.
 }
+\examples{
+
+## the text of five of Trump's most retweeted tweets
+trump_tweets <- c(
+  "#FraudNewsCNN #FNN https://t.co/WYUnHjjUjg",
+  "TODAY WE MAKE AMERICA GREAT AGAIN!",
+  paste("Why would Kim Jong-un insult me by calling me \\"old,\\" when I would",
+    "NEVER call him \\"short and fat?\\" Oh well, I try so hard to be his",
+    "friend - and maybe someday that will happen!"),
+  paste("Such a beautiful and important evening! The forgotten man and woman",
+    "will never be forgotten again. We will all come together as never before"),
+  paste("North Korean Leader Kim Jong Un just stated that the \\"Nuclear",
+    "Button is on his desk at all times.\\" Will someone from his depleted and",
+    "food starved regime please inform him that I too have a Nuclear Button,",
+    "but it is a much bigger &amp; more powerful one than his, and my Button",
+    "works!")
+)
+
+## get the text features of a character vector
+textfeatures(trump_tweets)
+
+## data frame with a character vector named "text"
+df <- data.frame(
+  id = c(1, 2, 3),
+  text = c("this is A!\\t sEntence https://github.com about #rstats @github",
+    "doh", "The following list:\\n- one\\n- two\\n- three\\nOkay!?!")
+)
+
+## get text features of a data frame with "text" variable
+textfeatures(df)
+
+}

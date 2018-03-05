@@ -12,3 +12,7 @@
 ## Reverse dependencies
 
 This is a new release, so there are no reverse dependencies.
+
+## Resubmission note
+
+Added small executable examples to the Rd-files.
