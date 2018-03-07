@@ -3,17 +3,27 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 library(textfeatures)
 ```
 
-## textfeatures
+## textfeatures [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures) [![Travis build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures) [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
 
 A simple package for extracting useful features from character objects.
 
 ## Install
 
-```{r install, eval=FALSE}
+Install from CRAN.
+
+```{r cran, eval=FALSE}
+## download from CRAN
+install.packages("textfeatures")
+```
+
+Or install the development version from Github.
+
+```{r github, eval=FALSE}
 ## download devtools if necessary
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
@@ -47,7 +57,6 @@ rt <- rtweet::search_tweets("rstats", n = 100, verbose = FALSE)
 ## get text features
 textfeatures(rt)
 ```
-
 
 ### Input: `grouped_df`
 

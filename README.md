@@ -1,9 +1,18 @@
 
-## textfeatures
+## textfeatures [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures) [![Travis build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures) [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
 A simple package for extracting useful features from character objects.
 
 ## Install
+
+Install from CRAN.
+
+``` r
+## download from CRAN
+install.packages("textfeatures")
+```
+
+Or install the development version from Github.
 
 ``` r
 ## download devtools if necessary
@@ -28,17 +37,16 @@ x <- c(
 
 ## get text features
 textfeatures(x)
+#> # A tibble: 3 x 17
+#>   n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
+#>     <int>    <int>    <int>      <int>         <int>      <int>    <int>
+#> 1      21        0        0          1             3          1       18
+#> 2       3        0        0          0             0          0        3
+#> 3      38        0        0          2             4          0       28
+#> # ... with 10 more variables: n_lowersp <dbl>, n_mentions <int>,
+#> #   n_periods <int>, n_urls <int>, n_words <int>, n_caps <int>,
+#> #   n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>
 ```
-
-    ## # A tibble: 3 x 17
-    ##   n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
-    ##     <int>    <int>    <int>      <int>         <int>      <int>    <int>
-    ## 1      21        0        0          1             3          1       18
-    ## 2       3        0        0          0             0          0        3
-    ## 3      38        0        0          2             4          0       28
-    ## # ... with 10 more variables: n_lowersp <dbl>, n_mentions <int>,
-    ## #   n_periods <int>, n_urls <int>, n_words <int>, n_caps <int>,
-    ## #   n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>
 
 ### Input: `data.frame`
 
@@ -48,25 +56,24 @@ rt <- rtweet::search_tweets("rstats", n = 100, verbose = FALSE)
 
 ## get text features
 textfeatures(rt)
+#> # A tibble: 100 x 17
+#>    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
+#>      <int>    <int>    <int>      <int>         <int>      <int>    <int>
+#>  1      92        1        0          0             2          1       86
+#>  2      46        0        0          0             2          5       37
+#>  3      46        0        0          0             2          5       37
+#>  4      85        0        0          0             4          1       69
+#>  5      46        0        0          0             2          5       37
+#>  6      46        0        0          0             2          5       37
+#>  7      97        1        0          1             2          0       77
+#>  8      85        0        0          0             4          1       69
+#>  9      47        0        0          0             2          1       38
+#> 10     100        0        8          0             4          1       77
+#> # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
+#> #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
+#> #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
+#> #   n_charsperword <dbl>
 ```
-
-    ## # A tibble: 100 x 17
-    ##    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
-    ##      <int>    <int>    <int>      <int>         <int>      <int>    <int>
-    ##  1      48        0        0          0             2          2       39
-    ##  2      46        0        4          0             2          2       33
-    ##  3      70        0        0          1             3          0       60
-    ##  4     114        0        0          0             1          0      102
-    ##  5     114        0        0          0             1          0      102
-    ##  6      41        0        0          0             2          5       27
-    ##  7      92        0        0          0             2          2       81
-    ##  8      41        0        0          0             2          5       27
-    ##  9      40        0        0          0             2          5       30
-    ## 10       2        0        0          0             1          1        0
-    ## # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
-    ## #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
-    ## #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
-    ## #   n_charsperword <dbl>
 
 ### Input: `grouped_df`
 
