@@ -1,9 +1,15 @@
 
-## textfeatures [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures) [![Travis build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures) [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+textfeatures <img src="man/figures/logo.png" align="right" />
+=============================================================
+
+[![Build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures) [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)
+
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
 A simple package for extracting useful features from character objects.
 
-## Install
+Install
+-------
 
 Install from CRAN.
 
@@ -24,7 +30,8 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("mkearney/textfeatures")
 ```
 
-## Usage
+Usage
+-----
 
 ### Input: `character`
 
@@ -59,16 +66,16 @@ textfeatures(rt)
 #> # A tibble: 100 x 17
 #>    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
 #>      <int>    <int>    <int>      <int>         <int>      <int>    <int>
-#>  1      92        1        0          0             2          1       86
-#>  2      46        0        0          0             2          5       37
-#>  3      46        0        0          0             2          5       37
-#>  4      85        0        0          0             4          1       69
-#>  5      46        0        0          0             2          5       37
-#>  6      46        0        0          0             2          5       37
-#>  7      97        1        0          1             2          0       77
-#>  8      85        0        0          0             4          1       69
-#>  9      47        0        0          0             2          1       38
-#> 10     100        0        8          0             4          1       77
+#>  1      91        1        0          0             3          1       69
+#>  2      77        1        8          0             6          5       52
+#>  3     102        0        0          1             2          0       91
+#>  4     123        3        0          1             2          3      112
+#>  5      77        1        8          0             6          5       52
+#>  6     108        0        2          1             3          3       99
+#>  7      51        0        0          0             1          2       43
+#>  8      98        1        0          0             1          1       83
+#>  9      48        0        0          0             2          4       42
+#> 10      55        0        7          0             0          1       45
 #> # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
 #> #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
 #> #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
