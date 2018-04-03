@@ -7,7 +7,7 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 library(textfeatures)
 ```
 
-# textfeatures <img src="man/figures/logo.png" width="175px" align="right" /> 
+# textfeatures <img src="man/figures/logo.png" width="200px" align="right" /> 
 
 [![Build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures)
 [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)

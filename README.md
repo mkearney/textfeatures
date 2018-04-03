@@ -1,5 +1,5 @@
 
-textfeatures <img src="man/figures/logo.png" width="175px" align="right" />
+textfeatures <img src="man/figures/logo.png" width="200px" align="right" />
 ===========================================================================
 
 [![Build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures) [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)
@@ -66,16 +66,16 @@ textfeatures(rt)
 #> # A tibble: 100 x 17
 #>    n_chars n_commas n_digits n_exclaims n_extraspaces n_hashtags n_lowers
 #>      <int>    <int>    <int>      <int>         <int>      <int>    <int>
-#>  1     216        2        0          1             3          1      199
-#>  2      54        0        0          0             3          1       46
-#>  3      79        0        0          0             4          2       68
-#>  4      43        0        0          0             2          2       34
-#>  5     149        0        0          0             2          2      140
-#>  6      63        1        2          0             3          2       40
+#>  1      54        0        0          0             3          1       46
+#>  2      79        0        0          0             4          2       68
+#>  3      43        0        0          0             2          2       34
+#>  4     149        0        0          0             2          2      140
+#>  5      63        1        2          0             3          2       40
+#>  6     105        1        0          0             2          0       90
 #>  7     105        1        0          0             2          0       90
 #>  8     105        1        0          0             2          0       90
-#>  9     105        1        0          0             2          0       90
-#> 10     105        1        0          0             2          1       96
+#>  9     105        1        0          0             2          1       96
+#> 10      48        0        0          0             2          2       38
 #> # ... with 90 more rows, and 10 more variables: n_lowersp <dbl>,
 #> #   n_mentions <int>, n_periods <int>, n_urls <int>, n_words <int>,
 #> #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
