@@ -20,108 +20,136 @@ n_charS <- function(x) {
 n_digits <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
-  x <- nchar(gsub("\\D", "", x))
+  m <- gregexpr("\\d", x)
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_hashtags <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
   m <- gregexpr("#\\S+", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_mentions <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
   m <- gregexpr("@\\S+", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_commas <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
-  m <- gregexpr(",+", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  m <- gregexpr(",", x)
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_periods <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
-  m <- gregexpr("\\.+", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  m <- gregexpr("\\.", x)
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_exclaims <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
-  m <- gregexpr("\\!+", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  m <- gregexpr("\\!", x)
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_extraspaces <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
-  m <- gregexpr("\\s{2,}|\\t|\\n", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  m <- gregexpr("\\s{2}|\\t|\\n", x)
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_caps <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
   m <- gregexpr("[[:upper:]]", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_lowers <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
   m <- gregexpr("[[:lower:]]", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_urls <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
   m <- gregexpr("https?:", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_nonasciis <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
   x <- iconv(x, from = "UTF-8", to = "ASCII", sub = "[NONASCII]")
   m <- gregexpr("\\[NONASCII\\]", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
 }
 
+#' @importFrom purrr map_int
 n_puncts <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
   x <- gsub("!|\\.|\\,", "", x)
   m <- gregexpr("[[:punct:]]", x)
-  x <- vply_int(m, ~ sum(. > 0, na.rm = TRUE))
+  x <- map_int(m, ~ sum(.x > 0, na.rm = TRUE))
   x[na] <- NA_integer_
   x
+}
+
+#' @importFrom utils capture.output
+polite_politeness <- function(x) {
+  tmp <- tempfile()
+  invisible(capture.output(p <- politeness::politeness(x, parser = "none", drop_blank = FALSE,
+    metric = "count"), file = tmp))
+  p <- p[!names(p) %in% c("Goodbye", "By.The.Way", "Let.Me.Know")]
+  names(p) <- paste0("polite_", gsub("\\.", "_", tolower(names(p))))
+  p
+}
+
+
+scale_standard <- function(x) {
+  xmin <- min(x, na.rm = TRUE)
+  (x - xmin) / (max(x, na.rm = TRUE) - xmin)
 }

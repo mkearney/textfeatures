@@ -43,7 +43,8 @@ textfeatures(trump_tweets)
 df <- data.frame(
   id = c(1, 2, 3),
   text = c("this is A!\\t sEntence https://github.com about #rstats @github",
-    "doh", "The following list:\\n- one\\n- two\\n- three\\nOkay!?!")
+    "doh", "The following list:\\n- one\\n- two\\n- three\\nOkay!?!"),
+  stringsAsFactors = FALSE
 )
 
 ## get text features of a data frame with "text" variable

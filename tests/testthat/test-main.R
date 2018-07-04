@@ -22,7 +22,7 @@ test_that("main textfeatures function", {
   o_fct <- textfeatures(text_fct)
   expect_true(is.data.frame(o_fct))
 
-    ## get text features of character vector
+  ## get text features of character vector
   o_df <- textfeatures(df)
   expect_true(is.data.frame(o_df))
 
