@@ -143,13 +143,9 @@ polite_politeness <- function(x) {
   tmp <- tempfile()
   invisible(capture.output(p <- politeness::politeness(x, parser = "none", drop_blank = FALSE,
     metric = "count"), file = tmp))
+  unlink(tmp)
   p <- p[!names(p) %in% c("Goodbye", "By.The.Way", "Let.Me.Know")]
-  names(p) <- paste0("polite_", gsub("\\.", "_", tolower(names(p))))
+  names(p) <- paste0("n_pol_", gsub("\\.", "", tolower(names(p))))
   p
 }
 
-
-scale_standard <- function(x) {
-  xmin <- min(x, na.rm = TRUE)
-  (x - xmin) / (max(x, na.rm = TRUE) - xmin)
-}
