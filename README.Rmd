@@ -72,17 +72,12 @@ f <- textfeatures(dplyr::group_by(gdf, screen_name))
 ## load ggplot
 suppressPackageStartupMessages(library(tidyverse))
 
-## standardize scales
-scale_standard <- function(x) {
-  xmin <- min(x, na.rm = TRUE)
-  (x - xmin) / (max(x, na.rm = TRUE) - xmin)
-}
-
 ## convert to long (tidy) form and plot
 p <- f %>%
+  scale_count() %>%
+  scale_standard() %>%
   summarise_if(is.numeric, mean) %>%
   gather(var, val, -screen_name) %>%
-  mutate_if(is.numeric, scale_standard) %>%
   ggplot(aes(x = var, y = val, fill = screen_name)) + 
   geom_col(width = .65) + 
   theme_bw(base_family = "Roboto Condensed") + 

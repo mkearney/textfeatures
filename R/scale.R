@@ -16,7 +16,7 @@ scale_count <- function(x) {
   yes_ints <- (purrr::map_lgl(x, rlang::is_integerish) |
       (grepl("^n_", names(x)) & purrr::map_lgl(x, is.numeric))) &
     !grepl("[._]?id$", names(x))
-  x[yes_ints] <- purrr::map(x[yes_ints], ~ log(.x + 1))
+  x[yes_ints] <- purrr::map(x[yes_ints], ~ log(scale_zero(.x) + 1))
   x
 }
 
@@ -31,7 +31,7 @@ scale_count10 <- function(x) {
   yes_ints <- (purrr::map_lgl(x, rlang::is_integerish) |
       (grepl("^n_", names(x)) & purrr::map_lgl(x, is.numeric))) &
     !grepl("[._]?id$", names(x))
-  x[yes_ints] <- purrr::map(x[yes_ints], ~ log10(.x + 1))
+  x[yes_ints] <- purrr::map(x[yes_ints], ~ log10(scale_zero(.x) + 1))
   x
 }
 
@@ -51,7 +51,7 @@ scale_inverse <- function(x) {
 
 
 scale_zero <- function(x) {
-  sign(min(x, na.rm = TRUE)) * x - min(x, na.rm = TRUE)
+  x + abs(0 - min(x))
 }
 
 
