@@ -45,14 +45,12 @@ textfeatures <- function(x) UseMethod("textfeatures")
 
 #' @export
 textfeatures.character <- function(x) {
-  x <- tibble::data_frame(text = x, validate = FALSE)
-  textfeatures(x)
+  textfeatures(data.frame(text = x, row.names = NULL, stringsAsFactors = FALSE))
 }
 
 #' @export
 textfeatures.factor <- function(x) {
-  x <- as.character(x)
-  textfeatures(x)
+  textfeatures(as.character(x))
 }
 
 #' @export
@@ -67,6 +65,16 @@ textfeatures.data.frame <- function(x) {
   }
   ## validate text class
   stopifnot(is.character(x$text))
+  ## if ID
+  if ("id" %in% names(x)) {
+    idname <- "id"
+    ids <- x$id
+  } else if (any(grepl("[._]id$", names(x)))) {
+    idname <- grep("[._]id$", names(x), value = TRUE)[1]
+    ids <- x[[grep("[._]id$", names(x))[1]]]
+  } else {
+    ids <- NULL
+  }
   ## extract features for all observations
   x <- suppressMessages(dplyr::transmute(x,
     n_urls = n_urls(.data$text),
@@ -91,14 +99,39 @@ textfeatures.data.frame <- function(x) {
     n_capsp = (.data$n_caps + 1L) / (.data$n_chars + 1L),
     n_charsperword = (.data$n_chars + 1L) / (.data$n_words + 1L)
   ))
+  if (!is.null(ids)) {
+    x[[idname]] <- ids
+  } else {
+    x$id <- seq_len(nrow(x))
+  }
+  ## move ID to front
+  x <- x[, c(ncol(x), 1:(ncol(x) - 1))]
   x <- dplyr::bind_cols(x, polite_politeness(x$text))
-  x <- dplyr::select(x, -.data$text)
-  x <- x %>% dplyr::mutate_if(is.integer, as.numeric)
-  y <- grepl("^n_", names(x))
-  x[y] <- purrr::map(x[y], ~ log10(.x + 1L))
-  x
+  tibble::as_tibble(x[names(x) != "text"], validate = FALSE)
 }
 
+#' @export
+#' @importFrom purrr map_lgl map
+textfeatures.list <- function(x) {
+  ## if named list with "text" element
+  if (!is.null(names(x)) && "text" %in% names(x)) {
+    x <- x$text
+    return(textfeatures(x))
+    ## if all elements are character vectors, return list of DFs
+  } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
+    ## (list in, list out)
+    return(map(x, textfeatures))
+  }
+  ## if all elements are recursive objects containing "text" variable
+  if (all(map_lgl(x, is.recursive)) &&
+      all(map_lgl(x, ~ "text" %in% names(.x)))) {
+    x <- map(x, ~ .x$text)
+    return(map(x, textfeatures))
+  }
+  stop(paste0("Input is a list without a character vector named \"text\". ",
+    "Are you sure the input shouldn't be a character vector or a data frame",
+    "with a \"text\" variable?"), call. = FALSE)
+}
 
 
 text_cleaner <- function(x) {
@@ -147,26 +180,4 @@ text_cleaner <- function(x) {
   gsub("\u2026", "\u002E\u002E\u002E", x, fixed = TRUE)
 }
 
-#' @export
-#' @importFrom purrr map_lgl map
-textfeatures.list <- function(x) {
-  ## if named list with "text" element
-  if (!is.null(names(x)) && "text" %in% names(x)) {
-    x <- x$text
-    return(textfeatures(x))
-    ## if all elements are character vectors, return list of DFs
-  } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
-    ## (list in, list out)
-    return(map(x, textfeatures))
-  }
-  ## if all elements are recursive objects containing "text" variable
-  if (all(map_lgl(x, is.recursive)) &&
-      all(map_lgl(x, ~ "text" %in% names(.x)))) {
-    x <- map(x, ~ .x$text)
-    return(map(x, textfeatures))
-  }
-  stop(paste0("Input is a list without a character vector named \"text\". ",
-    "Are you sure the input shouldn't be a character vector or a data frame",
-    "with a \"text\" variable?"), call. = FALSE)
-}
 
