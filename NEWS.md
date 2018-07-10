@@ -1,3 +1,12 @@
+# textfeatures 0.1.3
+
+* Functions now return "id" or (the first variable ending with (.|_)id)
+* Returns numeric and integer columns to allow scaling flexibility
+* Now exports several scale-transformation convenience functions
+* Added sentiment and politeness text analysis
+* Now exports a second method, `textfeatures2()`, which is the same as 
+`textfeatures()` only without the substantive analysis (sentiment/politeness)
+
 # textfeatures 0.1.2
 
 * Added sentiment and politness variables

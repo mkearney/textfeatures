@@ -1,5 +1,8 @@
 
-# 👷‍♂️ textfeatures 👷‍♀️ <img src="man/figures/logo.png" width="200px" align="right" />
+# 👷
+
+♂️ textfeatures 👷 ♀️
+<img src="man/figures/logo.png" width="200px" align="right" />
 
 [![Build
 status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures)
@@ -40,29 +43,26 @@ x <- c(
 
 ## get text features
 textfeatures(x)
-#> # A tibble: 3 x 46
-#>   n_urls n_hashtags n_mentions sent_afinn sent_bing sent_syuzhet n_chars
-#>    <dbl>      <dbl>      <dbl>      <dbl>     <dbl>        <dbl>   <dbl>
-#> 1  0.301      0.301      0.301         -2         0            0   1.34 
-#> 2  0          0          0              0         0            0   0.602
-#> 3  0          0          0              0         0            0   1.59 
-#> # ... with 39 more variables: n_commas <dbl>, n_digits <dbl>,
-#> #   n_exclaims <dbl>, n_extraspaces <dbl>, n_lowers <dbl>,
-#> #   n_lowersp <dbl>, n_periods <dbl>, n_words <dbl>, n_caps <dbl>,
-#> #   n_nonasciis <dbl>, n_puncts <dbl>, n_capsp <dbl>,
-#> #   n_charsperword <dbl>, polite_hedges <dbl>,
-#> #   polite_positive_emotion <dbl>, polite_negative_emotion <dbl>,
-#> #   polite_impersonal_pronoun <dbl>, polite_swearing <dbl>,
-#> #   polite_negation <dbl>, polite_filler_pause <dbl>,
-#> #   polite_informal_title <dbl>, polite_formal_title <dbl>,
-#> #   polite_subjunctive <dbl>, polite_indicative <dbl>,
-#> #   polite_for_me <dbl>, polite_for_you <dbl>, polite_reasoning <dbl>,
-#> #   polite_reassurance <dbl>, polite_ask_agency <dbl>,
-#> #   polite_give_agency <dbl>, polite_hello <dbl>,
-#> #   polite_group_identity <dbl>, polite_questions <dbl>,
-#> #   polite_gratitude <dbl>, polite_apology <dbl>, polite_actually <dbl>,
-#> #   polite_please <dbl>, polite_first_person <dbl>,
-#> #   polite_second_person <dbl>
+#> # A tibble: 3 x 47
+#>      id n_urls n_hashtags n_mentions sent_afinn sent_bing sent_syuzhet
+#>   <int>  <int>      <int>      <int>      <int>     <int>        <dbl>
+#> 1     1      1          1          1         -2         0            0
+#> 2     2      0          0          0          0         0            0
+#> 3     3      0          0          0          0         0            0
+#> # ... with 40 more variables: n_chars <int>, n_commas <int>,
+#> #   n_digits <int>, n_exclaims <int>, n_extraspaces <int>, n_lowers <int>,
+#> #   n_lowersp <dbl>, n_periods <int>, n_words <int>, n_caps <int>,
+#> #   n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
+#> #   n_charsperword <dbl>, n_pol_hedges <int>, n_pol_positiveemotion <int>,
+#> #   n_pol_negativeemotion <int>, n_pol_impersonalpronoun <dbl>,
+#> #   n_pol_swearing <dbl>, n_pol_negation <dbl>, n_pol_fillerpause <dbl>,
+#> #   n_pol_informaltitle <dbl>, n_pol_formaltitle <dbl>,
+#> #   n_pol_subjunctive <dbl>, n_pol_indicative <dbl>, n_pol_forme <dbl>,
+#> #   n_pol_foryou <dbl>, n_pol_reasoning <dbl>, n_pol_reassurance <dbl>,
+#> #   n_pol_askagency <dbl>, n_pol_giveagency <dbl>, n_pol_hello <int>,
+#> #   n_pol_groupidentity <int>, n_pol_questions <dbl>,
+#> #   n_pol_gratitude <int>, n_pol_apology <int>, n_pol_actually <dbl>,
+#> #   n_pol_please <dbl>, n_pol_firstperson <int>, n_pol_secondperson <int>
 ```
 
 ### Input: `data.frame`
@@ -73,36 +73,33 @@ rt <- rtweet::search_tweets("rstats", n = 100, verbose = FALSE)
 
 ## get text features
 textfeatures(rt)
-#> # A tibble: 100 x 46
-#>    n_urls n_hashtags n_mentions sent_afinn sent_bing sent_syuzhet n_chars
-#>     <dbl>      <dbl>      <dbl>      <dbl>     <dbl>        <dbl>   <dbl>
-#>  1  0.301      0.301      0              0        -2        -0.8     1.67
-#>  2  0.477      0.477      0.301          1         1         0.75    1.81
-#>  3  0.477      0.954      0.602          0         0         0       1.48
-#>  4  0.301      0.301      0              2         1         0.5     2.24
-#>  5  0          0.301      0.477          6         3         1.75    1.93
-#>  6  0.477      0.301      0.301          0         1         1.7     1.95
-#>  7  0.301      0.301      0              2         1         0.5     2.24
-#>  8  0.477      0.301      0.477          9         3         0.9     2.18
-#>  9  0.477      0.301      0.477          9         3         0.9     2.18
-#> 10  0          0.301      0.477          6         3         1.75    1.93
-#> # ... with 90 more rows, and 39 more variables: n_commas <dbl>,
-#> #   n_digits <dbl>, n_exclaims <dbl>, n_extraspaces <dbl>, n_lowers <dbl>,
-#> #   n_lowersp <dbl>, n_periods <dbl>, n_words <dbl>, n_caps <dbl>,
-#> #   n_nonasciis <dbl>, n_puncts <dbl>, n_capsp <dbl>,
-#> #   n_charsperword <dbl>, polite_hedges <dbl>,
-#> #   polite_positive_emotion <dbl>, polite_negative_emotion <dbl>,
-#> #   polite_impersonal_pronoun <dbl>, polite_swearing <dbl>,
-#> #   polite_negation <dbl>, polite_filler_pause <dbl>,
-#> #   polite_informal_title <dbl>, polite_formal_title <dbl>,
-#> #   polite_subjunctive <dbl>, polite_indicative <dbl>,
-#> #   polite_for_me <dbl>, polite_for_you <dbl>, polite_reasoning <dbl>,
-#> #   polite_reassurance <dbl>, polite_ask_agency <dbl>,
-#> #   polite_give_agency <dbl>, polite_hello <dbl>,
-#> #   polite_group_identity <dbl>, polite_questions <dbl>,
-#> #   polite_gratitude <dbl>, polite_apology <dbl>, polite_actually <dbl>,
-#> #   polite_please <dbl>, polite_first_person <dbl>,
-#> #   polite_second_person <dbl>
+#> # A tibble: 100 x 47
+#>    user_id  n_urls n_hashtags n_mentions sent_afinn sent_bing sent_syuzhet
+#>    <chr>     <int>      <int>      <int>      <int>     <int>        <dbl>
+#>  1 4536934…      2          3          1          8         2         1.05
+#>  2 3101015…      0          1          0          2        -2         0.7 
+#>  3 1030049…      1          1          1          0         0         0.8 
+#>  4 1114574…      1          4          2          0         0         0   
+#>  5 9130697…      2          1          0         -1        -2        -0.75
+#>  6 1235849…      0          1          3          9         4         3.25
+#>  7 3345539…      1          3          0          0         1         0.8 
+#>  8 3345539…      2          5          0          2         2         1.1 
+#>  9 3345539…      1          2          1          0         1         0.8 
+#> 10 3345539…      1          2          1          7         1         2   
+#> # ... with 90 more rows, and 40 more variables: n_chars <int>,
+#> #   n_commas <int>, n_digits <int>, n_exclaims <int>, n_extraspaces <int>,
+#> #   n_lowers <int>, n_lowersp <dbl>, n_periods <int>, n_words <int>,
+#> #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
+#> #   n_charsperword <dbl>, n_pol_hedges <int>, n_pol_positiveemotion <int>,
+#> #   n_pol_negativeemotion <int>, n_pol_impersonalpronoun <dbl>,
+#> #   n_pol_swearing <dbl>, n_pol_negation <dbl>, n_pol_fillerpause <dbl>,
+#> #   n_pol_informaltitle <dbl>, n_pol_formaltitle <dbl>,
+#> #   n_pol_subjunctive <dbl>, n_pol_indicative <dbl>, n_pol_forme <dbl>,
+#> #   n_pol_foryou <dbl>, n_pol_reasoning <dbl>, n_pol_reassurance <dbl>,
+#> #   n_pol_askagency <dbl>, n_pol_giveagency <dbl>, n_pol_hello <int>,
+#> #   n_pol_groupidentity <int>, n_pol_questions <dbl>,
+#> #   n_pol_gratitude <int>, n_pol_apology <int>, n_pol_actually <dbl>,
+#> #   n_pol_please <dbl>, n_pol_firstperson <int>, n_pol_secondperson <int>
 ```
 
 ### Input: `grouped_df`
@@ -147,3 +144,28 @@ ggsave("tools/readme/readme.png", p, width = 7, height = 7, units = "in")
 ```
 
 ![](tools/readme/readme.png)
+
+## `textfeatures2()`
+
+For those not patient enough for sentiment/politeness analysis
+
+``` r
+## get non-substantive text features
+textfeatures2(rt)
+#> # A tibble: 100 x 15
+#>    user_id     n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers
+#>    <chr>         <int>    <int>    <int>      <int>         <int>    <int>
+#>  1 453693457       118        0        0          2             4      114
+#>  2 3101015701      145        1        0          0             0      139
+#>  3 103004948        25        0        0          0             3       22
+#>  4 111457430        29        0        0          0             7       25
+#>  5 9130697596…     140        1        0          1             2      127
+#>  6 123584958       175        1        0          3             3      162
+#>  7 334553913        62        0        0          0             2       59
+#>  8 334553913       128        0        1          0             3      115
+#>  9 334553913        24        0        3          0             2       18
+#> 10 334553913        69        1        0          1             2       62
+#> # ... with 90 more rows, and 8 more variables: n_lowersp <dbl>,
+#> #   n_periods <int>, n_words <int>, n_caps <int>, n_nonasciis <int>,
+#> #   n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>
+```
