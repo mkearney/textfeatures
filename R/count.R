@@ -138,14 +138,59 @@ n_puncts <- function(x) {
   x
 }
 
-#' @importFrom utils capture.output
-polite_politeness <- function(x) {
-  tmp <- tempfile()
-  invisible(capture.output(p <- politeness::politeness(x, parser = "none", drop_blank = FALSE,
-    metric = "count"), file = tmp))
-  unlink(tmp)
-  p <- p[!names(p) %in% c("Goodbye", "By.The.Way", "Let.Me.Know")]
-  names(p) <- paste0("n_pol_", gsub("\\.", "", tolower(names(p))))
-  p
+wtokens <- function(x) {
+  x <- tolower(x)
+  x <- strsplit(x, "\\s+")
+  x <- purrr::map(x, ~ gsub("^[[:punct:]]+|[[:punct:]]|$", "", .x))
+  x <- purrr::map(x, ~ gsub("[[:punct:]].*", "", .x))
+  purrr::map(x, ~ return(.x[.x != ""]))
+}
+
+politeness <- function(x) {
+  purrr::map_dbl(x, ~ sum(politeness_dict$p[politeness_dict$term %in% .x],
+    na.rm = TRUE))
+}
+
+first_person <- function(x) {
+  fp <- c("i", "me", "myself", "my", "mine")
+  purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
+}
+
+first_personp <- function(x) {
+  fp <- c("we", "us", "our", "ours")
+  purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
+}
+
+second_person <- function(x) {
+  fp <- c("you", "yours", "your", "yourself")
+  purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
+}
+
+second_personp <- function(x) {
+  fp <- c("he", "she", "it", "its", "his", "hers")
+  purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
+}
+
+third_person <- function(x) {
+  fp <- c("they", "them", "theirs", "their")
+  purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
+}
+
+to_be <- function(x) {
+  fp <- c("am", "is", "are", "was", "were", "being",
+    "been", "be", "were", "be")
+  purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
+}
+
+prepositions <- function(x) {
+  fp <- c("about", "below", "excepting", "off", "toward", "above", "beneath", "for",
+    "on", "under", "across", "from", "onto", "underneath", "after", "between",
+    "in", "out", "until", "against", "beyond", "outside", "up", "along", "but",
+    "inside", "over", "upon", "among", "by", "past", "around", "concerning",
+    "regarding", "with", "at", "despite", "into", "since", "within", "down",
+    "like", "through", "without", "before", "during", "near", "throughout",
+    "behind", "except", "of", "to")
+  purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
+
 }
 

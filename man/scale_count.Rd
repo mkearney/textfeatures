@@ -2,10 +2,7 @@
 % Please edit documentation in R/scale.R
 \name{scale_count}
 \alias{scale_count}
-\alias{scale_count10}
-\alias{scale_inverse}
 \alias{scale_log}
-\alias{scale_log10}
 \alias{scale_normal}
 \alias{scale_standard}
 \alias{scale_sqrt}
@@ -13,13 +10,7 @@
 \usage{
 scale_count(x)
 
-scale_count10(x)
-
-scale_inverse(x)
-
 scale_log(x)
-
-scale_log10(x)
 
 scale_normal(x)
 
@@ -37,13 +28,7 @@ numeric/relevant variables transformed.
 \description{
 scale_count: Transforms integer and integerlike columns using log
 
-scale_count10: Transforms integer and integerlike columns using log10
-
-scale_inverse: Transforms numeric columns using 1 / x
-
 scale_log: Transforms numeric columns using log
-
-scale_log10: Transforms numeric columns using log10
 
 scale_normal: Transforms numeric columns using mean centering and dividing by standard deviation
 

@@ -63,14 +63,11 @@ test_that("main textfeatures function", {
   ## shouldn't work if no variable named text
   expect_error(textfeatures2(mtcars))
 
-  ## shouldn't work on numeric vector
-  expect_error(textfeatures2(rnorm(100)))
+  ## should return empty df
+  expect_equal(data.frame(), textfeatures2(NULL))
 
   expect_true(is.data.frame(scale_count(o_df)))
-  expect_true(is.data.frame(scale_count10(o_df)))
-  expect_true(is.data.frame(scale_inverse(o_df)))
   expect_true(is.data.frame(scale_log(o_df)))
-  expect_true(is.data.frame(scale_log10(o_df)))
   expect_true(is.data.frame(scale_normal(o_df)))
   expect_true(is.data.frame(scale_standard(o_df)))
   expect_true(is.data.frame(scale_sqrt(o_df)))

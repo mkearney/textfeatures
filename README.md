@@ -43,26 +43,16 @@ x <- c(
 
 ## get text features
 textfeatures(x)
-#> # A tibble: 3 x 47
-#>      id n_urls n_hashtags n_mentions sent_afinn sent_bing sent_syuzhet
-#>   <int>  <int>      <int>      <int>      <int>     <int>        <dbl>
-#> 1     1      1          1          1         -2         0            0
-#> 2     2      0          0          0          0         0            0
-#> 3     3      0          0          0          0         0            0
-#> # ... with 40 more variables: n_chars <int>, n_commas <int>,
-#> #   n_digits <int>, n_exclaims <int>, n_extraspaces <int>, n_lowers <int>,
-#> #   n_lowersp <dbl>, n_periods <int>, n_words <int>, n_caps <int>,
-#> #   n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
-#> #   n_charsperword <dbl>, n_pol_hedges <int>, n_pol_positiveemotion <int>,
-#> #   n_pol_negativeemotion <int>, n_pol_impersonalpronoun <dbl>,
-#> #   n_pol_swearing <dbl>, n_pol_negation <dbl>, n_pol_fillerpause <dbl>,
-#> #   n_pol_informaltitle <dbl>, n_pol_formaltitle <dbl>,
-#> #   n_pol_subjunctive <dbl>, n_pol_indicative <dbl>, n_pol_forme <dbl>,
-#> #   n_pol_foryou <dbl>, n_pol_reasoning <dbl>, n_pol_reassurance <dbl>,
-#> #   n_pol_askagency <dbl>, n_pol_giveagency <dbl>, n_pol_hello <int>,
-#> #   n_pol_groupidentity <int>, n_pol_questions <dbl>,
-#> #   n_pol_gratitude <int>, n_pol_apology <int>, n_pol_actually <dbl>,
-#> #   n_pol_please <dbl>, n_pol_firstperson <int>, n_pol_secondperson <int>
+#> # A tibble: 3 x 28
+#>      id n_urls n_hashtags n_mentions sent_afinn sent_bing n_chars n_commas n_digits n_exclaims n_extraspaces
+#>   <int>  <int>      <int>      <int>      <int>     <int>   <int>    <int>    <int>      <int>         <int>
+#> 1     1      1          1          1         -2         0      21        0        0          1             3
+#> 2     2      0          0          0          0         0       3        0        0          0             0
+#> 3     3      0          0          0          0         0      38        0        0          2             4
+#> # ... with 17 more variables: n_lowers <int>, n_lowersp <dbl>, n_periods <int>, n_words <int>, n_caps <int>,
+#> #   n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>, polite <dbl>,
+#> #   n_first_person <int>, n_first_personp <int>, n_second_person <int>, n_second_personp <int>,
+#> #   n_third_person <int>, n_tobe <int>, n_prepositions <int>
 ```
 
 ### Input: `data.frame`
@@ -73,33 +63,23 @@ rt <- rtweet::search_tweets("rstats", n = 100, verbose = FALSE)
 
 ## get text features
 textfeatures(rt)
-#> # A tibble: 100 x 47
-#>    user_id  n_urls n_hashtags n_mentions sent_afinn sent_bing sent_syuzhet
-#>    <chr>     <int>      <int>      <int>      <int>     <int>        <dbl>
-#>  1 8697941…      1          2          1          0         1          0.8
-#>  2 1011817…      1          1          0          0         1          0.8
-#>  3 1011817…      1          1          0          0         0          0.8
-#>  4 1011817…      1          1          0          0         1          0.8
-#>  5 1011817…      1          1          0          0         0          0.8
-#>  6 1011817…      1          1          0          0         1          0.8
-#>  7 1011817…      1          1          0          0         0          0.8
-#>  8 1011817…      1          1          0          0         1          0.8
-#>  9 1011817…      1          1          0          0         0          0.8
-#> 10 1011817…      1          1          0          0         1          0.8
-#> # ... with 90 more rows, and 40 more variables: n_chars <int>,
-#> #   n_commas <int>, n_digits <int>, n_exclaims <int>, n_extraspaces <int>,
-#> #   n_lowers <int>, n_lowersp <dbl>, n_periods <int>, n_words <int>,
-#> #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
-#> #   n_charsperword <dbl>, n_pol_hedges <int>, n_pol_positiveemotion <int>,
-#> #   n_pol_negativeemotion <int>, n_pol_impersonalpronoun <dbl>,
-#> #   n_pol_swearing <dbl>, n_pol_negation <dbl>, n_pol_fillerpause <dbl>,
-#> #   n_pol_informaltitle <dbl>, n_pol_formaltitle <dbl>,
-#> #   n_pol_subjunctive <dbl>, n_pol_indicative <dbl>, n_pol_forme <dbl>,
-#> #   n_pol_foryou <dbl>, n_pol_reasoning <dbl>, n_pol_reassurance <dbl>,
-#> #   n_pol_askagency <dbl>, n_pol_giveagency <dbl>, n_pol_hello <int>,
-#> #   n_pol_groupidentity <int>, n_pol_questions <dbl>,
-#> #   n_pol_gratitude <int>, n_pol_apology <int>, n_pol_actually <dbl>,
-#> #   n_pol_please <dbl>, n_pol_firstperson <int>, n_pol_secondperson <int>
+#> # A tibble: 100 x 28
+#>    id    n_urls n_hashtags n_mentions sent_afinn sent_bing n_chars n_commas n_digits n_exclaims n_extraspaces
+#>    <chr>  <int>      <int>      <int>      <int>     <int>   <int>    <int>    <int>      <int>         <int>
+#>  1 1356…      2          6          0          0         0      58        0        0          0             4
+#>  2 1487…      1          3          1          4         3     135        0        0          0             5
+#>  3 2746…      0          1          0          0         0     195        0        0          0             0
+#>  4 3996…      1          2          9          2         0      17        0        0          1             8
+#>  5 2953…      2          1          0          0         1      61        1        0          0             3
+#>  6 7545…      1          2          0          0         0     127        1        0          0             3
+#>  7 7545…      2          4          0          0         0     100        0        1          1             7
+#>  8 2133…      1          4          2          4         2      78        0        0          2             4
+#>  9 1605…      1          4          2          4         2      78        0        0          2             4
+#> 10 1955…      2          1          1          1         2     168        1        0          0             3
+#> # ... with 90 more rows, and 17 more variables: n_lowers <int>, n_lowersp <dbl>, n_periods <int>,
+#> #   n_words <int>, n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>,
+#> #   polite <dbl>, n_first_person <int>, n_first_personp <int>, n_second_person <int>, n_second_personp <int>,
+#> #   n_third_person <int>, n_tobe <int>, n_prepositions <int>
 ```
 
 ### Input: `grouped_df`
@@ -109,22 +89,29 @@ textfeatures(rt)
 gdf <- rtweet::get_timelines(
   c("cnn", "nytimes", "foxnews", "latimes"), n = 1000)
 
-## group by screen_name and return text features
-f <- textfeatures(dplyr::group_by(gdf, screen_name))
+## get text features for all observations
+f <- textfeatures(gdf)
 
-## load ggplot
+## override id with screen names
+f$id <- gdf$screen_name
+
+## load the tidyverse
 suppressPackageStartupMessages(library(tidyverse))
 
 ## convert to long (tidy) form and plot
 p <- f %>%
   scale_count() %>%
   scale_standard() %>%
+  group_by(id) %>%
   summarise_if(is.numeric, mean) %>%
-  gather(var, val, -screen_name) %>%
-  ggplot(aes(x = var, y = val, fill = screen_name)) + 
-  geom_col(width = .65) + 
+  gather(var, val, -id) %>%
+  arrange(-val) %>%
+  mutate(var = factor(var, levels = unique(var))) %>%
+  ggplot(aes(x = var, y = val, fill = id)) + 
+  geom_col(width = .15, fill = "#000000bb") +
+  geom_point(size = 2.75, shape = 21) + 
   theme_bw(base_family = "Roboto Condensed") + 
-  facet_wrap( ~ screen_name, nrow = 1) + 
+  facet_wrap( ~ id, nrow = 1) + 
   coord_flip() + 
   theme(legend.position = "none",
     axis.text = element_text(colour = "black"),
@@ -142,25 +129,28 @@ ggsave("tools/readme/readme.png", p, width = 7, height = 7, units = "in")
 
 ## `textfeatures2()`
 
-For those not patient enough for sentiment/politeness analysis
+For those not patient enough for the more substantive analytical
+methods…
 
 ``` r
+## 100 tweets
+rt <- rtweet::search_tweets("lang:en", n = 100, verbose = FALSE)
+
 ## get non-substantive text features
 textfeatures2(rt)
 #> # A tibble: 100 x 15
-#>    user_id     n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers
-#>    <chr>         <int>    <int>    <int>      <int>         <int>    <int>
-#>  1 8697941962…      24        0        3          0             2       18
-#>  2 1011817655…      41        0        0          0             1       40
-#>  3 1011817655…      45        0        0          0             1       38
-#>  4 1011817655…      25        0        3          0             1       18
-#>  5 1011817655…      44        0        0          0             1       38
-#>  6 1011817655…      24        0        3          0             1       18
-#>  7 1011817655…      45        0        0          0             1       38
-#>  8 1011817655…      25        0        3          0             1       18
-#>  9 1011817655…      93        1        0          0             1       79
-#> 10 1011817655…      59        1        3          0             1       46
-#> # ... with 90 more rows, and 8 more variables: n_lowersp <dbl>,
-#> #   n_periods <int>, n_words <int>, n_caps <int>, n_nonasciis <int>,
-#> #   n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>
+#>    id          n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers n_lowersp n_periods n_words n_caps
+#>    <chr>         <int>    <int>    <int>      <int>         <int>    <int>     <dbl>     <int>   <int>  <int>
+#>  1 1464697975       22        0        2          0             0       20     0.913         0       5      0
+#>  2 8869951695…     154        0        0          0             1      145     0.942         0      33      0
+#>  3 541624081        62        0        0          0             0       49     0.794         5      15      4
+#>  4 7632860884…      23        0        0          0             1       16     0.708         0       6      1
+#>  5 9879529890…      27        0        0          0             0       26     0.964         0       8      1
+#>  6 3295642727        6        0        0          0             0        4     0.714         0       2      1
+#>  7 9999261102…      13        0        0          0             0       10     0.786         0       3      0
+#>  8 7569889547…     110        0        0          1             0       99     0.901         1      25      6
+#>  9 20358329         68        1        0          0             0       61     0.899         3      13      3
+#> 10 236330808        68        0        0          0             0       54     0.797         1      11     12
+#> # ... with 90 more rows, and 4 more variables: n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
+#> #   n_charsperword <dbl>
 ```

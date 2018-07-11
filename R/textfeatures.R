@@ -54,61 +54,112 @@ textfeatures.factor <- function(x) {
 }
 
 #' @export
-#' @importFrom dplyr transmute
-#' @importFrom rlang .data
+#' @importFrom tibble as_tibble
 textfeatures.data.frame <- function(x) {
   ## validate input
   stopifnot("text" %in% names(x))
   ## make sure "text" is character
-  if (is.factor(x$text)) {
-    x$text <- as.character(x$text)
-  }
+  text <- as.character(x$text)
   ## validate text class
-  stopifnot(is.character(x$text))
+  stopifnot(is.character(text))
   ## if ID
   if ("id" %in% names(x)) {
     idname <- "id"
-    ids <- x$id
+    id <- x$id
   } else if (any(grepl("[._]id$", names(x)))) {
     idname <- grep("[._]id$", names(x), value = TRUE)[1]
-    ids <- x[[grep("[._]id$", names(x))[1]]]
+    id <- x[[grep("[._]id$", names(x))[1]]]
+  } else if ((is.character(x[[1]]) || is.factor(x[[1]])) && names(x)[1] != "text") {
+    idname <- names(x)[1]
+    id <- as.character(x[[1]])
   } else {
-    ids <- NULL
+    id <- seq_len(nrow(x))
   }
+
   ## extract features for all observations
-  x <- suppressMessages(dplyr::transmute(x,
-    n_urls = n_urls(.data$text),
-    n_hashtags = n_hashtags(.data$text),
-    n_mentions = n_mentions(.data$text),
-    text = text_cleaner(.data$text),
-    sent_afinn = syuzhet::get_sentiment(.data$text, method = "afinn"),
-    sent_bing = syuzhet::get_sentiment(.data$text, method = "bing"),
-    sent_syuzhet = syuzhet::get_sentiment(.data$text, method = "syuzhet"),
-    n_chars = n_charS(.data$text),
-    n_commas = n_commas(.data$text),
-    n_digits = n_digits(.data$text),
-    n_exclaims = n_exclaims(.data$text),
-    n_extraspaces = n_extraspaces(.data$text),
-    n_lowers = n_lowers(.data$text),
-    n_lowersp = (.data$n_lowers + 1L) / (.data$n_chars + 1L),
-    n_periods = n_periods(.data$text),
-    n_words = n_words(.data$text),
-    n_caps = n_caps(.data$text),
-    n_nonasciis = n_nonasciis(.data$text),
-    n_puncts = n_puncts(.data$text),
-    n_capsp = (.data$n_caps + 1L) / (.data$n_chars + 1L),
-    n_charsperword = (.data$n_chars + 1L) / (.data$n_words + 1L)
-  ))
-  if (!is.null(ids)) {
-    x[[idname]] <- ids
-  } else {
-    x$id <- seq_len(nrow(x))
-  }
-  ## move ID to front
-  x <- x[, c(ncol(x), 1:(ncol(x) - 1))]
-  x <- dplyr::bind_cols(x, polite_politeness(x$text))
-  tibble::as_tibble(x[names(x) != "text"], validate = FALSE)
+  n_urls = n_urls(text)
+  n_hashtags = n_hashtags(text)
+  n_mentions = n_mentions(text)
+  text = text_cleaner(text)
+  sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
+  sent_bing = syuzhet::get_sentiment(text, method = "bing")
+  n_chars = n_charS(text)
+  n_commas = n_commas(text)
+  n_digits = n_digits(text)
+  n_exclaims = n_exclaims(text)
+  n_extraspaces = n_extraspaces(text)
+  n_lowers = n_lowers(text)
+  n_lowersp = (n_lowers + 1L) / (n_chars + 1L)
+  n_periods = n_periods(text)
+  n_words = n_words(text)
+  n_caps = n_caps(text)
+  n_nonasciis = n_nonasciis(text)
+  n_puncts = n_puncts(text)
+  n_capsp = (n_caps + 1L) / (n_chars + 1L)
+  n_charsperword = (n_chars + 1L) / (n_words + 1L)
+  text <- wtokens(text)
+  polite <- politeness(text)
+  n_first_person <- first_person(text)
+  n_first_personp <- first_personp(text)
+  n_second_person <- second_person(text)
+  n_second_personp <- second_personp(text)
+  n_third_person <- third_person(text)
+  n_tobe <- to_be(text)
+  n_prepositions <- prepositions(text)
+
+  x <- list(id = id, n_urls = n_urls,
+    n_hashtags = n_hashtags,
+    n_mentions = n_mentions,
+    sent_afinn = sent_afinn,
+    sent_bing = sent_bing,
+    n_chars = n_chars,
+    n_commas = n_commas,
+    n_digits = n_digits,
+    n_exclaims = n_exclaims,
+    n_extraspaces = n_extraspaces,
+    n_lowers = n_lowers,
+    n_lowersp = n_lowersp,
+    n_periods = n_periods,
+    n_words = n_words,
+    n_caps = n_caps,
+    n_nonasciis = n_nonasciis,
+    n_puncts = n_puncts,
+    n_capsp = n_capsp,
+    n_charsperword = n_charsperword,
+    polite = polite,
+    n_first_person = n_first_person,
+    n_first_personp = n_first_personp,
+    n_second_person = n_second_person,
+    n_second_personp = n_second_personp,
+    n_third_person = n_third_person,
+    n_tobe = n_tobe,
+    n_prepositions = n_prepositions)
+  tibble::as_tibble(x, validate = FALSE)
 }
+
+#' @export
+#' @importFrom purrr map_lgl map
+textfeatures.list <- function(x) {
+  ## if named list with "text" element
+  if (!is.null(names(x)) && "text" %in% names(x)) {
+    x <- x$text
+    return(textfeatures(x))
+    ## if all elements are character vectors, return list of DFs
+  } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
+    ## (list in, list out)
+    return(map(x, textfeatures))
+  }
+  ## if all elements are recursive objects containing "text" variable
+  if (all(map_lgl(x, is.recursive)) &&
+      all(map_lgl(x, ~ "text" %in% names(.x)))) {
+    x <- map(x, ~ .x$text)
+    return(map(x, textfeatures))
+  }
+  stop(paste0("Input is a list without a character vector named \"text\". ",
+    "Are you sure the input shouldn't be a character vector or a data frame",
+    "with a \"text\" variable?"), call. = FALSE)
+}
+
 
 #' @export
 #' @importFrom purrr map_lgl map

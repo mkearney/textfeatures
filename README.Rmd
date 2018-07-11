@@ -5,6 +5,7 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 library(textfeatures)
+options(width = 110)
 ```
 
 # 👷
@@ -66,22 +67,29 @@ textfeatures(rt)
 gdf <- rtweet::get_timelines(
   c("cnn", "nytimes", "foxnews", "latimes"), n = 1000)
 
-## group by screen_name and return text features
-f <- textfeatures(dplyr::group_by(gdf, screen_name))
+## get text features for all observations
+f <- textfeatures(gdf)
 
-## load ggplot
+## override id with screen names
+f$id <- gdf$screen_name
+
+## load the tidyverse
 suppressPackageStartupMessages(library(tidyverse))
 
 ## convert to long (tidy) form and plot
 p <- f %>%
   scale_count() %>%
   scale_standard() %>%
+  group_by(id) %>%
   summarise_if(is.numeric, mean) %>%
-  gather(var, val, -screen_name) %>%
-  ggplot(aes(x = var, y = val, fill = screen_name)) + 
-  geom_col(width = .65) + 
+  gather(var, val, -id) %>%
+  arrange(-val) %>%
+  mutate(var = factor(var, levels = unique(var))) %>%
+  ggplot(aes(x = var, y = val, fill = id)) + 
+  geom_col(width = .15, fill = "#000000bb") +
+  geom_point(size = 2.75, shape = 21) + 
   theme_bw(base_family = "Roboto Condensed") + 
-  facet_wrap( ~ screen_name, nrow = 1) + 
+  facet_wrap( ~ id, nrow = 1) + 
   coord_flip() + 
   theme(legend.position = "none",
     axis.text = element_text(colour = "black"),
@@ -101,9 +109,12 @@ ggsave("tools/readme/readme.png", p, width = 7, height = 7, units = "in")
 
 ## `textfeatures2()`
 
-For those not patient enough for sentiment/politeness analysis
+For those not patient enough for the more substantive analytical methods...
 
 ```{r}
+## 100 tweets
+rt <- rtweet::search_tweets("lang:en", n = 100, verbose = FALSE)
+
 ## get non-substantive text features
 textfeatures2(rt)
 ```
