@@ -65,10 +65,10 @@ textfeatures.data.frame <- function(x) {
   ## if ID
   if ("id" %in% names(x)) {
     idname <- "id"
-    id <- x$id
-  } else if (any(grepl("[._]id$", names(x)))) {
-    idname <- grep("[._]id$", names(x), value = TRUE)[1]
-    id <- x[[grep("[._]id$", names(x))[1]]]
+    id <- .subset2(x, "id")
+  } else if (any(grepl("[._]?id$", names(x)))) {
+    idname <- grep("[._]?id$", names(x), value = TRUE)[1]
+    id <- .subset2(x, grep("[._]?id$", names(x))[1])
   } else if ((is.character(x[[1]]) || is.factor(x[[1]])) && names(x)[1] != "text") {
     idname <- names(x)[1]
     id <- as.character(x[[1]])

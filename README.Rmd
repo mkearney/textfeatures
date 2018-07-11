@@ -84,7 +84,8 @@ p <- f %>%
   summarise_if(is.numeric, mean) %>%
   gather(var, val, -id) %>%
   arrange(-val) %>%
-  mutate(var = factor(var, levels = unique(var))) %>%
+  mutate(var = factor(var, levels = unique(var)), 
+    id = paste0("@", id)) %>%
   ggplot(aes(x = var, y = val, fill = id)) + 
   geom_col(width = .15, fill = "#000000bb") +
   geom_point(size = 2.75, shape = 21) + 
@@ -94,16 +95,20 @@ p <- f %>%
   theme(legend.position = "none",
     axis.text = element_text(colour = "black"),
     axis.text.x = element_text(size = rel(.7)),
-    plot.title = element_text(face = "bold")) + 
+    plot.title = element_text(face = "bold", size = rel(1.6)),
+    panel.grid.major = element_line(colour = "#333333", size = rel(.05)),
+    panel.grid.minor = element_line(colour = "#333333", size = rel(.025))) + 
   labs(y = NULL, x = NULL,
     title = "{textfeatures}: Extract Features from Text",
     subtitle = "Features extracted from text of the most recent 1,000 tweets posted by each news media account")
 
 ## save plot
-ggsave("tools/readme/readme.png", p, width = 7, height = 7, units = "in")
+ggsave("tools/readme/readme.png", p, width = 8, height = 5, units = "in")
 ```
 
-![](tools/readme/readme.png)
+
+<p style='align:center'><img src='tools/readme/readme.png' max-width="600px" /></p>
+
 
 
 
