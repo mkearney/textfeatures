@@ -13,6 +13,7 @@ NULL
 
 
 char_to_b64 <- function(x) {
+  char_table <- c(LETTERS, letters, 0:9, "+", "/")
   vapply(x, function(x) {
     x <- as.numeric(charToRaw(x))
     l <- ceiling(length(x) / 3)
@@ -35,6 +36,7 @@ char_to_b64 <- function(x) {
 
 
 b64_to_char <- function(s) {
+  char_table <- c(LETTERS, letters, 0:9, "+", "/")
   s <- strsplit(s, "")
   vapply(s, function(x) {
     l <- length(x) / 4
