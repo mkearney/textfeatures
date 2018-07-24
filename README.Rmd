@@ -54,8 +54,8 @@ textfeatures(x)
 Or input a data frame with a column named `text`.
 
 ```{r df}
-## data frame with up to one hundred tweets
-rt <- rtweet::search_tweets("rstats", n = 100, verbose = FALSE)
+## data frame with rstats tweets
+rt <- rtweet::search_tweets("rstats", n = 2000, verbose = FALSE)
 
 ## get text features
 textfeatures(rt)
