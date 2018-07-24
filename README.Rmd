@@ -10,7 +10,7 @@ options(width = 110)
 
 # 👷
 ♂️ textfeatures 👷
-♀️ <img src="man/figures/logo.png" width="200px" align="right" /> 
+♀️ <img src="man/figures/logo.png" width="160px" align="right" /> 
 
 [![Build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures)
 [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)
