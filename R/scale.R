@@ -76,8 +76,8 @@ scale_standard <- function(x) {
 #' @rdname scale_count
 #' @export
 scale_sqrt <- function(x) {
-  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x)) &
-    names(x) != "y"
+  yes <- purrr::map_lgl(x, ~ is.numeric(.x) & min(.x, na.rm = TRUE) >= 0) &
+    !grepl("[._]?id$", names(x)) & names(x) != "y"
   x[yes] <- purrr::map(x[yes], sqrt)
   x
 }
