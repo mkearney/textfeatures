@@ -8,16 +8,14 @@ library(textfeatures)
 options(width = 100)
 ```
 
-# 👷
-♂️ textfeatures 👷
-♀️ <img src="man/figures/logo.png" width="160px" align="right" /> 
+# 👷 textfeatures 👷<img src="man/figures/logo.png" width="160px" align="right" /> 
 
 [![Build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures)
 [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
-> A simple package for extracting useful features from character objects.
+> Easily extract useful features from character objects.
 
 ## Install
 
@@ -37,20 +35,22 @@ devtools::install_github("mkearney/textfeatures")
 
 ## Usage
 
-### Input: `character`
+### `textfeatures()`
+
+Input a character vector.
 
 ```{r chr}
 ## vector of some text
 x <- c(
   "this is A!\t sEntence https://github.com about #rstats @github",
-  "doh", "THe following list:\n- one\n- two\n- three\nOkay!?!"
+  "and another sentence here", "THe following list:\n- one\n- two\n- three\nOkay!?!"
 )
 
 ## get text features
 textfeatures(x)
 ```
 
-### Input: `data.frame`
+Or input a data frame with a column named `text`.
 
 ```{r df}
 ## data frame with up to one hundred tweets
@@ -60,37 +60,40 @@ rt <- rtweet::search_tweets("rstats", n = 100, verbose = FALSE)
 textfeatures(rt)
 ```
 
-### Input: `grouped_df`
+Compare across multiple authors.
 
-```{r gdf, eval=FALSE}
+```{r news, eval = FALSE}
 ## data frame tweets from multiple news media accounts
-gdf <- rtweet::get_timelines(
+news <- rtweet::get_timelines(
   c("cnn", "nytimes", "foxnews", "latimes", "washingtonpost"), n = 2000)
 
 ## get text features for all observations
-tf <- textfeatures(gdf)
+news_features <- textfeatures(news)
+```
 
+
+```{r news_features, echo = FALSE, eval = FALSE}
 ## override id with screen names
-tf$id <- gdf$screen_name
+news_features$user_id <- news$screen_name
 
 ## load the tidyverse
 suppressPackageStartupMessages(library(tidyverse))
 
 ## convert to long (tidy) form and plot
-p <- tf[!grepl("^w2", names(tf))] %>%
+p <- news_features[1:45] %>%
   scale_count() %>%
   scale_standard() %>%
-  group_by(id) %>%
+  group_by(user_id) %>%
   summarise_if(is.numeric, mean) %>%
-  gather(var, val, -id) %>%
+  gather(var, val, -user_id) %>%
   arrange(-val) %>%
   mutate(var = factor(var, levels = unique(var)), 
-    id = paste0("@", id)) %>%
-  ggplot(aes(x = var, y = val, fill = id)) + 
+    user_id = paste0("@", user_id)) %>%
+  ggplot(aes(x = var, y = val, fill = user_id)) + 
   geom_col(width = .15, fill = "#000000bb") +
   geom_point(size = 2.75, shape = 21) + 
   theme_bw(base_family = "Roboto Condensed") + 
-  facet_wrap(~ id, nrow = 1) + 
+  facet_wrap(~ user_id, nrow = 1) + 
   coord_flip() + 
   theme(legend.position = "none",
     axis.text = element_text(colour = "black"),
@@ -100,26 +103,26 @@ p <- tf[!grepl("^w2", names(tf))] %>%
     panel.grid.minor = element_line(colour = "#333333", size = rel(.025))) + 
   labs(y = NULL, x = NULL,
     title = "{textfeatures}: Extract Features from Text",
-    subtitle = "Features extracted from text of the most recent 1,000 tweets posted by each news media account")
+    subtitle = "Features extracted from text of the most recent 2,000 tweets posted by each news media account")
 
 ## save plot
-ggsave("tools/readme/readme.png", p, width = 8, height = 5, units = "in")
+ggsave("tools/readme/readme.png", p, width = 8, height = 6, units = "in")
 ```
-
 
 <p style='align:center'><img src='tools/readme/readme.png' max-width="600px" /></p>
 
 
 
 
-## `textfeatures2()`
+## Fast version
 
-For those not patient enough for the more substantive analytical methods...
+If you're looking for something faster try setting `sentiment` and `word2vec` 
+to `FALSE`.
 
-```{r}
+```{r fast}
 ## 100 tweets
 rt <- rtweet::search_tweets("lang:en", n = 100, verbose = FALSE)
 
 ## get non-substantive text features
-textfeatures2(rt)
+textfeatures(rt, sentiment = FALSE, word2vec = FALSE)
 ```
