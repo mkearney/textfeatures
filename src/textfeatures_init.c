@@ -6,10 +6,10 @@
 */
 
 /* .C calls */
-extern void CWrapper_word2vec(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void cwrapper_word2vec(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 
 static const R_CMethodDef CEntries[] = {
-    {"CWrapper_word2vec", (DL_FUNC) &CWrapper_word2vec, 11},
+    {"cwrapper_word2vec", (DL_FUNC) &cwrapper_word2vec, 11},
     {NULL, NULL, 0}
 };
 
