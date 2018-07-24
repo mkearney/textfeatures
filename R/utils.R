@@ -1,16 +1,3 @@
-#' Pipe operator
-#'
-#' See \code{magrittr::\link[magrittr]{\%>\%}} for details.
-#'
-#' @name %>%
-#' @rdname pipe
-#' @keywords internal
-#' @export
-#' @importFrom magrittr %>%
-#' @usage lhs \%>\% rhs
-NULL
-
-
 
 text_cleaner <- function(x) {
   stopifnot(is.character(x))
@@ -104,4 +91,11 @@ b64_to_char <- function(s) {
     }
     rawToChar(as.raw(y))
   }, FUN.VALUE = character(1), USE.NAMES = FALSE)
+}
+
+
+prep_wordtokens <- function(x) {
+  x <- iconv(x, to = "ASCII", sub = " ")
+  x <- trim_ws(x)
+  tokenizers::tokenize_words(x, strip_numeric = TRUE)
 }
