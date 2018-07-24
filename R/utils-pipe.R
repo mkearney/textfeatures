@@ -12,6 +12,54 @@ NULL
 
 
 
+text_cleaner <- function(x) {
+  stopifnot(is.character(x))
+
+  ## remove URLs, mentions, and hashtags
+  x <- gsub("https?:[[:graph:]]+|@\\S+|#\\S+", "", x)
+
+  ## convert non-ascii into ascii exclamation marks
+  x <- gsub("\u00A1", "\u0021", x, fixed = TRUE)
+  x <- gsub("\u01C3", "\u0021", x, fixed = TRUE)
+  x <- gsub("\u202C", "\u0021", x, fixed = TRUE)
+  x <- gsub("\u203D", "\u0021", x, fixed = TRUE)
+  x <- gsub("\u2762", "\u0021", x, fixed = TRUE)
+
+  ## convert non-ascii into ascii apostrophes
+  x <- gsub("\u2018", "\u0027", x, fixed = TRUE)
+  x <- gsub("\uA78C", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u05F3", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u0301", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u02C8", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u2018", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u02Bc", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u02B9", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u05F3", "\u0027", x, fixed = TRUE)
+  x <- gsub("\u2019", "\u0027", x, fixed = TRUE)
+
+  ## convert non-ascii into ascii commas
+  x <- gsub("\u2795", "\u002B", x, fixed = TRUE)
+
+  ## convert non-ascii into ascii hypthens
+  x <- gsub("\u2010", "\u002D", x, fixed = TRUE)
+  x <- gsub("\u2011", "\u002D", x, fixed = TRUE)
+  x <- gsub("\u2012", "\u002D", x, fixed = TRUE)
+  x <- gsub("\u2013", "\u002D", x, fixed = TRUE)
+  x <- gsub("\u2043", "\u002D", x, fixed = TRUE)
+  x <- gsub("\u2212", "\u002D", x, fixed = TRUE)
+  x <- gsub("\u10191", "\u002D", x, fixed = TRUE)
+
+  ## convert non-ascii into ascii periods
+  x <- gsub("\u06D4", "\u002E", x, fixed = TRUE)
+  x <- gsub("\u2E3C", "\u002E", x, fixed = TRUE)
+  x <- gsub("\u3002", "\u002E", x, fixed = TRUE)
+
+  ## convert non-ascii into ascii elipses
+  gsub("\u2026", "\u002E\u002E\u002E", x, fixed = TRUE)
+}
+
+
+
 char_to_b64 <- function(x) {
   char_table <- c(LETTERS, letters, 0:9, "+", "/")
   vapply(x, function(x) {

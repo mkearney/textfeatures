@@ -4,14 +4,14 @@
 \alias{word2vec}
 \title{word2vec}
 \usage{
-word2vec(x, n_vectors = 50, threads = 1)
+word2vec(x, n_vectors = 50, threads = 3)
 }
 \arguments{
 \item{x}{Input text}
 
 \item{n_vectors}{Number of vectors (dimensions) defaults to 100}
 
-\item{threads}{Number of threads to use, defaults to 1.}
+\item{threads}{Number of threads to use, defaults to 3.}
 }
 \description{
 Convert text into wordvec dimensions

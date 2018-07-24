@@ -11,7 +11,7 @@ word2vec_obs(x, n_vectors = 100, threads = 1)
 
 \item{n_vectors}{Number of vectors (dimensions) defaults to 100}
 
-\item{threads}{Number of threads to use, defaults to 1.}
+\item{threads}{Number of threads to use, defaults to 3.}
 }
 \value{
 A tibble of observations with n_vectors columns.

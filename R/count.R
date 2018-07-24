@@ -138,14 +138,6 @@ n_puncts <- function(x) {
   x
 }
 
-wtokens <- function(x) {
-  x <- tolower(x)
-  x <- strsplit(x, "\\s+")
-  x <- purrr::map(x, ~ gsub("^[[:punct:]]+|[[:punct:]]|$", "", .x))
-  x <- purrr::map(x, ~ gsub("[[:punct:]].*", "", .x))
-  purrr::map(x, ~ return(.x[.x != ""]))
-}
-
 politeness <- function(x) {
   purrr::map_dbl(x, ~ sum(politeness_dict$p[politeness_dict$term %in% .x],
     na.rm = TRUE))
