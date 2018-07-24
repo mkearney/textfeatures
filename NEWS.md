@@ -3,6 +3,7 @@
 * `textfeatures()` now returns word2vec dimension estimates 
 * New `sentiment` and `word2vec_dims` arguments allow users to customize (and
 speed up) feature extraction process
+* Added `normalize` argument, which by default preprocesses feature values
 * Various bug fixes and improvements
 * `scale_*` functions more robust
 
