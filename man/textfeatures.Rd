@@ -8,19 +8,18 @@ textfeatures(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1,
   normalize = TRUE)
 }
 \arguments{
-\item{x}{Input data. Should be character vector, data frame, or grouped data
-frame (grouped_df) with character variable of interest named "text". If
-grouped_df is provided, then features will be averaged across all
-observations for each group.}
+\item{x}{Input data. Should be character vector or data frame with character
+variable of interest named "text". If a data frame then the first "id|*_id"
+variable, if found, is assumed to be an ID variable.}
 
 \item{sentiment}{Logical, indicating whether to return sentiment analysis
-features–this includes \code{sent_afinn} and \code{sent_bing}. Defaults to
+features, the variables \code{sent_afinn} and \code{sent_bing}. Defaults to
 FALSE. Setting this to true will speed things up a bit.}
 
 \item{word2vec_dims}{Integer indicating the desired number of word2vec dimension
-estimates. By default (\code{word2vec_dims = NULL, threads = 1}), this function
-will pick a reasonable number of dimensions (ranging from 3 to 200) based on
-size of input. To disable word2vec estimates, set this to 0 or FALSE.}
+estimates. When NULL, the default, this function will pick a reasonable
+number of dimensions (ranging from 2 to 200) based on size of input. To
+disable word2vec estimates, set this to 0 or FALSE.}
 
 \item{threads}{Integer, specifying the number of threads to use when generating
 word2vec estimates. Defaults to 1. Ignored if \code{word2vec_dims = 0}.}
@@ -59,7 +58,8 @@ textfeatures(trump_tweets)
 df <- data.frame(
   id = c(1, 2, 3),
   text = c("this is A!\\t sEntence https://github.com about #rstats @github",
-    "doh", "The following list:\\n- one\\n- two\\n- three\\nOkay!?!"),
+    "and another sentence here",
+    "The following list:\\n- one\\n- two\\n- three\\nOkay!?!"),
   stringsAsFactors = FALSE
 )
 
