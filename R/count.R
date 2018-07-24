@@ -138,42 +138,50 @@ n_puncts <- function(x) {
   x
 }
 
+#' @importFrom purrr map_dbl
 politeness <- function(x) {
   purrr::map_dbl(x, ~ sum(politeness_dict$p[politeness_dict$term %in% .x],
     na.rm = TRUE))
 }
 
+#' @importFrom purrr map_int
 first_person <- function(x) {
   fp <- c("i", "me", "myself", "my", "mine")
   purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
 }
 
+#' @importFrom purrr map_int
 first_personp <- function(x) {
   fp <- c("we", "us", "our", "ours")
   purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
 }
 
+#' @importFrom purrr map_int
 second_person <- function(x) {
   fp <- c("you", "yours", "your", "yourself")
   purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
 }
 
+#' @importFrom purrr map_int
 second_personp <- function(x) {
   fp <- c("he", "she", "it", "its", "his", "hers")
   purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
 }
 
+#' @importFrom purrr map_int
 third_person <- function(x) {
   fp <- c("they", "them", "theirs", "their")
   purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
 }
 
+#' @importFrom purrr map_int
 to_be <- function(x) {
   fp <- c("am", "is", "are", "was", "were", "being",
     "been", "be", "were", "be")
   purrr::map_int(x, ~ sum(fp %in% .x, na.rm = TRUE))
 }
 
+#' @importFrom purrr map_int
 prepositions <- function(x) {
   fp <- c("about", "below", "excepting", "off", "toward", "above", "beneath", "for",
     "on", "under", "across", "from", "onto", "underneath", "after", "between",
