@@ -23,7 +23,7 @@ test_that("main textfeatures function", {
   expect_true(is.data.frame(o_fct))
 
   ## get text features of character vector
-  o_df <- textfeatures(df)
+  o_df <- textfeatures(df, sentiment = FALSE, word2vec = FALSE)
   expect_true(is.data.frame(o_df))
 
   ## get text features of list of DFs with "text" vars
@@ -35,7 +35,6 @@ test_that("main textfeatures function", {
 
   ## shouldn't work on numeric vector
   expect_error(textfeatures(rnorm(100)))
-
 
   ## factor
   text_fct <- factor(txt)
