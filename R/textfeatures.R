@@ -16,6 +16,8 @@
 #'   size of input. To disable word2vec estimates, set this to 0 or FALSE.
 #' @param threads Integer, specifying the number of threads to use when generating
 #'   word2vec estimates. Defaults to 1. Ignored if \code{word2vec_dims = 0}.
+#' @param normalize Logical indicating whether to normalize (mean center,
+#'   sd = 1) features. Defaults to TRUE.
 #' @return A tibble data frame with extracted features as columns.
 #' @examples
 #'
@@ -50,26 +52,31 @@
 #' textfeatures(df)
 #'
 #' @export
-textfeatures <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = threads) {
+textfeatures <- function(x, sentiment = TRUE, word2vec_dims = NULL,
+                         threads = 1, normalize = TRUE) {
   UseMethod("textfeatures")
 }
 
 #' @export
-textfeatures.character <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
+textfeatures.character <- function(x, sentiment = TRUE, word2vec_dims = NULL,
+                                   threads = 1, normalize = TRUE) {
   textfeatures(data.frame(text = x, row.names = NULL, stringsAsFactors = FALSE),
-    sentiment = sentiment, word2vec_dims = word2vec_dims, threads = threads)
+    sentiment = sentiment, word2vec_dims = word2vec_dims, threads = threads,
+    normalize = normalize)
 }
 
 #' @export
-textfeatures.factor <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
+textfeatures.factor <- function(x, sentiment = TRUE, word2vec_dims = NULL,
+                                threads = 1, normalize = TRUE) {
   textfeatures(as.character(x), sentiment = sentiment,
-    word2vec_dims = word2vec_dims, threads = threads)
+    word2vec_dims = word2vec_dims, threads = threads, normalize = normalize)
 }
 
 #' @export
 #' @importFrom tibble as_tibble
 #' @importFrom tokenizers tokenize_words
-textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
+textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL,
+                                    threads = 1, normalize = TRUE) {
   ## initialize output data
   o <- list()
 
@@ -138,10 +145,8 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL, t
       n_vectors <- 50
     } else if (nrow(x) > 60) {
       n_vectors <- 20
-    } else if (nrow(x) > 10) {
-      n_vectors <- 6
     } else {
-      n_vectors <- 3
+      n_vectors <- ceiling(nrow(x) / 2)
     }
   }
 
@@ -156,7 +161,7 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL, t
   }
 
   ## if applicable, get w2v estimates
-  if (identical(word2vec_dims, 0)) {
+  if (identical(n_vectors, 0)) {
     w <- NULL
   } else {
     w <- tryCatch(word2vec_obs(text, n_vectors, threads),
@@ -180,7 +185,15 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL, t
   names(o)[names(o) == "id"] <- idname
 
   ## merge with w2v estimates
-  dplyr::bind_cols(o, w)
+  o <- dplyr::bind_cols(o, w)
+
+  ## normalize
+  if (normalize) {
+    o <- scale_normal(scale_count(o))
+  }
+
+  ## return
+  o
 }
 
 
@@ -188,7 +201,8 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL, t
 
 #' @export
 #' @importFrom purrr map_lgl map
-textfeatures.list <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
+textfeatures.list <- function(x, sentiment = TRUE, word2vec_dims = NULL,
+                              threads = 1, normalize = TRUE) {
   ## if named list with "text" element
   if (!is.null(names(x)) && "text" %in% names(x)) {
     x <- x$text
@@ -198,14 +212,14 @@ textfeatures.list <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads
   } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
     ## (list in, list out)
     return(map(x, textfeatures, sentiment = sentiment,
-      word2vec_dims = word2vec_dims, threads = threads))
+      word2vec_dims = word2vec_dims, threads = threads, normalize = normalize))
   }
   ## if all elements are recursive objects containing "text" variable
   if (all(map_lgl(x, is.recursive)) &&
       all(map_lgl(x, ~ "text" %in% names(.x)))) {
     x <- map(x, ~ .x$text)
     return(map(x, textfeatures, sentiment = sentiment,
-      word2vec_dims = word2vec_dims, threads = threads))
+      word2vec_dims = word2vec_dims, threads = threads, normalize = normalize))
   }
   stop(paste0("Input is a list without a character vector named \"text\". ",
     "Are you sure the input shouldn't be a character vector or a data frame",

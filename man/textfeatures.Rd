@@ -4,7 +4,8 @@
 \alias{textfeatures}
 \title{textfeatures}
 \usage{
-textfeatures(x, sentiment = TRUE, word2vec_dims = NULL, threads = threads)
+textfeatures(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1,
+  normalize = TRUE)
 }
 \arguments{
 \item{x}{Input data. Should be character vector, data frame, or grouped data
@@ -23,6 +24,9 @@ size of input. To disable word2vec estimates, set this to 0 or FALSE.}
 
 \item{threads}{Integer, specifying the number of threads to use when generating
 word2vec estimates. Defaults to 1. Ignored if \code{word2vec_dims = 0}.}
+
+\item{normalize}{Logical indicating whether to normalize (mean center,
+sd = 1) features. Defaults to TRUE.}
 }
 \value{
 A tibble data frame with extracted features as columns.
