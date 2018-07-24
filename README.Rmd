@@ -58,7 +58,7 @@ Or input a data frame with a column named `text`.
 rt <- rtweet::search_tweets("rstats", n = 2000, verbose = FALSE)
 
 ## get text features
-textfeatures(rt)
+textfeatures(rt, threads = 2)
 ```
 
 Compare across multiple authors.
@@ -120,9 +120,6 @@ ggsave("tools/readme/readme.png", p, width = 9, height = 6, units = "in")
 If you're looking for something faster try setting `sentiment = FALSE` and `word2vec = 0`.
 
 ```{r fast}
-## 100 tweets
-rt <- rtweet::search_tweets("lang:en", n = 100, verbose = FALSE)
-
 ## get non-substantive text features
 textfeatures(rt, sentiment = FALSE, word2vec_dims = 0)
 ```

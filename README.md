@@ -41,17 +41,17 @@ x <- c(
 
 ## get text features
 textfeatures(x)
-#> # A tibble: 3 x 31
+#> # A tibble: 3 x 30
 #>   id    n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers
-#>   <chr>  <int>      <int>      <int>   <int>    <int>    <int>      <int>         <int>    <int>
-#> 1 1          1          1          1      21        0        0          1             3       18
-#> 2 2          0          0          0      22        0        0          0             0       22
-#> 3 3          0          0          0      38        0        0          2             4       28
-#> # ... with 21 more variables: n_lowersp <dbl>, n_periods <int>, n_words <int>, n_caps <int>,
-#> #   n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>, sent_afinn <int>,
-#> #   sent_bing <int>, n_polite <dbl>, n_first_person <int>, n_first_personp <int>,
-#> #   n_second_person <int>, n_second_personp <int>, n_third_person <int>, n_tobe <int>,
-#> #   n_prepositions <int>, w1 <dbl>, w2 <dbl>, w3 <dbl>
+#>   <chr>  <dbl>      <dbl>      <dbl>   <dbl>    <dbl>    <dbl>      <dbl>         <dbl>    <dbl>
+#> 1 1      1.15       1.15       1.15   -0.792      NaN      NaN      0.173         0.445   -1.09 
+#> 2 2     -0.577     -0.577     -0.577  -0.332      NaN      NaN     -1.08         -1.15     0.224
+#> 3 3     -0.577     -0.577     -0.577   1.12       NaN      NaN      0.902         0.701    0.869
+#> # ... with 20 more variables: n_lowersp <dbl>, n_periods <dbl>, n_words <dbl>, n_caps <dbl>,
+#> #   n_nonasciis <dbl>, n_puncts <dbl>, n_capsp <dbl>, n_charsperword <dbl>, sent_afinn <dbl>,
+#> #   sent_bing <dbl>, n_polite <dbl>, n_first_person <dbl>, n_first_personp <dbl>,
+#> #   n_second_person <dbl>, n_second_personp <dbl>, n_third_person <dbl>, n_tobe <dbl>,
+#> #   n_prepositions <dbl>, w1 <dbl>, w2 <dbl>
 ```
 
 Or input a data frame with a column named `text`.
@@ -62,24 +62,24 @@ rt <- rtweet::search_tweets("rstats", n = 2000, verbose = FALSE)
 
 ## get text features
 textfeatures(rt)
-#> # A tibble: 1,993 x 128
+#> # A tibble: 1,996 x 128
 #>    user_id n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers
-#>    <chr>    <int>      <int>      <int>   <int>    <int>    <int>      <int>         <int>    <int>
-#>  1 343928…      1          2          0     209        2        3          0             7      169
-#>  2 152907…      1          1          0     113        1        0          0             1       99
-#>  3 978355…      3         10          0      44        0        6          0            10       30
-#>  4 151380…      2          2          2     161        2        0          0             4      148
-#>  5 739773…      1          2          0     117        0        0          0             2      115
-#>  6 739773…      3          3          1     121        0        0          0             5      105
-#>  7 859466…      2         17          1      57        0        0          0            12       49
-#>  8 938010…      1          2          1      75        0        0          0             1       73
-#>  9 938010…      1          2          1      75        0        0          0             1       73
-#> 10 167914…      3          6          0     134        3        1          0             7      112
-#> # ... with 1,983 more rows, and 118 more variables: n_lowersp <dbl>, n_periods <int>,
-#> #   n_words <int>, n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>,
-#> #   n_charsperword <dbl>, sent_afinn <int>, sent_bing <int>, n_polite <dbl>, n_first_person <int>,
-#> #   n_first_personp <int>, n_second_person <int>, n_second_personp <int>, n_third_person <int>,
-#> #   n_tobe <int>, n_prepositions <int>, w1 <dbl>, w2 <dbl>, w3 <dbl>, w4 <dbl>, w5 <dbl>, w6 <dbl>,
+#>    <chr>    <dbl>      <dbl>      <dbl>   <dbl>    <dbl>    <dbl>      <dbl>         <dbl>    <dbl>
+#>  1 335499… -0.495     -1.00       2.46    0.758    1.14    -0.565      1.74         0.223     0.839
+#>  2 270458… -0.495      1.85      -0.636  -1.80    -0.492   -0.565     -0.441        1.69     -1.61 
+#>  3 270458… -0.495      1.59      -0.636  -0.548   -0.492   -0.565     -0.441        1.20     -0.403
+#>  4 270458…  0.721      1.43       2.03   -0.897   -0.492   -0.565     -0.441        1.31     -0.814
+#>  5 270458…  0.721      1.37      -0.636  -0.644   -0.492   -0.565     -0.441        1.08     -0.612
+#>  6 270458…  0.721      1.37       0.696  -0.373   -0.492   -0.565     -0.441        1.08     -0.469
+#>  7 270458…  0.721      1.43      -0.636  -0.292   -0.492    0.571     -0.441        1.08     -0.436
+#>  8 781871… -0.495     -0.563     -0.636   1.11    -0.492    1.24      -0.441       -0.0347    1.10 
+#>  9 812424…  0.721      1.37      -0.636  -0.644   -0.492   -0.565     -0.441        1.08     -0.612
+#> 10 812424…  0.721      1.43      -0.636  -0.192   -0.492   -0.565     -0.441        1.08     -0.193
+#> # ... with 1,986 more rows, and 118 more variables: n_lowersp <dbl>, n_periods <dbl>,
+#> #   n_words <dbl>, n_caps <dbl>, n_nonasciis <dbl>, n_puncts <dbl>, n_capsp <dbl>,
+#> #   n_charsperword <dbl>, sent_afinn <dbl>, sent_bing <dbl>, n_polite <dbl>, n_first_person <dbl>,
+#> #   n_first_personp <dbl>, n_second_person <dbl>, n_second_personp <dbl>, n_third_person <dbl>,
+#> #   n_tobe <dbl>, n_prepositions <dbl>, w1 <dbl>, w2 <dbl>, w3 <dbl>, w4 <dbl>, w5 <dbl>, w6 <dbl>,
 #> #   w7 <dbl>, w8 <dbl>, w9 <dbl>, w10 <dbl>, w11 <dbl>, w12 <dbl>, w13 <dbl>, w14 <dbl>, w15 <dbl>,
 #> #   w16 <dbl>, w17 <dbl>, w18 <dbl>, w19 <dbl>, w20 <dbl>, w21 <dbl>, w22 <dbl>, w23 <dbl>,
 #> #   w24 <dbl>, w25 <dbl>, w26 <dbl>, w27 <dbl>, w28 <dbl>, w29 <dbl>, w30 <dbl>, w31 <dbl>,
@@ -115,26 +115,23 @@ If you’re looking for something faster try setting `sentiment = FALSE`
 and `word2vec = 0`.
 
 ``` r
-## 100 tweets
-rt <- rtweet::search_tweets("lang:en", n = 100, verbose = FALSE)
-
 ## get non-substantive text features
 textfeatures(rt, sentiment = FALSE, word2vec_dims = 0)
-#> # A tibble: 100 x 26
+#> # A tibble: 1,996 x 26
 #>    user_id n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers
-#>    <chr>    <int>      <int>      <int>   <int>    <int>    <int>      <int>         <int>    <int>
-#>  1 394082…      1          0          0      31        0        2          0             0       28
-#>  2 286737…      0          1          0     226        2        2          0             8      205
-#>  3 334067…      1          0          0      20        0        0          0             0       16
-#>  4 100102…      1          0          0      50        0        0          0             0        3
-#>  5 238934…      0          0          0      99        1        0          0             0       87
-#>  6 469428…      0          0          0     224        2        0          0             0      218
-#>  7 414470…      2          0          1      80        0        8          4             2       58
-#>  8 966225…      0          0          0      73        0        0          0             0       67
-#>  9 398891…      0          0          3     206        2        0          0             1      201
-#> 10 831303…      1          0          0      19        0        0          0             0       17
-#> # ... with 90 more rows, and 16 more variables: n_lowersp <dbl>, n_periods <int>, n_words <int>,
-#> #   n_caps <int>, n_nonasciis <int>, n_puncts <int>, n_capsp <dbl>, n_charsperword <dbl>,
-#> #   n_polite <dbl>, n_first_person <int>, n_first_personp <int>, n_second_person <int>,
-#> #   n_second_personp <int>, n_third_person <int>, n_tobe <int>, n_prepositions <int>
+#>    <chr>    <dbl>      <dbl>      <dbl>   <dbl>    <dbl>    <dbl>      <dbl>         <dbl>    <dbl>
+#>  1 335499… -0.495     -1.00       2.46    0.758    1.14    -0.565      1.74         0.223     0.839
+#>  2 270458… -0.495      1.85      -0.636  -1.80    -0.492   -0.565     -0.441        1.69     -1.61 
+#>  3 270458… -0.495      1.59      -0.636  -0.548   -0.492   -0.565     -0.441        1.20     -0.403
+#>  4 270458…  0.721      1.43       2.03   -0.897   -0.492   -0.565     -0.441        1.31     -0.814
+#>  5 270458…  0.721      1.37      -0.636  -0.644   -0.492   -0.565     -0.441        1.08     -0.612
+#>  6 270458…  0.721      1.37       0.696  -0.373   -0.492   -0.565     -0.441        1.08     -0.469
+#>  7 270458…  0.721      1.43      -0.636  -0.292   -0.492    0.571     -0.441        1.08     -0.436
+#>  8 781871… -0.495     -0.563     -0.636   1.11    -0.492    1.24      -0.441       -0.0347    1.10 
+#>  9 812424…  0.721      1.37      -0.636  -0.644   -0.492   -0.565     -0.441        1.08     -0.612
+#> 10 812424…  0.721      1.43      -0.636  -0.192   -0.492   -0.565     -0.441        1.08     -0.193
+#> # ... with 1,986 more rows, and 16 more variables: n_lowersp <dbl>, n_periods <dbl>, n_words <dbl>,
+#> #   n_caps <dbl>, n_nonasciis <dbl>, n_puncts <dbl>, n_capsp <dbl>, n_charsperword <dbl>,
+#> #   n_polite <dbl>, n_first_person <dbl>, n_first_personp <dbl>, n_second_person <dbl>,
+#> #   n_second_personp <dbl>, n_third_person <dbl>, n_tobe <dbl>, n_prepositions <dbl>
 ```
