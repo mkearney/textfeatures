@@ -1,14 +1,6 @@
 
-#' word2vec
-#'
-#' Convert text into wordvec dimensions
-#'
-#' @param x Input text
-#' @param n_vectors Number of vectors (dimensions) defaults to 100
-#' @param threads Number of threads to use, defaults to 3.
 #' @useDynLib textfeatures, .registration = TRUE
-#' @export
-word2vec <- function(x, n_vectors = 50, threads = 3) {
+word2vec <- function(x, n_vectors = 50, threads = 1) {
   tmp_train <- tempfile()
   on.exit(unlink(tmp_train), add = TRUE)
   writeLines(x[nchar(x) > 0], tmp_train)
@@ -38,22 +30,7 @@ word2vec <- function(x, n_vectors = 50, threads = 3) {
   x
 }
 
-prep_word2vec <- function(x) {
-  x <- text_cleaner(x)
-  x <- iconv(x, to = "ASCII", sub = " ")
-  x <- trim_ws(x)
-  tokenizers::tokenize_words(x, strip_numeric = TRUE)
-}
-
-#' word2vec estimates of observed text
-#'
-#' Converts text vector into n word2vec (dimension) estimates
-#'
-#' @inheritParams word2vec
-#' @return A tibble of observations with n_vectors columns.
-#' @export
 word2vec_obs <- function(x, n_vectors = 100, threads = 1) {
-  x <- prep_word2vec(x)
   w2v <- word2vec(vapply(x, paste, collapse = " ",
     FUN.VALUE = character(1), USE.NAMES = FALSE),
     n_vectors = n_vectors, threads = threads)
