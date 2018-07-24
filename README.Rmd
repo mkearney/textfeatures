@@ -5,6 +5,7 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 library(textfeatures)
+library(magrittr)
 options(width = 100)
 ```
 
@@ -67,8 +68,8 @@ Compare across multiple authors.
 news <- rtweet::get_timelines(
   c("cnn", "nytimes", "foxnews", "latimes", "washingtonpost"), n = 2000)
 
-## get text features for all observations
-news_features <- textfeatures(news)
+## get text features (including ests for 20 word dims) for all observations
+news_features <- textfeatures(news, word2vec_dims = 20, threads = 3)
 ```
 
 
@@ -80,7 +81,7 @@ news_features$user_id <- news$screen_name
 suppressPackageStartupMessages(library(tidyverse))
 
 ## convert to long (tidy) form and plot
-p <- news_features[1:45] %>%
+p <- news_features %>%
   scale_count() %>%
   scale_standard() %>%
   group_by(user_id) %>%
@@ -91,8 +92,8 @@ p <- news_features[1:45] %>%
     user_id = paste0("@", user_id)) %>%
   ggplot(aes(x = var, y = val, fill = user_id)) + 
   geom_col(width = .15, fill = "#000000bb") +
-  geom_point(size = 2.75, shape = 21) + 
-  theme_bw(base_family = "Roboto Condensed") + 
+  geom_point(size = 2.5, shape = 21) + 
+  tfse::theme_mwk(light = "#ffffff") + 
   facet_wrap(~ user_id, nrow = 1) + 
   coord_flip() + 
   theme(legend.position = "none",
@@ -106,7 +107,7 @@ p <- news_features[1:45] %>%
     subtitle = "Features extracted from text of the most recent 2,000 tweets posted by each news media account")
 
 ## save plot
-ggsave("tools/readme/readme.png", p, width = 8, height = 6, units = "in")
+ggsave("tools/readme/readme.png", p, width = 9, height = 6, units = "in")
 ```
 
 <p style='align:center'><img src='tools/readme/readme.png' max-width="600px" /></p>
@@ -116,13 +117,12 @@ ggsave("tools/readme/readme.png", p, width = 8, height = 6, units = "in")
 
 ## Fast version
 
-If you're looking for something faster try setting `sentiment` and `word2vec` 
-to `FALSE`.
+If you're looking for something faster try setting `sentiment = FALSE` and `word2vec = 0`.
 
 ```{r fast}
 ## 100 tweets
 rt <- rtweet::search_tweets("lang:en", n = 100, verbose = FALSE)
 
 ## get non-substantive text features
-textfeatures(rt, sentiment = FALSE, word2vec = FALSE)
+textfeatures(rt, sentiment = FALSE, word2vec_dims = 0)
 ```
