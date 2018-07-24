@@ -77,20 +77,20 @@ tf$id <- gdf$screen_name
 suppressPackageStartupMessages(library(tidyverse))
 
 ## convert to long (tidy) form and plot
-p <- tf %[!grepl("^w2", names(tf))]>%
-  scscale_count %>%
+p <- tf[!grepl("^w2", names(tf))] %>%
+  scale_count() %>%
   scale_standard() %>%
-  grgroup_by(id) %>%
-  mmarise_if(is.numeric, memean%>%
+  group_by(id) %>%
+  summarise_if(is.numeric, mean) %>%
   gather(var, val, -id) %>%
-  ararrange(-val) %>%
-  tate(var = factor(var, levels = unique(var)), 
+  arrange(-val) %>%
+  mutate(var = factor(var, levels = unique(var)), 
     id = paste0("@", id)) %>%
   ggplot(aes(x = var, y = val, fill = id)) + 
   geom_col(width = .15, fill = "#000000bb") +
   geom_point(size = 2.75, shape = 21) + 
   theme_bw(base_family = "Roboto Condensed") + 
-  facet_wrap( ~ id, nrow = 1) + 
+  facet_wrap(~ id, nrow = 1) + 
   coord_flip() + 
   theme(legend.position = "none",
     axis.text = element_text(colour = "black"),
