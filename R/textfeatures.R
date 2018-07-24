@@ -7,6 +7,13 @@
 #'   frame (grouped_df) with character variable of interest named "text". If
 #'   grouped_df is provided, then features will be averaged across all
 #'   observations for each group.
+#' @param sentiment Logical, indicating whether to return sentiment analysis
+#'   features–this includes \code{sent_afinn} and \code{sent_bing}. Defaults to
+#'   FALSE. Setting this to true will speed things up a bit.
+#' @param word2vec Logical, indicating whether to return word2vec dimension
+#'   estimates. By default, this function will attempt to generate estimates for
+#'   anywhere from 3 to 300 word embeddings for each observation. Setting this
+#'   to FALSE will speed things up.
 #' @return A tibble data frame with extracted features as columns.
 #' @examples
 #'
@@ -41,21 +48,25 @@
 #' textfeatures(df)
 #'
 #' @export
-textfeatures <- function(x) UseMethod("textfeatures")
-
-#' @export
-textfeatures.character <- function(x) {
-  textfeatures(data.frame(text = x, row.names = NULL, stringsAsFactors = FALSE))
+textfeatures <- function(x, sentiment = TRUE, word2vec = TRUE) {
+  UseMethod("textfeatures")
 }
 
 #' @export
-textfeatures.factor <- function(x) {
-  textfeatures(as.character(x))
+textfeatures.character <- function(x, sentiment = TRUE, word2vec = TRUE) {
+  textfeatures(data.frame(text = x, row.names = NULL, stringsAsFactors = FALSE),
+    sentiment = TRUE, word2vec = TRUE)
+}
+
+#' @export
+textfeatures.factor <- function(x, sentiment = TRUE, word2vec = TRUE) {
+  textfeatures(as.character(x), sentiment = TRUE, word2vec = TRUE)
 }
 
 #' @export
 #' @importFrom tibble as_tibble
-textfeatures.data.frame <- function(x) {
+#' @importFrom tokenizers tokenize_words
+textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec = TRUE) {
   ## initialize output data
   o <- list()
 
@@ -76,6 +87,7 @@ textfeatures.data.frame <- function(x) {
     idname <- names(x)[1]
     o$id <- as.character(x[[1]])
   } else {
+    idname <- "id"
     o$id <- seq_len(nrow(x))
   }
 
@@ -84,8 +96,10 @@ textfeatures.data.frame <- function(x) {
   o$n_hashtags = n_hashtags(text)
   o$n_mentions = n_mentions(text)
   o$text = text_cleaner(text)
-  o$sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
-  o$sent_bing = syuzhet::get_sentiment(text, method = "bing")
+  if (sentiment) {
+    o$sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
+    o$sent_bing = syuzhet::get_sentiment(text, method = "bing")
+  }
   o$n_chars = n_charS(text)
   o$n_commas = n_commas(text)
   o$n_digits = n_digits(text)
@@ -100,20 +114,24 @@ textfeatures.data.frame <- function(x) {
   o$n_puncts = n_puncts(text)
   o$n_capsp = (o$n_caps + 1L) / (o$n_chars + 1L)
   o$n_charsperword = (o$n_chars + 1L) / (o$n_words + 1L)
-  if (nrow(x) > 1000) {
-    n_vectors <- 200
-  } else if (nrow(x) > 300) {
-    n_vectors <- 100
-  } else if (nrow(x) > 60) {
-    n_vectors <- 50
-  } else if (nrow(x) > 10) {
-    n_vectors <- 10
+  if (word2vec) {
+    if (nrow(x) > 1000) {
+      n_vectors <- 200
+    } else if (nrow(x) > 300) {
+      n_vectors <- 100
+    } else if (nrow(x) > 60) {
+      n_vectors <- 50
+    } else if (nrow(x) > 10) {
+      n_vectors <- 10
+    } else {
+      n_vectors <- 3
+    }
+    w <- tryCatch(word2vec_obs(text, n_vectors), error = function(e) return(NULL))
   } else {
-    n_vectors <- 3
+    w <- NULL
   }
-  w <- tryCatch(word2vec_obs(text, n_vectors), error = function(e) return(NULL))
-  text <- wtokens(text)
-  o$polite <- politeness(text)
+  text <- tokenizers::tokenize_words(text)
+  o$n_polite <- politeness(text)
   o$n_first_person <- first_person(text)
   o$n_first_personp <- first_personp(text)
   o$n_second_person <- second_person(text)
@@ -123,102 +141,35 @@ textfeatures.data.frame <- function(x) {
   o$n_prepositions <- prepositions(text)
 
   o <- tibble::as_tibble(o, validate = FALSE)
+  names(o)[names(o) == "id"] <- idname
 
   dplyr::bind_cols(o, w)
 }
 
+
+
+
 #' @export
 #' @importFrom purrr map_lgl map
-textfeatures.list <- function(x) {
+textfeatures.list <- function(x, sentiment = TRUE, word2vec = TRUE) {
   ## if named list with "text" element
   if (!is.null(names(x)) && "text" %in% names(x)) {
     x <- x$text
-    return(textfeatures(x))
+    return(textfeatures(x, sentiment = TRUE, word2vec = TRUE))
     ## if all elements are character vectors, return list of DFs
   } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
     ## (list in, list out)
-    return(map(x, textfeatures))
+    return(map(x, textfeatures, sentiment = TRUE, word2vec = TRUE))
   }
   ## if all elements are recursive objects containing "text" variable
   if (all(map_lgl(x, is.recursive)) &&
       all(map_lgl(x, ~ "text" %in% names(.x)))) {
     x <- map(x, ~ .x$text)
-    return(map(x, textfeatures))
+    return(map(x, textfeatures, sentiment = TRUE, word2vec = TRUE))
   }
   stop(paste0("Input is a list without a character vector named \"text\". ",
     "Are you sure the input shouldn't be a character vector or a data frame",
     "with a \"text\" variable?"), call. = FALSE)
-}
-
-
-#' @export
-#' @importFrom purrr map_lgl map
-textfeatures.list <- function(x) {
-  ## if named list with "text" element
-  if (!is.null(names(x)) && "text" %in% names(x)) {
-    x <- x$text
-    return(textfeatures(x))
-    ## if all elements are character vectors, return list of DFs
-  } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
-    ## (list in, list out)
-    return(map(x, textfeatures))
-  }
-  ## if all elements are recursive objects containing "text" variable
-  if (all(map_lgl(x, is.recursive)) &&
-      all(map_lgl(x, ~ "text" %in% names(.x)))) {
-    x <- map(x, ~ .x$text)
-    return(map(x, textfeatures))
-  }
-  stop(paste0("Input is a list without a character vector named \"text\". ",
-    "Are you sure the input shouldn't be a character vector or a data frame",
-    "with a \"text\" variable?"), call. = FALSE)
-}
-
-
-text_cleaner <- function(x) {
-  stopifnot(is.character(x))
-
-  ## remove URLs, mentions, and hashtags
-  x <- gsub("https?:[[:graph:]]+|@\\S+|#\\S+", "", x)
-
-  ## convert non-ascii into ascii exclamation marks
-  x <- gsub("\u00A1", "\u0021", x, fixed = TRUE)
-  x <- gsub("\u01C3", "\u0021", x, fixed = TRUE)
-  x <- gsub("\u202C", "\u0021", x, fixed = TRUE)
-  x <- gsub("\u203D", "\u0021", x, fixed = TRUE)
-  x <- gsub("\u2762", "\u0021", x, fixed = TRUE)
-
-  ## convert non-ascii into ascii apostrophes
-  x <- gsub("\u2018", "\u0027", x, fixed = TRUE)
-  x <- gsub("\uA78C", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u05F3", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u0301", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u02C8", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u2018", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u02Bc", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u02B9", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u05F3", "\u0027", x, fixed = TRUE)
-  x <- gsub("\u2019", "\u0027", x, fixed = TRUE)
-
-  ## convert non-ascii into ascii commas
-  x <- gsub("\u2795", "\u002B", x, fixed = TRUE)
-
-  ## convert non-ascii into ascii hypthens
-  x <- gsub("\u2010", "\u002D", x, fixed = TRUE)
-  x <- gsub("\u2011", "\u002D", x, fixed = TRUE)
-  x <- gsub("\u2012", "\u002D", x, fixed = TRUE)
-  x <- gsub("\u2013", "\u002D", x, fixed = TRUE)
-  x <- gsub("\u2043", "\u002D", x, fixed = TRUE)
-  x <- gsub("\u2212", "\u002D", x, fixed = TRUE)
-  x <- gsub("\u10191", "\u002D", x, fixed = TRUE)
-
-  ## convert non-ascii into ascii periods
-  x <- gsub("\u06D4", "\u002E", x, fixed = TRUE)
-  x <- gsub("\u2E3C", "\u002E", x, fixed = TRUE)
-  x <- gsub("\u3002", "\u002E", x, fixed = TRUE)
-
-  ## convert non-ascii into ascii elipses
-  gsub("\u2026", "\u002E\u002E\u002E", x, fixed = TRUE)
 }
 
 

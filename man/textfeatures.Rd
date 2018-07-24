@@ -4,13 +4,22 @@
 \alias{textfeatures}
 \title{textfeatures}
 \usage{
-textfeatures(x)
+textfeatures(x, sentiment = TRUE, word2vec = TRUE)
 }
 \arguments{
 \item{x}{Input data. Should be character vector, data frame, or grouped data
 frame (grouped_df) with character variable of interest named "text". If
 grouped_df is provided, then features will be averaged across all
 observations for each group.}
+
+\item{sentiment}{Logical, indicating whether to return sentiment analysis
+features–this includes \code{sent_afinn} and \code{sent_bing}. Defaults to
+FALSE. Setting this to true will speed things up a bit.}
+
+\item{word2vec}{Logical, indicating whether to return word2vec dimension
+estimates. By default, this function will attempt to generate estimates for
+anywhere from 3 to 300 word embeddings for each observation. Setting this
+to FALSE will speed things up.}
 }
 \value{
 A tibble data frame with extracted features as columns.
