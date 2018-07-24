@@ -5,15 +5,20 @@
 #'
 #' @param x Input text
 #' @param n_vectors Number of vectors (dimensions) defaults to 100
-#' @param threads Number of threads to use, defaults to 1.
+#' @param threads Number of threads to use, defaults to 3.
 #' @useDynLib textfeatures, .registration = TRUE
 #' @export
-word2vec <- function(x, n_vectors = 50, threads = 1) {
+word2vec <- function(x, n_vectors = 50, threads = 3) {
   tmp_train <- tempfile()
   on.exit(unlink(tmp_train), add = TRUE)
   writeLines(x[nchar(x) > 0], tmp_train)
   tmp_out <- tempfile()
   on.exit(unlink(tmp_out), add = TRUE)
+  if (length(x) < 5) {
+    min_count <- as.character(length(x))
+  } else {
+    min_count <- "5"
+  }
   # Whether to output binary, default is 1 means binary.
   utils::capture.output(sh <- suppressMessages(.C("CWrapper_word2vec",
     train_file = tmp_train,
@@ -24,11 +29,11 @@ word2vec <- function(x, n_vectors = 50, threads = 1) {
     window = "12",
     classes = "0",
     cbow = "0",
-    min_count = "5",
+    min_count = min_count,
     iter = "5",
     neg_samples = "5")))
   x <- read_word2vecoutput(tmp_out)
-  x <- tibble::as_tibble(t(x[-1, ]))
+  x <- tibble::as_tibble(t(x[-1, ]), validate = FALSE)
   names(x) <- gsub("['`<>\\)\\(\\}\\{\\/\\\\]", "", names(x))
   x
 }
@@ -63,7 +68,7 @@ word2vec_obs <- function(x, n_vectors = 100, threads = 1) {
   o <- tibble::as_tibble(as.data.frame(matrix(unlist(o), length(x), nrow(w2v),
     byrow = TRUE),
     row.names = NULL, stringsAsFactors = FALSE), validate = FALSE)
-  names(o) <- paste0("w2v", seq_len(ncol(o)))
+  names(o) <- paste0("w", seq_len(ncol(o)))
   o
 }
 
