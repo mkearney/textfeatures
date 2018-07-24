@@ -44,28 +44,6 @@ test_that("main textfeatures function", {
   ## list of dfs with text variables
   lst <- list(df, df, df)
 
-  ## get text features of character vector
-  o_chr <- textfeatures2(txt)
-  expect_true(is.data.frame(o_chr))
-
-  ## get text features of factor
-  o_fct <- textfeatures2(text_fct)
-  expect_true(is.data.frame(o_fct))
-
-  ## get text features of character vector
-  o_df <- textfeatures2(df)
-  expect_true(is.data.frame(o_df))
-
-  ## get text features of list of DFs with "text" vars
-  o_lst <- textfeatures2(lst)
-  expect_true(all(vapply(o_lst, is.data.frame, FUN.VALUE = logical(1))))
-
-  ## shouldn't work if no variable named text
-  expect_error(textfeatures2(mtcars))
-
-  ## should return empty df
-  expect_equal(data.frame(), textfeatures2(NULL))
-
   expect_true(is.data.frame(scale_count(o_df)))
   expect_true(is.data.frame(scale_log(o_df)))
   expect_true(is.data.frame(scale_normal(o_df)))
