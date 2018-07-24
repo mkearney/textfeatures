@@ -4,7 +4,7 @@
 \alias{textfeatures}
 \title{textfeatures}
 \usage{
-textfeatures(x, sentiment = TRUE, word2vec = TRUE)
+textfeatures(x, sentiment = TRUE, word2vec_dims = NULL, threads = threads)
 }
 \arguments{
 \item{x}{Input data. Should be character vector, data frame, or grouped data
@@ -16,10 +16,13 @@ observations for each group.}
 features–this includes \code{sent_afinn} and \code{sent_bing}. Defaults to
 FALSE. Setting this to true will speed things up a bit.}
 
-\item{word2vec}{Logical, indicating whether to return word2vec dimension
-estimates. By default, this function will attempt to generate estimates for
-anywhere from 3 to 300 word embeddings for each observation. Setting this
-to FALSE will speed things up.}
+\item{word2vec_dims}{Integer indicating the desired number of word2vec dimension
+estimates. By default (\code{word2vec_dims = NULL, threads = 1}), this function
+will pick a reasonable number of dimensions (ranging from 3 to 200) based on
+size of input. To disable word2vec estimates, set this to 0 or FALSE.}
+
+\item{threads}{Integer, specifying the number of threads to use when generating
+word2vec estimates. Defaults to 1. Ignored if \code{word2vec_dims = 0}.}
 }
 \value{
 A tibble data frame with extracted features as columns.

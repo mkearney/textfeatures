@@ -10,10 +10,12 @@
 #' @param sentiment Logical, indicating whether to return sentiment analysis
 #'   features–this includes \code{sent_afinn} and \code{sent_bing}. Defaults to
 #'   FALSE. Setting this to true will speed things up a bit.
-#' @param word2vec Logical, indicating whether to return word2vec dimension
-#'   estimates. By default, this function will attempt to generate estimates for
-#'   anywhere from 3 to 300 word embeddings for each observation. Setting this
-#'   to FALSE will speed things up.
+#' @param word2vec_dims Integer indicating the desired number of word2vec dimension
+#'   estimates. By default (\code{word2vec_dims = NULL, threads = 1}), this function
+#'   will pick a reasonable number of dimensions (ranging from 3 to 200) based on
+#'   size of input. To disable word2vec estimates, set this to 0 or FALSE.
+#' @param threads Integer, specifying the number of threads to use when generating
+#'   word2vec estimates. Defaults to 1. Ignored if \code{word2vec_dims = 0}.
 #' @return A tibble data frame with extracted features as columns.
 #' @examples
 #'
@@ -48,25 +50,26 @@
 #' textfeatures(df)
 #'
 #' @export
-textfeatures <- function(x, sentiment = TRUE, word2vec = TRUE) {
+textfeatures <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = threads) {
   UseMethod("textfeatures")
 }
 
 #' @export
-textfeatures.character <- function(x, sentiment = TRUE, word2vec = TRUE) {
+textfeatures.character <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
   textfeatures(data.frame(text = x, row.names = NULL, stringsAsFactors = FALSE),
-    sentiment = TRUE, word2vec = TRUE)
+    sentiment = sentiment, word2vec_dims = word2vec_dims, threads = threads)
 }
 
 #' @export
-textfeatures.factor <- function(x, sentiment = TRUE, word2vec = TRUE) {
-  textfeatures(as.character(x), sentiment = TRUE, word2vec = TRUE)
+textfeatures.factor <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
+  textfeatures(as.character(x), sentiment = sentiment,
+    word2vec_dims = word2vec_dims, threads = threads)
 }
 
 #' @export
 #' @importFrom tibble as_tibble
 #' @importFrom tokenizers tokenize_words
-textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec = TRUE) {
+textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
   ## initialize output data
   o <- list()
 
@@ -75,8 +78,9 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec = TRUE) {
   ## make sure "text" is character
   text <- as.character(x$text)
   ## validate text class
-  stopifnot(is.character(text))
-  ## if ID
+  stopifnot(is.character(text), is.numeric(threads), is.logical(sentiment))
+
+  ## try to determine ID/ID-like variable, or create a new one
   if ("id" %in% names(x)) {
     idname <- "id"
     o$id <- .subset2(x, "id")
@@ -88,18 +92,18 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec = TRUE) {
     o$id <- as.character(x[[1]])
   } else {
     idname <- "id"
-    o$id <- seq_len(nrow(x))
+    o$id <- as.character(seq_len(nrow(x)))
   }
 
-  ## extract features for all observations
+  ## number of URLs/hashtags/mentions
   o$n_urls = n_urls(text)
   o$n_hashtags = n_hashtags(text)
   o$n_mentions = n_mentions(text)
-  o$text = text_cleaner(text)
-  if (sentiment) {
-    o$sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
-    o$sent_bing = syuzhet::get_sentiment(text, method = "bing")
-  }
+
+  ## scrub urls, hashtags, mentions
+  text = text_cleaner(text)
+
+  ## count various character types
   o$n_chars = n_charS(text)
   o$n_commas = n_commas(text)
   o$n_digits = n_digits(text)
@@ -114,23 +118,52 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec = TRUE) {
   o$n_puncts = n_puncts(text)
   o$n_capsp = (o$n_caps + 1L) / (o$n_chars + 1L)
   o$n_charsperword = (o$n_chars + 1L) / (o$n_words + 1L)
-  if (word2vec) {
-    if (nrow(x) > 1000) {
+
+  ## estimate sentiment
+  if (sentiment) {
+    o$sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
+    o$sent_bing = syuzhet::get_sentiment(text, method = "bing")
+  }
+
+  ## tokenize into words
+  text <- prep_wordtokens(text)
+
+  ## if null, pick reasonable number of dims
+  if (is.null(word2vec_dims)) {
+    if (nrow(x) > 10000) {
       n_vectors <- 200
-    } else if (nrow(x) > 300) {
+    } else if (nrow(x) > 1000) {
       n_vectors <- 100
-    } else if (nrow(x) > 60) {
+    } else if (nrow(x) > 300) {
       n_vectors <- 50
+    } else if (nrow(x) > 60) {
+      n_vectors <- 20
     } else if (nrow(x) > 10) {
-      n_vectors <- 10
+      n_vectors <- 6
     } else {
       n_vectors <- 3
     }
-    w <- tryCatch(word2vec_obs(text, n_vectors), error = function(e) return(NULL))
-  } else {
-    w <- NULL
   }
-  text <- tokenizers::tokenize_words(text)
+
+  ## if specified, set as n_vectors
+  if (is.numeric(word2vec_dims)) {
+    n_vectors <- word2vec_dims
+  }
+
+  ## if false, set to 0
+  if (identical(word2vec_dims, FALSE)) {
+    n_vectors <- 0
+  }
+
+  ## if applicable, get w2v estimates
+  if (identical(word2vec_dims, 0)) {
+    w <- NULL
+  } else {
+    w <- tryCatch(word2vec_obs(text, n_vectors, threads),
+      error = function(e) return(NULL))
+  }
+
+  ## count number of polite, POV, to-be, and preposition words.
   o$n_polite <- politeness(text)
   o$n_first_person <- first_person(text)
   o$n_first_personp <- first_personp(text)
@@ -140,9 +173,13 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec = TRUE) {
   o$n_tobe <- to_be(text)
   o$n_prepositions <- prepositions(text)
 
+  ## convert to tibble
   o <- tibble::as_tibble(o, validate = FALSE)
+
+  ## name ID variable
   names(o)[names(o) == "id"] <- idname
 
+  ## merge with w2v estimates
   dplyr::bind_cols(o, w)
 }
 
@@ -151,21 +188,24 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec = TRUE) {
 
 #' @export
 #' @importFrom purrr map_lgl map
-textfeatures.list <- function(x, sentiment = TRUE, word2vec = TRUE) {
+textfeatures.list <- function(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1) {
   ## if named list with "text" element
   if (!is.null(names(x)) && "text" %in% names(x)) {
     x <- x$text
-    return(textfeatures(x, sentiment = TRUE, word2vec = TRUE))
+    return(textfeatures(x, sentiment = sentiment,
+      word2vec_dims = word2vec_dims, threads = threads))
     ## if all elements are character vectors, return list of DFs
   } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
     ## (list in, list out)
-    return(map(x, textfeatures, sentiment = TRUE, word2vec = TRUE))
+    return(map(x, textfeatures, sentiment = sentiment,
+      word2vec_dims = word2vec_dims, threads = threads))
   }
   ## if all elements are recursive objects containing "text" variable
   if (all(map_lgl(x, is.recursive)) &&
       all(map_lgl(x, ~ "text" %in% names(.x)))) {
     x <- map(x, ~ .x$text)
-    return(map(x, textfeatures, sentiment = TRUE, word2vec = TRUE))
+    return(map(x, textfeatures, sentiment = sentiment,
+      word2vec_dims = word2vec_dims, threads = threads))
   }
   stop(paste0("Input is a list without a character vector named \"text\". ",
     "Are you sure the input shouldn't be a character vector or a data frame",
