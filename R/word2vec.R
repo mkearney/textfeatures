@@ -15,7 +15,7 @@ word2vec <- function(x, n_vectors = 50, threads = 1) {
   utils::capture.output(sh <- suppressMessages(.C("CWrapper_word2vec",
     train_file = tmp_train,
     output_file = tmp_out,
-    binary = "1",
+    binary = "0",
     dims = as.character(n_vectors),
     threads = as.character(threads),
     window = "12",
@@ -24,9 +24,10 @@ word2vec <- function(x, n_vectors = 50, threads = 1) {
     min_count = min_count,
     iter = "5",
     neg_samples = "5")))
-  x <- read_word2vecoutput(tmp_out)
-  x <- tibble::as_tibble(t(x[-1, ]), validate = FALSE)
-  names(x) <- gsub("['`<>\\)\\(\\}\\{\\/\\\\]", "", names(x))
+  x <- read.table(tmp_out, skip = 2)
+  nms <- x[, 1, drop = TRUE]
+  x <- tibble::as_tibble(t(x[, -1]), validate = FALSE)
+  names(x) <- nms
   x
 }
 
@@ -52,49 +53,4 @@ word2vec_obs <- function(x, n_vectors = 100, threads = 1) {
 trim_ws <- function(x) {
   x <- gsub("[ ]{2,}", " ", x)
   gsub("^[ ]+|[ ]+$", "", x)
-}
-
-
-read_word2vecoutput <- function(filename) {
-  a <- file(filename, 'rb')
-  on.exit(close(a), add = TRUE)
-  rows <- ""
-  most_recent = ""
-  while (most_recent != " ") {
-    most_recent <- readChar(a, 1)
-    rows <- paste0(rows, most_recent)
-  }
-  rows <- as.integer(rows)
-
-  col_number <- ""
-  while (most_recent != "\n") {
-    most_recent <- readChar(a, 1)
-    col_number <- paste0(col_number, most_recent)
-  }
-  col_number <- as.integer(col_number)
-
-  ## Read a row
-  rownames <- rep("", rows)
-
-  returned_columns <- col_number
-
-  read_row <- function(i) {
-    rowname <- ""
-    most_recent <- ""
-    while (TRUE) {
-      most_recent <- readChar(a, 1)
-      if (most_recent == " ") break
-      if (most_recent != "\n") {
-        # Some versions end with newlines, some don't.
-        rowname <- paste0(rowname, most_recent)
-      }
-    }
-    rownames[i] <<- rowname
-    row <- readBin(a, numeric(), size = 4, n = col_number, endian = "little")
-    row
-  }
-
-  matrix <- t(vapply(1:rows, read_row, as.array(rep(0, returned_columns))))
-  rownames(matrix) <- rownames
-  matrix
 }
