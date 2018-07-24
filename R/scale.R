@@ -15,15 +15,13 @@
 scale_count <- function(x) {
   yes_ints <- (purrr::map_lgl(x, rlang::is_integerish) |
       (grepl("^n_", names(x)) & purrr::map_lgl(x, is.numeric))) &
-    !grepl("[._]?id$", names(x))
+    !grepl("[._]?id$", names(x)) & names(x) != "y"
   x[yes_ints] <- purrr::map(x[yes_ints], ~ log10(scale_zero(.x) + 1))
   x
 }
 
 
-scale_zero <- function(x) {
-  x + abs(0 - min(x))
-}
+scale_zero <- function(x) x + (0 - min(x))
 
 
 #' scale_
@@ -34,7 +32,8 @@ scale_zero <- function(x) {
 #' @rdname scale_count
 #' @export
 scale_log <- function(x) {
-  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x))
+  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x)) &
+    names(x) != "y"
   x[yes] <- purrr::map(x[yes], ~ log(scale_zero(.x) + 1))
   x
 }
@@ -47,7 +46,8 @@ scale_log <- function(x) {
 #' @rdname scale_count
 #' @export
 scale_normal <- function(x) {
-  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x))
+  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x)) &
+    names(x) != "y"
   x[yes] <- scale(x[yes])
   x
 }
@@ -61,7 +61,8 @@ scale_normal <- function(x) {
 #' @rdname scale_count
 #' @export
 scale_standard <- function(x) {
-  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x))
+  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x)) &
+    names(x) != "y"
   x[yes] <- purrr::map(x[yes], standard_scale)
   x
 }
@@ -75,7 +76,8 @@ scale_standard <- function(x) {
 #' @rdname scale_count
 #' @export
 scale_sqrt <- function(x) {
-  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x))
+  yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x)) &
+    names(x) != "y"
   x[yes] <- purrr::map(x[yes], sqrt)
   x
 }

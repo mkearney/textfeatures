@@ -5,7 +5,7 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 library(textfeatures)
-options(width = 110)
+options(width = 100)
 ```
 
 # 👷
@@ -63,28 +63,28 @@ textfeatures(rt)
 ### Input: `grouped_df`
 
 ```{r gdf, eval=FALSE}
-## data frame with up to two hundred tweets for each of 4 users
+## data frame tweets from multiple news media accounts
 gdf <- rtweet::get_timelines(
-  c("cnn", "nytimes", "foxnews", "latimes"), n = 1000)
+  c("cnn", "nytimes", "foxnews", "latimes", "washingtonpost"), n = 2000)
 
 ## get text features for all observations
-f <- textfeatures(gdf)
+tf <- textfeatures(gdf)
 
 ## override id with screen names
-f$id <- gdf$screen_name
+tf$id <- gdf$screen_name
 
 ## load the tidyverse
 suppressPackageStartupMessages(library(tidyverse))
 
 ## convert to long (tidy) form and plot
-p <- f %>%
-  scale_count() %>%
+p <- tf %[!grepl("^w2", names(tf))]>%
+  scscale_count %>%
   scale_standard() %>%
-  group_by(id) %>%
-  summarise_if(is.numeric, mean) %>%
+  grgroup_by(id) %>%
+  mmarise_if(is.numeric, memean%>%
   gather(var, val, -id) %>%
-  arrange(-val) %>%
-  mutate(var = factor(var, levels = unique(var)), 
+  ararrange(-val) %>%
+  tate(var = factor(var, levels = unique(var)), 
     id = paste0("@", id)) %>%
   ggplot(aes(x = var, y = val, fill = id)) + 
   geom_col(width = .15, fill = "#000000bb") +

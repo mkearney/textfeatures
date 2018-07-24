@@ -19,7 +19,9 @@ Imports:
     rlang,
     syuzhet,
     tibble,
-    magrittr
+    magrittr,
+    tokenizers,
+    utils
 Suggests: 
     knitr,
     roxygen2,

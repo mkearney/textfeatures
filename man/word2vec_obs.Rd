@@ -2,7 +2,7 @@
 % Please edit documentation in R/word2vec.R
 \name{word2vec_obs}
 \alias{word2vec_obs}
-\title{word2vec observations}
+\title{word2vec estimates of observed text}
 \usage{
 word2vec_obs(x, n_vectors = 100, threads = 1)
 }
@@ -14,8 +14,8 @@ word2vec_obs(x, n_vectors = 100, threads = 1)
 \item{threads}{Number of threads to use, defaults to 1.}
 }
 \value{
-Matrix
+A tibble of observations with n_vectors columns.
 }
 \description{
-word2vec observations
+Converts text vector into n word2vec (dimension) estimates
 }

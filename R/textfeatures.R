@@ -56,6 +56,9 @@ textfeatures.factor <- function(x) {
 #' @export
 #' @importFrom tibble as_tibble
 textfeatures.data.frame <- function(x) {
+  ## initialize output data
+  o <- list()
+
   ## validate input
   stopifnot("text" %in% names(x))
   ## make sure "text" is character
@@ -65,76 +68,63 @@ textfeatures.data.frame <- function(x) {
   ## if ID
   if ("id" %in% names(x)) {
     idname <- "id"
-    id <- .subset2(x, "id")
+    o$id <- .subset2(x, "id")
   } else if (any(grepl("[._]?id$", names(x)))) {
     idname <- grep("[._]?id$", names(x), value = TRUE)[1]
-    id <- .subset2(x, grep("[._]?id$", names(x))[1])
+    o$id <- .subset2(x, grep("[._]?id$", names(x))[1])
   } else if ((is.character(x[[1]]) || is.factor(x[[1]])) && names(x)[1] != "text") {
     idname <- names(x)[1]
-    id <- as.character(x[[1]])
+    o$id <- as.character(x[[1]])
   } else {
-    id <- seq_len(nrow(x))
+    o$id <- seq_len(nrow(x))
   }
 
   ## extract features for all observations
-  n_urls = n_urls(text)
-  n_hashtags = n_hashtags(text)
-  n_mentions = n_mentions(text)
-  text = text_cleaner(text)
-  sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
-  sent_bing = syuzhet::get_sentiment(text, method = "bing")
-  n_chars = n_charS(text)
-  n_commas = n_commas(text)
-  n_digits = n_digits(text)
-  n_exclaims = n_exclaims(text)
-  n_extraspaces = n_extraspaces(text)
-  n_lowers = n_lowers(text)
-  n_lowersp = (n_lowers + 1L) / (n_chars + 1L)
-  n_periods = n_periods(text)
-  n_words = n_words(text)
-  n_caps = n_caps(text)
-  n_nonasciis = n_nonasciis(text)
-  n_puncts = n_puncts(text)
-  n_capsp = (n_caps + 1L) / (n_chars + 1L)
-  n_charsperword = (n_chars + 1L) / (n_words + 1L)
+  o$n_urls = n_urls(text)
+  o$n_hashtags = n_hashtags(text)
+  o$n_mentions = n_mentions(text)
+  o$text = text_cleaner(text)
+  o$sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
+  o$sent_bing = syuzhet::get_sentiment(text, method = "bing")
+  o$n_chars = n_charS(text)
+  o$n_commas = n_commas(text)
+  o$n_digits = n_digits(text)
+  o$n_exclaims = n_exclaims(text)
+  o$n_extraspaces = n_extraspaces(text)
+  o$n_lowers = n_lowers(text)
+  o$n_lowersp = (o$n_lowers + 1L) / (o$n_chars + 1L)
+  o$n_periods = n_periods(text)
+  o$n_words = n_words(text)
+  o$n_caps = n_caps(text)
+  o$n_nonasciis = n_nonasciis(text)
+  o$n_puncts = n_puncts(text)
+  o$n_capsp = (o$n_caps + 1L) / (o$n_chars + 1L)
+  o$n_charsperword = (o$n_chars + 1L) / (o$n_words + 1L)
+  if (nrow(x) > 1000) {
+    n_vectors <- 200
+  } else if (nrow(x) > 300) {
+    n_vectors <- 100
+  } else if (nrow(x) > 60) {
+    n_vectors <- 50
+  } else if (nrow(x) > 10) {
+    n_vectors <- 10
+  } else {
+    n_vectors <- 3
+  }
+  w <- tryCatch(word2vec_obs(text, n_vectors), error = function(e) return(NULL))
   text <- wtokens(text)
-  polite <- politeness(text)
-  n_first_person <- first_person(text)
-  n_first_personp <- first_personp(text)
-  n_second_person <- second_person(text)
-  n_second_personp <- second_personp(text)
-  n_third_person <- third_person(text)
-  n_tobe <- to_be(text)
-  n_prepositions <- prepositions(text)
+  o$polite <- politeness(text)
+  o$n_first_person <- first_person(text)
+  o$n_first_personp <- first_personp(text)
+  o$n_second_person <- second_person(text)
+  o$n_second_personp <- second_personp(text)
+  o$n_third_person <- third_person(text)
+  o$n_tobe <- to_be(text)
+  o$n_prepositions <- prepositions(text)
 
-  x <- list(id = id, n_urls = n_urls,
-    n_hashtags = n_hashtags,
-    n_mentions = n_mentions,
-    sent_afinn = sent_afinn,
-    sent_bing = sent_bing,
-    n_chars = n_chars,
-    n_commas = n_commas,
-    n_digits = n_digits,
-    n_exclaims = n_exclaims,
-    n_extraspaces = n_extraspaces,
-    n_lowers = n_lowers,
-    n_lowersp = n_lowersp,
-    n_periods = n_periods,
-    n_words = n_words,
-    n_caps = n_caps,
-    n_nonasciis = n_nonasciis,
-    n_puncts = n_puncts,
-    n_capsp = n_capsp,
-    n_charsperword = n_charsperword,
-    polite = polite,
-    n_first_person = n_first_person,
-    n_first_personp = n_first_personp,
-    n_second_person = n_second_person,
-    n_second_personp = n_second_personp,
-    n_third_person = n_third_person,
-    n_tobe = n_tobe,
-    n_prepositions = n_prepositions)
-  tibble::as_tibble(x, validate = FALSE)
+  o <- tibble::as_tibble(o, validate = FALSE)
+
+  dplyr::bind_cols(o, w)
 }
 
 #' @export
