@@ -1,18 +1,18 @@
 
 #' @useDynLib textfeatures, .registration = TRUE
-word2vec <- function(x, n_vectors = 50, threads = 1) {
+word2vec <- function(x, n_vectors, threads) {
   tmp_train <- tempfile()
   on.exit(unlink(tmp_train), add = TRUE)
   writeLines(x[nchar(x) > 0], tmp_train)
   tmp_out <- tempfile()
   on.exit(unlink(tmp_out), add = TRUE)
-  if (length(x) < 5) {
-    min_count <- as.character(length(x))
+  if (length(x) < 5 & length(x) > 1) {
+    min_count <- as.character(length(x) - 1)
   } else {
     min_count <- "5"
   }
   # Whether to output binary, default is 1 means binary.
-  utils::capture.output(sh <- suppressMessages(.C("CWrapper_word2vec",
+  utils::capture.output(sh <- suppressMessages(.C("cwrapper_word2vec",
     train_file = tmp_train,
     output_file = tmp_out,
     binary = "0",
@@ -24,14 +24,14 @@ word2vec <- function(x, n_vectors = 50, threads = 1) {
     min_count = min_count,
     iter = "5",
     neg_samples = "5")))
-  x <- read.table(tmp_out, skip = 2)
+  x <- read.table(tmp_out, skip = 1)
   nms <- x[, 1, drop = TRUE]
   x <- tibble::as_tibble(t(x[, -1]), validate = FALSE)
   names(x) <- nms
   x
 }
 
-word2vec_obs <- function(x, n_vectors = 100, threads = 1) {
+word2vec_obs <- function(x, n_vectors = 50, threads = 1) {
   w2v <- word2vec(vapply(x, paste, collapse = " ",
     FUN.VALUE = character(1), USE.NAMES = FALSE),
     n_vectors = n_vectors, threads = threads)
