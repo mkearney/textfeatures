@@ -48,7 +48,20 @@ scale_log <- function(x) {
 scale_normal <- function(x) {
   yes <- purrr::map_lgl(x, is.numeric) & !grepl("[._]?id$", names(x)) &
     names(x) != "y"
-  x[yes] <- scale(x[yes])
+  x[yes] <- scale0(x[yes])
+  x
+}
+
+scale0 <- function(x) {
+  x <- as.matrix(x)
+  center <- colMeans(x, na.rm = TRUE)
+  x <- sweep(x, 2L, center, check.margin = FALSE)
+  f <- function(v) {
+    v <- v[!is.na(v)]
+    sqrt(sum(v^2)/max(1, length(v) - 1L))
+  }
+  scale <- apply(x, 2L, f)
+  x[, scale != 0] <- sweep(x[, scale != 0, drop = FALSE], 2L, scale[scale != 0], "/", check.margin = FALSE)
   x
 }
 
