@@ -3,10 +3,18 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>", cache = TRUE)
 library(textfeatures)
 library(magrittr)
 options(width = 100)
+skimrskim <- function(x) {
+  skimr::skim(x[-1]) %>% 
+    dplyr::filter(stat %in% c("p0", "p25", "p50", "p75", "p100", "hist", "n")) %>%
+    dplyr::select(-value, -level, -type) %>%
+    tidyr::spread(stat, formatted) %>%
+    dplyr::select(variable, `min` = p0, `25%` = p25, `mid` = p50, `75%` = p75, `max` = p100, hist) %>% 
+    knitr::kable()
+}
 ```
 
 # 👷 textfeatures 👷<img src="man/figures/logo.png" width="160px" align="right" /> 
@@ -123,3 +131,35 @@ If you're looking for something faster try setting `sentiment = FALSE` and `word
 ## get non-substantive text features
 textfeatures(rt, sentiment = FALSE, word2vec_dims = 0)
 ```
+
+
+## Example: NASA meta data
+
+Extract text features from NASA meta data:
+
+
+```{r nasa}
+## read NASA meta data
+nasa <- jsonlite::fromJSON("https://data.nasa.gov/data.json")
+
+## create data frame with ID and title
+nasa_title <- unique(data.frame(
+  id = nasa$dataset$`_id`$`$oid`, 
+  text = nasa$dataset$title, stringsAsFactors = FALSE))
+
+## drop obs w/o IDs and duplicate texts (these could be rejoined later)
+nasa_title <- subset(nasa_title, !is.na(id) & !duplicated(text))
+
+## get text features
+nasa_tf <- textfeatures(nasa_title, threads = 10)
+
+## drop columns with zero variance
+kp <- apply(nasa_tf[-1], 2, var)
+nasa_tf <- nasa_tf[c("id", names(kp[kp > 0]))]
+
+## view summary
+skimrskim(nasa_tf)
+```
+
+
+
