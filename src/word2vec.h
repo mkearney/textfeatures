@@ -391,7 +391,7 @@ void *TrainModelThread(void *id) {
   //  real doneness_f, speed_f;
   // For writing to R.
   real f, g;
-  clock_t now;
+//  clock_t now;
   real *neu1 = (real *)calloc(layer1_size, sizeof(real));
   real *neu1e = (real *)calloc(layer1_size, sizeof(real));
   FILE *fi = fopen(train_file, "rb");
