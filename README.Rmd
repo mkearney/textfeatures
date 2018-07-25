@@ -157,13 +157,25 @@ nd <- nd[!duplicated(tolower(substr(nd$text, 1, 100))), ]
 nd <- nd[c(sample(which(!nd$nonpub), sum(nd$nonpub)), which(nd$nonpub)), ]
 
 ## get text features
-nasa_tf <- textfeatures(nd, threads = 10)
+nasa_tf <- textfeatures(nd, word2vec_dims = 20, threads = 10)
 
 ## drop columns with little to no variance
 nasa_tf <- min_var(nasa_tf)
 
 ## view summary
 skimrskim(nasa_tf)
+
+## add nonpub variable
+nasa_tf$nonpub <- nd$nonpub
+
+## run model predicting whether data is restricted
+m1 <- glm(nonpub ~ ., data = nasa_tf[-1], family = binomial)
+
+## view model summary
+summary(m1)
+
+## how accurate was the model?
+table(predict(m1, type = "response") > .5, nasa_tf$nonpub)
 ```
 
 
