@@ -142,20 +142,25 @@ Extract text features from NASA meta data:
 ## read NASA meta data
 nasa <- jsonlite::fromJSON("https://data.nasa.gov/data.json")
 
-## create data frame with ID and title
-nasa_title <- unique(data.frame(
-  id = nasa$dataset$`_id`$`$oid`, 
-  text = nasa$dataset$title, stringsAsFactors = FALSE))
+## identify non-public or restricted data sets
+nonpub <- grepl("Not publicly available|must register", nasa$data$rights, ignore.case = TRUE) | 
+  nasa$dataset$accessLevel %in% c("restricted public", "non-public")
 
-## drop obs w/o IDs and duplicate texts (these could be rejoined later)
-nasa_title <- subset(nasa_title, !is.na(id) & !duplicated(text))
+## create data frame with ID, description (name it "text"), and nonpub
+nd <- data.frame(text = nasa$dataset$description, nonpub = nonpub, 
+  stringsAsFactors = FALSE)
+
+## drop duplicates (truncate text to ensure more distinct obs)
+nd <- nd[!duplicated(tolower(substr(nd$text, 1, 100))), ]
+
+## filter via sampling to create equal number of pub/nonpub
+nd <- nd[c(sample(which(!nd$nonpub), sum(nd$nonpub)), which(nd$nonpub)), ]
 
 ## get text features
-nasa_tf <- textfeatures(nasa_title, threads = 10)
+nasa_tf <- textfeatures(nd, threads = 10)
 
-## drop columns with zero variance
-kp <- apply(nasa_tf[-1], 2, var)
-nasa_tf <- nasa_tf[c("id", names(kp[kp > 0]))]
+## drop columns with little to no variance
+nasa_tf <- min_var(nasa_tf)
 
 ## view summary
 skimrskim(nasa_tf)
