@@ -5,3 +5,4 @@ make.R
 .Ruserdata
 inst/doc
 .DS_Store
+README_cache
