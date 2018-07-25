@@ -31,10 +31,13 @@ word2vec <- function(x, n_vectors, threads) {
   x
 }
 
-word2vec_obs <- function(x, n_vectors = 50, threads = 1) {
-  w2v <- word2vec(vapply(x, paste, collapse = " ",
-    FUN.VALUE = character(1), USE.NAMES = FALSE),
-    n_vectors = n_vectors, threads = threads)
+word2vec_obs <- function(x, n_vectors = 50, threads = 1, export = FALSE,
+                         w2v = NULL) {
+  if (is.null(w2v)) {
+    w2v <- word2vec(vapply(x, paste, collapse = " ",
+      FUN.VALUE = character(1), USE.NAMES = FALSE),
+      n_vectors = n_vectors, threads = threads)
+  }
   word2vec_obs_ <- function(x) {
     m <- match(x, names(w2v))
     m <- m[!is.na(m)]
@@ -47,6 +50,9 @@ word2vec_obs <- function(x, n_vectors = 50, threads = 1) {
     byrow = TRUE),
     row.names = NULL, stringsAsFactors = FALSE), validate = FALSE)
   names(o) <- paste0("w", seq_len(ncol(o)))
+  if (export) {
+    attr(o, "w2v_dict") <- w2v
+  }
   o
 }
 

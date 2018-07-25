@@ -5,7 +5,7 @@
 \title{textfeatures}
 \usage{
 textfeatures(x, sentiment = TRUE, word2vec_dims = NULL, threads = 1,
-  normalize = TRUE)
+  normalize = TRUE, export = FALSE)
 }
 \arguments{
 \item{x}{Input data. Should be character vector or data frame with character
@@ -26,6 +26,10 @@ word2vec estimates. Defaults to 1. Ignored if \code{word2vec_dims = 0}.}
 
 \item{normalize}{Logical indicating whether to normalize (mean center,
 sd = 1) features. Defaults to TRUE.}
+
+\item{export}{Logical indicating whether to store sufficient information for
+exporting the feature extraction process (stores the means, standard deviations,
+and the word2vec reference object, which can then be used to process new data).}
 }
 \value{
 A tibble data frame with extracted features as columns.
