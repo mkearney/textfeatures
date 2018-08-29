@@ -21,7 +21,10 @@ skimrskim <- function(x) {
 
 [![Build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures)
 [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)
+[![Coverage Status](https://codecov.io/gh/mkearney/textfeatures/branch/master/graph/badge.svg)](https://codecov.io/gh/mkearney/textfeatures?branch=master)
 
+![Downloads](https://cranlogs.r-pkg.org/badges/textfeatures)
+![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/textfeatures)
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
 > Easily extract useful features from character objects.
