@@ -3,6 +3,6 @@ pkgdown: 1.1.0.9000
 pkgdown_sha: ~
 articles: []
 urls:
-  reference: https://mikewk.com/textfeatures/reference
-  article: https://mikewk.com/textfeatures/articles
+  reference: https://textfeatures.mikewk.com//reference
+  article: https://textfeatures.mikewk.com//articles
 
