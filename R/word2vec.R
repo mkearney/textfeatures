@@ -26,7 +26,7 @@ word2vec <- function(x, n_vectors, threads) {
     neg_samples = "5")))
   x <- read.table(tmp_out, skip = 1)
   nms <- x[, 1, drop = TRUE]
-  x <- tibble::as_tibble(t(x[, -1]), validate = FALSE)
+  x <- tibble::as_tibble(t(x[, -1]))
   names(x) <- nms
   x
 }
@@ -42,13 +42,13 @@ word2vec_obs <- function(x, n_vectors = 50, threads = 1, export = FALSE,
     m <- match(x, names(w2v))
     m <- m[!is.na(m)]
     if (length(m) == 0) return(rep(0, nrow(w2v)))
-    x <- tibble::as_tibble(lapply(m, function(.x) w2v[[.x]]), validate = FALSE)
+    x <- tibble::as_tibble(lapply(m, function(.x) w2v[[.x]]))
     rowSums(x)
   }
   o <- lapply(x, word2vec_obs_)
   o <- tibble::as_tibble(as.data.frame(matrix(unlist(o), length(x), nrow(w2v),
     byrow = TRUE),
-    row.names = NULL, stringsAsFactors = FALSE), validate = FALSE)
+    row.names = NULL, stringsAsFactors = FALSE))
   names(o) <- paste0("w", seq_len(ncol(o)))
   if (export) {
     attr(o, "w2v_dict") <- w2v

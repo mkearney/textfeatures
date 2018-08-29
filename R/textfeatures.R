@@ -182,7 +182,7 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word2vec_dims = NULL,
   o$n_prepositions <- prepositions(text)
 
   ## convert to tibble
-  o <- tibble::as_tibble(o, validate = FALSE)
+  o <- tibble::as_tibble(o)
 
   ## name ID variable
   names(o)[names(o) == "id"] <- idname
