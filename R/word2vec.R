@@ -38,7 +38,7 @@ word2vec_obs <- function(x, n_vectors = 50, threads = 1, export = FALSE,
       FUN.VALUE = character(1), USE.NAMES = FALSE),
       n_vectors = n_vectors, threads = threads)
   }
-  o <- lapply(text, word2vec_obs_)
+  o <- lapply(x, word2vec_obs_)
   o <- tibble::as_tibble(as.data.frame(matrix(unlist(o), length(x), nrow(w2v),
     byrow = TRUE),
     row.names = NULL, stringsAsFactors = FALSE))
