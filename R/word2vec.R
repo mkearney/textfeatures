@@ -38,14 +38,7 @@ word2vec_obs <- function(x, n_vectors = 50, threads = 1, export = FALSE,
       FUN.VALUE = character(1), USE.NAMES = FALSE),
       n_vectors = n_vectors, threads = threads)
   }
-  word2vec_obs_ <- function(x) {
-    m <- match(x, names(w2v))
-    m <- m[!is.na(m)]
-    if (length(m) == 0) return(rep(0, nrow(w2v)))
-    x <- tibble::as_tibble(lapply(m, function(.x) w2v[[.x]]))
-    rowSums(x)
-  }
-  o <- lapply(x, word2vec_obs_)
+  o <- lapply(text, word2vec_obs_)
   o <- tibble::as_tibble(as.data.frame(matrix(unlist(o), length(x), nrow(w2v),
     byrow = TRUE),
     row.names = NULL, stringsAsFactors = FALSE))
@@ -54,6 +47,15 @@ word2vec_obs <- function(x, n_vectors = 50, threads = 1, export = FALSE,
     attr(o, "w2v_dict") <- w2v
   }
   o
+}
+
+
+word2vec_obs_ <- function(x) {
+  m <- names(w2v)[match(x, names(w2v))]
+  m <- m[!is.na(m)]
+  z <- rep(0, nrow(w2v))
+  if (length(m) == 0) return(z)
+  rowSums(cbind(.zeroholder = z, w2v[m]))
 }
 
 trim_ws <- function(x) {
