@@ -8,7 +8,7 @@
 #'   variable, if found, is assumed to be an ID variable.
 #' @param sentiment Logical, indicating whether to return sentiment analysis
 #'   features, the variables \code{sent_afinn} and \code{sent_bing}. Defaults to
-#'   FALSE. Setting this to true will speed things up a bit.
+#'   TRUE. Setting this to FALSE will speed things up a bit.
 #' @param word_dims Integer indicating the desired number of word2vec dimension
 #'   estimates. When NULL, the default, this function will pick a reasonable
 #'   number of dimensions (ranging from 2 to 200) based on size of input. To
