@@ -26,7 +26,8 @@ Imports:
 Suggests: 
     knitr,
     roxygen2,
-    testthat
+    testthat,
+    covr
 Encoding: UTF-8
 LazyData: yes
 Roxygen: list(markdown = TRUE)
