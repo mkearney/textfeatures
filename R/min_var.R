@@ -18,7 +18,7 @@ min_var.default <- function(x, min = 1) {
       call. = FALSE)
   }
   stopifnot(is.numeric(x))
-  x[, apply(x, 2, var) >= min]
+  x[, apply(x, 2, stats::var) >= min]
 }
 
 #' @export
