@@ -69,7 +69,10 @@ Or input a data frame with a column named `text`.
 rt <- rtweet::search_tweets("rstats", n = 2000, verbose = FALSE)
 
 ## get text features
-textfeatures(rt, threads = 2)
+tf <- textfeatures(rt, threads = 20)
+
+## preview data
+tf
 ```
 
 Compare across multiple authors.
@@ -77,10 +80,11 @@ Compare across multiple authors.
 ```{r news, eval = FALSE}
 ## data frame tweets from multiple news media accounts
 news <- rtweet::get_timelines(
-  c("cnn", "nytimes", "foxnews", "latimes", "washingtonpost"), n = 2000)
+  c("cnn", "nytimes", "foxnews", "latimes", "washingtonpost"), 
+  n = 2000)
 
 ## get text features (including ests for 20 word dims) for all observations
-news_features <- textfeatures(news, word2vec_dims = 20, threads = 3)
+news_features <- textfeatures(news, word_dims = 20, threads = 3)
 ```
 
 
@@ -132,7 +136,7 @@ If you're looking for something faster try setting `sentiment = FALSE` and `word
 
 ```{r fast}
 ## get non-substantive text features
-textfeatures(rt, sentiment = FALSE, word2vec_dims = 0)
+textfeatures(rt, sentiment = FALSE, word_dims = 0)
 ```
 
 
@@ -146,7 +150,8 @@ Extract text features from NASA meta data:
 nasa <- jsonlite::fromJSON("https://data.nasa.gov/data.json")
 
 ## identify non-public or restricted data sets
-nonpub <- grepl("Not publicly available|must register", nasa$data$rights, ignore.case = TRUE) | 
+nonpub <- grepl("Not publicly available|must register", 
+  nasa$data$rights, ignore.case = TRUE) | 
   nasa$dataset$accessLevel %in% c("restricted public", "non-public")
 
 ## create data frame with ID, description (name it "text"), and nonpub
@@ -160,7 +165,7 @@ nd <- nd[!duplicated(tolower(substr(nd$text, 1, 100))), ]
 nd <- nd[c(sample(which(!nd$nonpub), sum(nd$nonpub)), which(nd$nonpub)), ]
 
 ## get text features
-nasa_tf <- textfeatures(nd, word2vec_dims = 20, threads = 10)
+nasa_tf <- textfeatures(nd, word_dims = 20, threads = 10)
 
 ## drop columns with little to no variance
 nasa_tf <- min_var(nasa_tf)
