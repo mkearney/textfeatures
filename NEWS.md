@@ -1,3 +1,5 @@
+# textfeatures 0.2.0
+
 # textfeatures 0.1.4
 
 * `textfeatures()` now returns word2vec dimension estimates 
