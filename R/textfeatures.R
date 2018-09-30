@@ -193,7 +193,7 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
   ## make exportable
   if (export) {
     m <- vapply(o[-1], mean, na.rm = TRUE, FUN.VALUE = numeric(1))
-    s <- vapply(o[-1], sd, na.rm = TRUE, FUN.VALUE = numeric(1))
+    s <- vapply(o[-1], stats::sd, na.rm = TRUE, FUN.VALUE = numeric(1))
     e <- list(means = m, sds = s)
     e$w2v_dict <- attr(w, "w2v_dict")
   }

@@ -91,7 +91,7 @@
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">"textfeatures"</span>)</a></code></pre></div>
 <p>Or install the development version from Github.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## install from github</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"mkearney/textfeatures"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb2-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"mkearney/textfeatures"</span>)</a></code></pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -109,48 +109,62 @@
 <a class="sourceLine" id="cb3-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">## get text features</span></a>
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(x)</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; # A tibble: 3 x 28</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; # A tibble: 3 x 30</span></a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;   id    n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers</span></a>
 <a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;</span></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; 1 1      1.15       1.15       1.15   -0.792        0        0      0.173         0.445   -1.09 </span></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; 2 2     -0.577     -0.577     -0.577  -0.332        0        0     -1.08         -1.15     0.224</span></a>
 <a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; 3 3     -0.577     -0.577     -0.577   1.12         0        0      0.902         0.701    0.869</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; # … with 18 more variables: n_lowersp &lt;dbl&gt;, n_periods &lt;dbl&gt;, n_words &lt;dbl&gt;, n_caps &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; # … with 20 more variables: n_lowersp &lt;dbl&gt;, n_periods &lt;dbl&gt;, n_words &lt;dbl&gt;, n_caps &lt;dbl&gt;,</span></a>
 <a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; #   n_nonasciis &lt;dbl&gt;, n_puncts &lt;dbl&gt;, n_capsp &lt;dbl&gt;, n_charsperword &lt;dbl&gt;, sent_afinn &lt;dbl&gt;,</span></a>
 <a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; #   sent_bing &lt;dbl&gt;, n_polite &lt;dbl&gt;, n_first_person &lt;dbl&gt;, n_first_personp &lt;dbl&gt;,</span></a>
 <a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; #   n_second_person &lt;dbl&gt;, n_second_personp &lt;dbl&gt;, n_third_person &lt;dbl&gt;, n_tobe &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; #   n_prepositions &lt;dbl&gt;</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; #   n_prepositions &lt;dbl&gt;, w1 &lt;dbl&gt;, w2 &lt;dbl&gt;</span></a></code></pre></div>
 <p>Or input a data frame with a column named <code>text</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## data frame with rstats tweets</span></a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">rt &lt;-<span class="st"> </span>rtweet<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rtweet/topics/search_tweets">search_tweets</a></span>(<span class="st">"rstats"</span>, <span class="dt">n =</span> <span class="dv">2000</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## get text features</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(rt, <span class="dt">threads =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; # A tibble: 1,983 x 28</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt;    user_id n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt;  1 105556…  0.731    -0.0635     -0.711  0.0752   -0.570   -0.438      1.38         0.0124   0.0458</span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;  2 105556… -0.502    -0.854      -0.711  1.40      2.78    -0.438     -0.573        0.930    1.16  </span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt;  3 105556…  0.731    -0.0635      0.496 -0.0624   -0.570   -0.438      1.38         0.0124  -0.115 </span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;  4 280813… -0.502    -0.0635     -0.711  1.21      2.31    -0.438     -0.573       -0.336    1.29  </span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;  5 166165… -0.502    -0.392      -0.711  0.391    -0.570   -0.438     -0.573       -1.42     0.544 </span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;  6 166165…  0.731    -0.854       0.496  0.597    -0.570   -0.438      2.52        -0.336    0.602 </span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt;  7 128409… -0.502    -0.392      -0.711  1.09      1.71     2.81      -0.573       -1.42     1.10  </span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;  8 295740… -0.502    -0.854       1.20   0.0752   -0.570   -0.438      1.38        -0.336    0.189 </span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;  9 227646… -0.502     0.191      -0.711  1.02      0.871   -0.438      1.38        -0.336    1.09  </span></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; 10 227646…  0.731    -0.392       0.496  0.315     0.871   -0.438     -0.573        0.0124   0.170 </span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; # … with 1,973 more rows, and 18 more variables: n_lowersp &lt;dbl&gt;, n_periods &lt;dbl&gt;, n_words &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; #   n_caps &lt;dbl&gt;, n_nonasciis &lt;dbl&gt;, n_puncts &lt;dbl&gt;, n_capsp &lt;dbl&gt;, n_charsperword &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; #   sent_afinn &lt;dbl&gt;, sent_bing &lt;dbl&gt;, n_polite &lt;dbl&gt;, n_first_person &lt;dbl&gt;, n_first_personp &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; #   n_second_person &lt;dbl&gt;, n_second_personp &lt;dbl&gt;, n_third_person &lt;dbl&gt;, n_tobe &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; #   n_prepositions &lt;dbl&gt;</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-5" data-line-number="5">tf &lt;-<span class="st"> </span><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(rt, <span class="dt">threads =</span> <span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">## preview data</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">tf</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; # A tibble: 1,955 x 128</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;    user_id n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;  1 917515… -0.755     -0.832      1.08    1.79     1.19    -0.485      2.97         -0.516    1.78 </span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;  2 306425…  0.743     -0.532      0.462   1.42     2.19    -0.485     -0.269        -0.214    1.42 </span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;  3 143511…  0.743     -1.25      -0.602   0.232   -0.507   -0.485     -0.269        -0.906    0.145</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt;  4 103978… -0.755     -0.299      1.87   -0.919   -0.507   -0.485     -0.269        -0.214   -0.736</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;  5 519095…  0.743     -0.832      2.38   -1.76    -0.507   -0.485     -0.269         0.242   -1.39 </span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;  6 519095…  0.743     -1.25       1.53    1.18     2.19    -0.485     -0.269        -0.214    1.07 </span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt;  7 103440…  0.743     -0.832     -0.602   1.93     1.19    -0.485     -0.269         0.242    1.95 </span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt;  8 103440…  0.743      0.423      0.462  -0.333   -0.507   -0.485     -0.269         0.423   -0.223</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt;  9 103440…  0.743      1.20      -0.602  -0.414   -0.507   -0.485     -0.269         0.972   -0.526</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; 10 101181…  0.743     -0.832      1.87    1.48     2.19    -0.485     -0.269        -0.214    1.56 </span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; # … with 1,945 more rows, and 118 more variables: n_lowersp &lt;dbl&gt;, n_periods &lt;dbl&gt;, n_words &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; #   n_caps &lt;dbl&gt;, n_nonasciis &lt;dbl&gt;, n_puncts &lt;dbl&gt;, n_capsp &lt;dbl&gt;, n_charsperword &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; #   sent_afinn &lt;dbl&gt;, sent_bing &lt;dbl&gt;, n_polite &lt;dbl&gt;, n_first_person &lt;dbl&gt;, n_first_personp &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; #   n_second_person &lt;dbl&gt;, n_second_personp &lt;dbl&gt;, n_third_person &lt;dbl&gt;, n_tobe &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt; #   n_prepositions &lt;dbl&gt;, w1 &lt;dbl&gt;, w2 &lt;dbl&gt;, w3 &lt;dbl&gt;, w4 &lt;dbl&gt;, w5 &lt;dbl&gt;, w6 &lt;dbl&gt;, w7 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-27" data-line-number="27"><span class="co">#&gt; #   w8 &lt;dbl&gt;, w9 &lt;dbl&gt;, w10 &lt;dbl&gt;, w11 &lt;dbl&gt;, w12 &lt;dbl&gt;, w13 &lt;dbl&gt;, w14 &lt;dbl&gt;, w15 &lt;dbl&gt;, w16 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-28" data-line-number="28"><span class="co">#&gt; #   w17 &lt;dbl&gt;, w18 &lt;dbl&gt;, w19 &lt;dbl&gt;, w20 &lt;dbl&gt;, w21 &lt;dbl&gt;, w22 &lt;dbl&gt;, w23 &lt;dbl&gt;, w24 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-29" data-line-number="29"><span class="co">#&gt; #   w25 &lt;dbl&gt;, w26 &lt;dbl&gt;, w27 &lt;dbl&gt;, w28 &lt;dbl&gt;, w29 &lt;dbl&gt;, w30 &lt;dbl&gt;, w31 &lt;dbl&gt;, w32 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-30" data-line-number="30"><span class="co">#&gt; #   w33 &lt;dbl&gt;, w34 &lt;dbl&gt;, w35 &lt;dbl&gt;, w36 &lt;dbl&gt;, w37 &lt;dbl&gt;, w38 &lt;dbl&gt;, w39 &lt;dbl&gt;, w40 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-31" data-line-number="31"><span class="co">#&gt; #   w41 &lt;dbl&gt;, w42 &lt;dbl&gt;, w43 &lt;dbl&gt;, w44 &lt;dbl&gt;, w45 &lt;dbl&gt;, w46 &lt;dbl&gt;, w47 &lt;dbl&gt;, w48 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-32" data-line-number="32"><span class="co">#&gt; #   w49 &lt;dbl&gt;, w50 &lt;dbl&gt;, w51 &lt;dbl&gt;, w52 &lt;dbl&gt;, w53 &lt;dbl&gt;, w54 &lt;dbl&gt;, w55 &lt;dbl&gt;, w56 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-33" data-line-number="33"><span class="co">#&gt; #   w57 &lt;dbl&gt;, w58 &lt;dbl&gt;, w59 &lt;dbl&gt;, w60 &lt;dbl&gt;, w61 &lt;dbl&gt;, w62 &lt;dbl&gt;, w63 &lt;dbl&gt;, w64 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-34" data-line-number="34"><span class="co">#&gt; #   w65 &lt;dbl&gt;, w66 &lt;dbl&gt;, w67 &lt;dbl&gt;, w68 &lt;dbl&gt;, w69 &lt;dbl&gt;, w70 &lt;dbl&gt;, w71 &lt;dbl&gt;, w72 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-35" data-line-number="35"><span class="co">#&gt; #   w73 &lt;dbl&gt;, w74 &lt;dbl&gt;, w75 &lt;dbl&gt;, w76 &lt;dbl&gt;, w77 &lt;dbl&gt;, w78 &lt;dbl&gt;, w79 &lt;dbl&gt;, w80 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-36" data-line-number="36"><span class="co">#&gt; #   w81 &lt;dbl&gt;, w82 &lt;dbl&gt;, …</span></a></code></pre></div>
 <p>Compare across multiple authors.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## data frame tweets from multiple news media accounts</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">news &lt;-<span class="st"> </span>rtweet<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rtweet/topics/get_timeline">get_timelines</a></span>(</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">c</span>(<span class="st">"cnn"</span>, <span class="st">"nytimes"</span>, <span class="st">"foxnews"</span>, <span class="st">"latimes"</span>, <span class="st">"washingtonpost"</span>), <span class="dt">n =</span> <span class="dv">2000</span>)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">## get text features (including ests for 20 word dims) for all observations</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">news_features &lt;-<span class="st"> </span><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(news, <span class="dt">word2vec_dims =</span> <span class="dv">20</span>, <span class="dt">threads =</span> <span class="dv">3</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">c</span>(<span class="st">"cnn"</span>, <span class="st">"nytimes"</span>, <span class="st">"foxnews"</span>, <span class="st">"latimes"</span>, <span class="st">"washingtonpost"</span>), </a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="dt">n =</span> <span class="dv">2000</span>)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">## get text features (including ests for 20 word dims) for all observations</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">news_features &lt;-<span class="st"> </span><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(news, <span class="dt">word_dims =</span> <span class="dv">20</span>, <span class="dt">threads =</span> <span class="dv">3</span>)</a></code></pre></div>
 <p style="align:center">
 <img src="tools/readme/readme.png" max-width="600px"></p>
 </div>
@@ -160,21 +174,21 @@
 <a href="#fast-version" class="anchor"></a>Fast version</h2>
 <p>If you’re looking for something faster try setting <code>sentiment = FALSE</code> and <code>word2vec = 0</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">## get non-substantive text features</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(rt, <span class="dt">sentiment =</span> <span class="ot">FALSE</span>, <span class="dt">word2vec_dims =</span> <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; # A tibble: 1,983 x 26</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(rt, <span class="dt">sentiment =</span> <span class="ot">FALSE</span>, <span class="dt">word_dims =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; # A tibble: 1,955 x 26</span></a>
 <a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt;    user_id n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims n_extraspaces n_lowers</span></a>
 <a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt;  1 105556…  0.731    -0.0635     -0.711  0.0752   -0.570   -0.438      1.38         0.0124   0.0458</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt;  2 105556… -0.502    -0.854      -0.711  1.40      2.78    -0.438     -0.573        0.930    1.16  </span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt;  3 105556…  0.731    -0.0635      0.496 -0.0624   -0.570   -0.438      1.38         0.0124  -0.115 </span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt;  4 280813… -0.502    -0.0635     -0.711  1.21      2.31    -0.438     -0.573       -0.336    1.29  </span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt;  5 166165… -0.502    -0.392      -0.711  0.391    -0.570   -0.438     -0.573       -1.42     0.544 </span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt;  6 166165…  0.731    -0.854       0.496  0.597    -0.570   -0.438      2.52        -0.336    0.602 </span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt;  7 128409… -0.502    -0.392      -0.711  1.09      1.71     2.81      -0.573       -1.42     1.10  </span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt;  8 295740… -0.502    -0.854       1.20   0.0752   -0.570   -0.438      1.38        -0.336    0.189 </span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt;  9 227646… -0.502     0.191      -0.711  1.02      0.871   -0.438      1.38        -0.336    1.09  </span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; 10 227646…  0.731    -0.392       0.496  0.315     0.871   -0.438     -0.573        0.0124   0.170 </span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; # … with 1,973 more rows, and 16 more variables: n_lowersp &lt;dbl&gt;, n_periods &lt;dbl&gt;, n_words &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt;  1 917515… -0.755     -0.832      1.08    1.79     1.19    -0.485      2.97         -0.516    1.78 </span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt;  2 306425…  0.743     -0.532      0.462   1.42     2.19    -0.485     -0.269        -0.214    1.42 </span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt;  3 143511…  0.743     -1.25      -0.602   0.232   -0.507   -0.485     -0.269        -0.906    0.145</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt;  4 103978… -0.755     -0.299      1.87   -0.919   -0.507   -0.485     -0.269        -0.214   -0.736</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt;  5 519095…  0.743     -0.832      2.38   -1.76    -0.507   -0.485     -0.269         0.242   -1.39 </span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt;  6 519095…  0.743     -1.25       1.53    1.18     2.19    -0.485     -0.269        -0.214    1.07 </span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt;  7 103440…  0.743     -0.832     -0.602   1.93     1.19    -0.485     -0.269         0.242    1.95 </span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt;  8 103440…  0.743      0.423      0.462  -0.333   -0.507   -0.485     -0.269         0.423   -0.223</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt;  9 103440…  0.743      1.20      -0.602  -0.414   -0.507   -0.485     -0.269         0.972   -0.526</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; 10 101181…  0.743     -0.832      1.87    1.48     2.19    -0.485     -0.269        -0.214    1.56 </span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; # … with 1,945 more rows, and 16 more variables: n_lowersp &lt;dbl&gt;, n_periods &lt;dbl&gt;, n_words &lt;dbl&gt;,</span></a>
 <a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; #   n_caps &lt;dbl&gt;, n_nonasciis &lt;dbl&gt;, n_puncts &lt;dbl&gt;, n_capsp &lt;dbl&gt;, n_charsperword &lt;dbl&gt;,</span></a>
 <a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt; #   n_polite &lt;dbl&gt;, n_first_person &lt;dbl&gt;, n_first_personp &lt;dbl&gt;, n_second_person &lt;dbl&gt;,</span></a>
 <a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">#&gt; #   n_second_personp &lt;dbl&gt;, n_third_person &lt;dbl&gt;, n_tobe &lt;dbl&gt;, n_prepositions &lt;dbl&gt;</span></a></code></pre></div>
@@ -187,27 +201,28 @@
 <a class="sourceLine" id="cb7-2" data-line-number="2">nasa &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/jsonlite/topics/fromJSON">fromJSON</a></span>(<span class="st">"https://data.nasa.gov/data.json"</span>)</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">## identify non-public or restricted data sets</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">nonpub &lt;-<span class="st"> </span><span class="kw">grepl</span>(<span class="st">"Not publicly available|must register"</span>, nasa<span class="op">$</span>data<span class="op">$</span>rights, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>) <span class="op">|</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="st">  </span>nasa<span class="op">$</span>dataset<span class="op">$</span>accessLevel <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"restricted public"</span>, <span class="st">"non-public"</span>)</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">## create data frame with ID, description (name it "text"), and nonpub</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">nd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">text =</span> nasa<span class="op">$</span>dataset<span class="op">$</span>description, <span class="dt">nonpub =</span> nonpub, </a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co">## drop duplicates (truncate text to ensure more distinct obs)</span></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13">nd &lt;-<span class="st"> </span>nd[<span class="op">!</span><span class="kw">duplicated</span>(<span class="kw">tolower</span>(<span class="kw">substr</span>(nd<span class="op">$</span>text, <span class="dv">1</span>, <span class="dv">100</span>))), ]</a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="co">## filter via sampling to create equal number of pub/nonpub</span></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16">nd &lt;-<span class="st"> </span>nd[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="kw">which</span>(<span class="op">!</span>nd<span class="op">$</span>nonpub), <span class="kw">sum</span>(nd<span class="op">$</span>nonpub)), <span class="kw">which</span>(nd<span class="op">$</span>nonpub)), ]</a>
-<a class="sourceLine" id="cb7-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb7-18" data-line-number="18"><span class="co">## get text features</span></a>
-<a class="sourceLine" id="cb7-19" data-line-number="19">nasa_tf &lt;-<span class="st"> </span><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(nd, <span class="dt">word2vec_dims =</span> <span class="dv">20</span>, <span class="dt">threads =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb7-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb7-21" data-line-number="21"><span class="co">## drop columns with little to no variance</span></a>
-<a class="sourceLine" id="cb7-22" data-line-number="22">nasa_tf &lt;-<span class="st"> </span><span class="kw"><a href="reference/min_var.html">min_var</a></span>(nasa_tf)</a>
-<a class="sourceLine" id="cb7-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb7-24" data-line-number="24"><span class="co">## view summary</span></a>
-<a class="sourceLine" id="cb7-25" data-line-number="25"><span class="kw">skimrskim</span>(nasa_tf)</a></code></pre></div>
+<a class="sourceLine" id="cb7-5" data-line-number="5">nonpub &lt;-<span class="st"> </span><span class="kw">grepl</span>(<span class="st">"Not publicly available|must register"</span>, </a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">  nasa<span class="op">$</span>data<span class="op">$</span>rights, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>) <span class="op">|</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="st">  </span>nasa<span class="op">$</span>dataset<span class="op">$</span>accessLevel <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"restricted public"</span>, <span class="st">"non-public"</span>)</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">## create data frame with ID, description (name it "text"), and nonpub</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">nd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">text =</span> nasa<span class="op">$</span>dataset<span class="op">$</span>description, <span class="dt">nonpub =</span> nonpub, </a>
+<a class="sourceLine" id="cb7-11" data-line-number="11">  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">## drop duplicates (truncate text to ensure more distinct obs)</span></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14">nd &lt;-<span class="st"> </span>nd[<span class="op">!</span><span class="kw">duplicated</span>(<span class="kw">tolower</span>(<span class="kw">substr</span>(nd<span class="op">$</span>text, <span class="dv">1</span>, <span class="dv">100</span>))), ]</a>
+<a class="sourceLine" id="cb7-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co">## filter via sampling to create equal number of pub/nonpub</span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17">nd &lt;-<span class="st"> </span>nd[<span class="kw">c</span>(<span class="kw">sample</span>(<span class="kw">which</span>(<span class="op">!</span>nd<span class="op">$</span>nonpub), <span class="kw">sum</span>(nd<span class="op">$</span>nonpub)), <span class="kw">which</span>(nd<span class="op">$</span>nonpub)), ]</a>
+<a class="sourceLine" id="cb7-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="co">## get text features</span></a>
+<a class="sourceLine" id="cb7-20" data-line-number="20">nasa_tf &lt;-<span class="st"> </span><span class="kw"><a href="reference/textfeatures.html">textfeatures</a></span>(nd, <span class="dt">word_dims =</span> <span class="dv">20</span>, <span class="dt">threads =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb7-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb7-22" data-line-number="22"><span class="co">## drop columns with little to no variance</span></a>
+<a class="sourceLine" id="cb7-23" data-line-number="23">nasa_tf &lt;-<span class="st"> </span><span class="kw"><a href="reference/min_var.html">min_var</a></span>(nasa_tf)</a>
+<a class="sourceLine" id="cb7-24" data-line-number="24"></a>
+<a class="sourceLine" id="cb7-25" data-line-number="25"><span class="co">## view summary</span></a>
+<a class="sourceLine" id="cb7-26" data-line-number="26"><span class="kw">skimrskim</span>(nasa_tf)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">variable</th>
@@ -221,86 +236,95 @@
 <tbody>
 <tr class="odd">
 <td align="left">n_caps</td>
-<td align="left">-2.54</td>
-<td align="left">-0.55</td>
-<td align="left">0.31</td>
-<td align="left">0.65</td>
-<td align="left">1.89</td>
-<td align="left">▁▁▂▅▃▇▃▁</td>
+<td align="left">-2.69</td>
+<td align="left">-0.52</td>
+<td align="left">0.27</td>
+<td align="left">0.62</td>
+<td align="left">2.23</td>
+<td align="left">▁▂▃▅▇▇▃▁</td>
 </tr>
 <tr class="even">
 <td align="left">n_capsp</td>
-<td align="left">-0.99</td>
-<td align="left">-0.8</td>
-<td align="left">-0.5</td>
-<td align="left">1.02</td>
+<td align="left">-0.95</td>
+<td align="left">-0.78</td>
+<td align="left">-0.55</td>
+<td align="left">1.03</td>
 <td align="left">2</td>
-<td align="left">▇▃▁▁▁▁▂▂</td>
+<td align="left">▇▂▁▁▁▁▂▂</td>
 </tr>
 <tr class="odd">
 <td align="left">n_chars</td>
-<td align="left">-2.79</td>
-<td align="left">-0.76</td>
-<td align="left">-0.29</td>
-<td align="left">0.98</td>
-<td align="left">1.95</td>
-<td align="left">▁▁▃▇▃▂▇▂</td>
+<td align="left">-2.81</td>
+<td align="left">-0.78</td>
+<td align="left">-0.075</td>
+<td align="left">0.93</td>
+<td align="left">1.91</td>
+<td align="left">▁▁▃▇▂▃▇▁</td>
 </tr>
 <tr class="even">
 <td align="left">n_charsperword</td>
-<td align="left">-6.3</td>
-<td align="left">-0.3</td>
-<td align="left">0.22</td>
+<td align="left">-6.32</td>
+<td align="left">-0.32</td>
+<td align="left">0.23</td>
 <td align="left">0.55</td>
-<td align="left">2.33</td>
-<td align="left">▁▁▁▁▁▆▇▁</td>
+<td align="left">1.66</td>
+<td align="left">▁▁▁▁▁▂▇▂</td>
 </tr>
 <tr class="odd">
-<td align="left">n_digits</td>
-<td align="left">-0.95</td>
-<td align="left">-0.95</td>
-<td align="left">-0.052</td>
-<td align="left">0.75</td>
-<td align="left">2.98</td>
-<td align="left">▇▂▃▂▁▂▁▁</td>
+<td align="left">n_commas</td>
+<td align="left">-1.45</td>
+<td align="left">-0.74</td>
+<td align="left">-0.023</td>
+<td align="left">0.81</td>
+<td align="left">2.38</td>
+<td align="left">▇▂▇▂▇▅▁▁</td>
 </tr>
 <tr class="even">
-<td align="left">n_exclaims</td>
-<td align="left">-0.055</td>
-<td align="left">-0.055</td>
-<td align="left">-0.055</td>
-<td align="left">-0.055</td>
-<td align="left">18.28</td>
-<td align="left">▇▁▁▁▁▁▁▁</td>
+<td align="left">n_digits</td>
+<td align="left">-0.92</td>
+<td align="left">-0.92</td>
+<td align="left">-0.2</td>
+<td align="left">0.64</td>
+<td align="left">2.56</td>
+<td align="left">▇▁▃▂▂▁▂▁</td>
 </tr>
 <tr class="odd">
 <td align="left">n_first_person</td>
-<td align="left">-0.78</td>
-<td align="left">-0.78</td>
-<td align="left">-0.78</td>
-<td align="left">0.98</td>
-<td align="left">2.75</td>
-<td align="left">▇▁▁▅▁▁▁▁</td>
+<td align="left">-0.75</td>
+<td align="left">-0.75</td>
+<td align="left">-0.75</td>
+<td align="left">1.03</td>
+<td align="left">2.81</td>
+<td align="left">▇▁▁▁▅▁▁▁</td>
 </tr>
 <tr class="even">
 <td align="left">n_first_personp</td>
-<td align="left">-0.5</td>
-<td align="left">-0.5</td>
-<td align="left">-0.5</td>
-<td align="left">-0.5</td>
-<td align="left">3.22</td>
+<td align="left">-0.49</td>
+<td align="left">-0.49</td>
+<td align="left">-0.49</td>
+<td align="left">-0.49</td>
+<td align="left">3.51</td>
 <td align="left">▇▁▁▂▁▁▁▁</td>
 </tr>
 <tr class="odd">
 <td align="left">n_hashtags</td>
-<td align="left">-0.055</td>
-<td align="left">-0.055</td>
-<td align="left">-0.055</td>
-<td align="left">-0.055</td>
-<td align="left">18.28</td>
+<td align="left">-0.095</td>
+<td align="left">-0.095</td>
+<td align="left">-0.095</td>
+<td align="left">-0.095</td>
+<td align="left">10.52</td>
 <td align="left">▇▁▁▁▁▁▁▁</td>
 </tr>
 <tr class="even">
+<td align="left">n_lowersp</td>
+<td align="left">-1.82</td>
+<td align="left">-0.96</td>
+<td align="left">0.58</td>
+<td align="left">0.79</td>
+<td align="left">0.93</td>
+<td align="left">▃▁▁▁▁▁▂▇</td>
+</tr>
+<tr class="odd">
 <td align="left">n_mentions</td>
 <td align="left">-0.075</td>
 <td align="left">-0.075</td>
@@ -309,77 +333,203 @@
 <td align="left">15.45</td>
 <td align="left">▇▁▁▁▁▁▁▁</td>
 </tr>
-<tr class="odd">
-<td align="left">n_nonasciis</td>
-<td align="left">-0.12</td>
-<td align="left">-0.12</td>
-<td align="left">-0.12</td>
-<td align="left">-0.12</td>
-<td align="left">10.52</td>
-<td align="left">▇▁▁▁▁▁▁▁</td>
-</tr>
 <tr class="even">
 <td align="left">n_periods</td>
-<td align="left">-1.05</td>
-<td align="left">-1.05</td>
-<td align="left">-0.00013</td>
-<td align="left">0.81</td>
-<td align="left">2.39</td>
-<td align="left">▇▂▂▂▃▂▁▁</td>
+<td align="left">-1.1</td>
+<td align="left">-1.1</td>
+<td align="left">-0.049</td>
+<td align="left">0.89</td>
+<td align="left">2.25</td>
+<td align="left">▇▁▂▂▃▃▂▁</td>
 </tr>
 <tr class="odd">
 <td align="left">n_polite</td>
-<td align="left">-5.3</td>
-<td align="left">-0.071</td>
-<td align="left">0.33</td>
-<td align="left">0.33</td>
-<td align="left">2.53</td>
+<td align="left">-7.02</td>
+<td align="left">-0.15</td>
+<td align="left">0.27</td>
+<td align="left">0.27</td>
+<td align="left">2.81</td>
 <td align="left">▁▁▁▁▁▇▂▁</td>
 </tr>
 <tr class="even">
 <td align="left">n_prepositions</td>
-<td align="left">-1.02</td>
-<td align="left">-1.02</td>
-<td align="left">0.012</td>
-<td align="left">1.05</td>
-<td align="left">1.65</td>
-<td align="left">▇▁▁▁▁▂▃▂</td>
+<td align="left">-1.04</td>
+<td align="left">-1.04</td>
+<td align="left">-0.016</td>
+<td align="left">1.01</td>
+<td align="left">1.75</td>
+<td align="left">▇▁▁▁▁▃▃▁</td>
+</tr>
+<tr class="odd">
+<td align="left">n_puncts</td>
+<td align="left">-1.16</td>
+<td align="left">-1.16</td>
+<td align="left">-0.047</td>
+<td align="left">0.9</td>
+<td align="left">2.58</td>
+<td align="left">▇▅▃▂▃▂▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">n_second_person</td>
+<td align="left">-0.055</td>
+<td align="left">-0.055</td>
+<td align="left">-0.055</td>
+<td align="left">-0.055</td>
+<td align="left">18.28</td>
+<td align="left">▇▁▁▁▁▁▁▁</td>
 </tr>
 <tr class="odd">
 <td align="left">n_second_personp</td>
-<td align="left">-0.39</td>
-<td align="left">-0.39</td>
-<td align="left">-0.39</td>
-<td align="left">-0.39</td>
-<td align="left">3.81</td>
+<td align="left">-0.43</td>
+<td align="left">-0.43</td>
+<td align="left">-0.43</td>
+<td align="left">-0.43</td>
+<td align="left">3.45</td>
 <td align="left">▇▁▁▁▁▁▁▁</td>
 </tr>
 <tr class="even">
 <td align="left">n_third_person</td>
-<td align="left">-0.63</td>
-<td align="left">-0.63</td>
-<td align="left">-0.63</td>
-<td align="left">1.07</td>
-<td align="left">3.33</td>
+<td align="left">-0.62</td>
+<td align="left">-0.62</td>
+<td align="left">-0.62</td>
+<td align="left">1.18</td>
+<td align="left">4.03</td>
 <td align="left">▇▁▁▂▁▁▁▁</td>
 </tr>
 <tr class="odd">
-<td align="left">n_words</td>
-<td align="left">-1.91</td>
-<td align="left">-0.77</td>
-<td align="left">-0.34</td>
-<td align="left">1.03</td>
-<td align="left">1.92</td>
-<td align="left">▂▂▇▂▂▃▇▁</td>
+<td align="left">n_urls</td>
+<td align="left">-0.16</td>
+<td align="left">-0.16</td>
+<td align="left">-0.16</td>
+<td align="left">-0.16</td>
+<td align="left">7.64</td>
+<td align="left">▇▁▁▁▁▁▁▁</td>
 </tr>
 <tr class="even">
-<td align="left">sent_afinn</td>
-<td align="left">-7.14</td>
-<td align="left">-0.45</td>
-<td align="left">-0.45</td>
+<td align="left">n_words</td>
+<td align="left">-1.95</td>
+<td align="left">-0.81</td>
+<td align="left">-0.15</td>
+<td align="left">1.01</td>
+<td align="left">1.95</td>
+<td align="left">▂▂▇▂▂▃▆▁</td>
+</tr>
+<tr class="odd">
+<td align="left">sent_bing</td>
+<td align="left">-6.68</td>
+<td align="left">-0.28</td>
+<td align="left">-0.28</td>
+<td align="left">0.16</td>
+<td align="left">3.33</td>
+<td align="left">▁▁▁▁▁▇▂▁</td>
+</tr>
+<tr class="even">
+<td align="left">w1</td>
+<td align="left">-8.02</td>
+<td align="left">-0.39</td>
+<td align="left">0.48</td>
+<td align="left">0.63</td>
+<td align="left">0.74</td>
+<td align="left">▁▁▁▁▁▁▂▇</td>
+</tr>
+<tr class="odd">
+<td align="left">w12</td>
+<td align="left">-5.58</td>
+<td align="left">-0.34</td>
+<td align="left">0.38</td>
+<td align="left">0.53</td>
+<td align="left">3.5</td>
+<td align="left">▁▁▁▁▃▇▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">w13</td>
+<td align="left">-3.71</td>
+<td align="left">-0.24</td>
+<td align="left">-0.062</td>
+<td align="left">0.14</td>
+<td align="left">11.14</td>
+<td align="left">▁▇▃▁▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">w14</td>
+<td align="left">-10.28</td>
+<td align="left">-0.23</td>
+<td align="left">0.35</td>
+<td align="left">0.44</td>
+<td align="left">1.95</td>
+<td align="left">▁▁▁▁▁▁▇▆</td>
+</tr>
+<tr class="even">
+<td align="left">w15</td>
+<td align="left">-6.27</td>
+<td align="left">0.051</td>
+<td align="left">0.19</td>
 <td align="left">0.27</td>
-<td align="left">4.3</td>
-<td align="left">▁▁▁▁▇▂▁▁</td>
+<td align="left">2.51</td>
+<td align="left">▁▁▁▁▁▇▂▁</td>
+</tr>
+<tr class="odd">
+<td align="left">w17</td>
+<td align="left">-0.74</td>
+<td align="left">-0.68</td>
+<td align="left">-0.58</td>
+<td align="left">0.42</td>
+<td align="left">7.15</td>
+<td align="left">▇▂▁▁▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">w19</td>
+<td align="left">-13.25</td>
+<td align="left">-0.3</td>
+<td align="left">0.23</td>
+<td align="left">0.51</td>
+<td align="left">1.24</td>
+<td align="left">▁▁▁▁▁▁▂▇</td>
+</tr>
+<tr class="odd">
+<td align="left">w20</td>
+<td align="left">-6.19</td>
+<td align="left">-0.58</td>
+<td align="left">0.51</td>
+<td align="left">0.71</td>
+<td align="left">0.77</td>
+<td align="left">▁▁▁▁▁▂▂▇</td>
+</tr>
+<tr class="even">
+<td align="left">w3</td>
+<td align="left">-1.25</td>
+<td align="left">-0.55</td>
+<td align="left">-0.39</td>
+<td align="left">0.33</td>
+<td align="left">5.33</td>
+<td align="left">▇▇▂▂▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">w7</td>
+<td align="left">-9.01</td>
+<td align="left">-0.33</td>
+<td align="left">0.34</td>
+<td align="left">0.48</td>
+<td align="left">1.58</td>
+<td align="left">▁▁▁▁▁▁▃▇</td>
+</tr>
+<tr class="even">
+<td align="left">w8</td>
+<td align="left">-3.04</td>
+<td align="left">-0.53</td>
+<td align="left">-0.3</td>
+<td align="left">0.052</td>
+<td align="left">7.21</td>
+<td align="left">▁▆▇▂▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">w9</td>
+<td align="left">-1.47</td>
+<td align="left">-0.57</td>
+<td align="left">-0.51</td>
+<td align="left">0.3</td>
+<td align="left">4.51</td>
+<td align="left">▁▇▂▁▁▁▁▁</td>
 </tr>
 </tbody>
 </table>
@@ -398,47 +548,62 @@
 <a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt; glm(formula = nonpub ~ ., family = binomial, data = nasa_tf[-1])</span></a>
 <a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; Deviance Residuals: </span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt;     Min       1Q   Median       3Q      Max  </span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; -2.3637  -0.3712   0.0000   0.2634   2.8226  </span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt;      Min        1Q    Median        3Q       Max  </span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; -1.82359  -0.00118   0.00000   0.02412   2.97932  </span></a>
 <a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt; Coefficients:</span></a>
-<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="co">#&gt;                   Estimate Std. Error z value Pr(&gt;|z|)    </span></a>
-<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="co">#&gt; (Intercept)        0.06159   56.69984   0.001  0.99913    </span></a>
-<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">#&gt; n_hashtags        -0.81414  355.83911  -0.002  0.99817    </span></a>
-<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">#&gt; n_mentions         2.25295  274.25782   0.008  0.99345    </span></a>
-<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="co">#&gt; n_chars           -8.63406   12.63026  -0.684  0.49423    </span></a>
-<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="co">#&gt; n_digits           0.27932    0.30786   0.907  0.36424    </span></a>
-<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="co">#&gt; n_exclaims        -0.92347  355.83912  -0.003  0.99793    </span></a>
-<a class="sourceLine" id="cb8-27" data-line-number="27"><span class="co">#&gt; n_periods          3.35507    0.75417   4.449 8.64e-06 ***</span></a>
-<a class="sourceLine" id="cb8-28" data-line-number="28"><span class="co">#&gt; n_words            6.94229   11.15391   0.622  0.53367    </span></a>
-<a class="sourceLine" id="cb8-29" data-line-number="29"><span class="co">#&gt; n_caps            -0.15377    0.62347  -0.247  0.80520    </span></a>
-<a class="sourceLine" id="cb8-30" data-line-number="30"><span class="co">#&gt; n_nonasciis       -3.35035  384.63843  -0.009  0.99305    </span></a>
-<a class="sourceLine" id="cb8-31" data-line-number="31"><span class="co">#&gt; n_capsp            2.89600    1.00853   2.871  0.00409 ** </span></a>
-<a class="sourceLine" id="cb8-32" data-line-number="32"><span class="co">#&gt; n_charsperword     0.45103    1.65812   0.272  0.78561    </span></a>
-<a class="sourceLine" id="cb8-33" data-line-number="33"><span class="co">#&gt; sent_afinn         0.53782    0.32637   1.648  0.09938 .  </span></a>
-<a class="sourceLine" id="cb8-34" data-line-number="34"><span class="co">#&gt; n_polite           0.64114    0.28717   2.233  0.02558 *  </span></a>
-<a class="sourceLine" id="cb8-35" data-line-number="35"><span class="co">#&gt; n_first_person    -0.20718    0.28147  -0.736  0.46169    </span></a>
-<a class="sourceLine" id="cb8-36" data-line-number="36"><span class="co">#&gt; n_first_personp   -0.88249    0.30681  -2.876  0.00402 ** </span></a>
-<a class="sourceLine" id="cb8-37" data-line-number="37"><span class="co">#&gt; n_second_personp  -0.35334    0.27552  -1.282  0.19969    </span></a>
-<a class="sourceLine" id="cb8-38" data-line-number="38"><span class="co">#&gt; n_third_person     0.69108    0.32458   2.129  0.03324 *  </span></a>
-<a class="sourceLine" id="cb8-39" data-line-number="39"><span class="co">#&gt; n_prepositions    -2.25307    0.86013  -2.619  0.00881 ** </span></a>
-<a class="sourceLine" id="cb8-40" data-line-number="40"><span class="co">#&gt; ---</span></a>
-<a class="sourceLine" id="cb8-41" data-line-number="41"><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></a>
-<a class="sourceLine" id="cb8-42" data-line-number="42"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-43" data-line-number="43"><span class="co">#&gt; (Dispersion parameter for binomial family taken to be 1)</span></a>
-<a class="sourceLine" id="cb8-44" data-line-number="44"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-45" data-line-number="45"><span class="co">#&gt;     Null deviance: 465.79  on 335  degrees of freedom</span></a>
-<a class="sourceLine" id="cb8-46" data-line-number="46"><span class="co">#&gt; Residual deviance: 165.92  on 317  degrees of freedom</span></a>
-<a class="sourceLine" id="cb8-47" data-line-number="47"><span class="co">#&gt; AIC: 203.92</span></a>
-<a class="sourceLine" id="cb8-48" data-line-number="48"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-49" data-line-number="49"><span class="co">#&gt; Number of Fisher Scoring iterations: 17</span></a>
-<a class="sourceLine" id="cb8-50" data-line-number="50"></a>
-<a class="sourceLine" id="cb8-51" data-line-number="51"><span class="co">## how accurate was the model?</span></a>
-<a class="sourceLine" id="cb8-52" data-line-number="52"><span class="kw">table</span>(<span class="kw">predict</span>(m1, <span class="dt">type =</span> <span class="st">"response"</span>) <span class="op">&gt;</span><span class="st"> </span><span class="fl">.5</span>, nasa_tf<span class="op">$</span>nonpub)</a>
-<a class="sourceLine" id="cb8-53" data-line-number="53"><span class="co">#&gt;        </span></a>
-<a class="sourceLine" id="cb8-54" data-line-number="54"><span class="co">#&gt;         FALSE TRUE</span></a>
-<a class="sourceLine" id="cb8-55" data-line-number="55"><span class="co">#&gt;   FALSE   152   20</span></a>
-<a class="sourceLine" id="cb8-56" data-line-number="56"><span class="co">#&gt;   TRUE     16  148</span></a></code></pre></div>
+<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="co">#&gt;                   Estimate Std. Error z value Pr(&gt;|z|)   </span></a>
+<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="co">#&gt; (Intercept)       -5.56818   35.77811  -0.156  0.87632   </span></a>
+<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">#&gt; n_urls            -4.06012    1.65605  -2.452  0.01422 * </span></a>
+<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">#&gt; n_hashtags        -1.90087  240.83822  -0.008  0.99370   </span></a>
+<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="co">#&gt; n_mentions         1.85887  420.17799   0.004  0.99647   </span></a>
+<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="co">#&gt; n_chars           45.67043   33.04196   1.382  0.16691   </span></a>
+<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="co">#&gt; n_commas           0.81489    1.06429   0.766  0.44387   </span></a>
+<a class="sourceLine" id="cb8-27" data-line-number="27"><span class="co">#&gt; n_digits          -2.63413    1.17324  -2.245  0.02476 * </span></a>
+<a class="sourceLine" id="cb8-28" data-line-number="28"><span class="co">#&gt; n_lowersp        -11.20069    4.91147  -2.281  0.02258 * </span></a>
+<a class="sourceLine" id="cb8-29" data-line-number="29"><span class="co">#&gt; n_periods          0.50772    1.23013   0.413  0.67980   </span></a>
+<a class="sourceLine" id="cb8-30" data-line-number="30"><span class="co">#&gt; n_words          -38.20250   28.01013  -1.364  0.17260   </span></a>
+<a class="sourceLine" id="cb8-31" data-line-number="31"><span class="co">#&gt; n_caps            -0.03105    1.87701  -0.017  0.98680   </span></a>
+<a class="sourceLine" id="cb8-32" data-line-number="32"><span class="co">#&gt; n_puncts          -0.23511    1.31842  -0.178  0.85846   </span></a>
+<a class="sourceLine" id="cb8-33" data-line-number="33"><span class="co">#&gt; n_capsp           -8.82151    4.51147  -1.955  0.05054 . </span></a>
+<a class="sourceLine" id="cb8-34" data-line-number="34"><span class="co">#&gt; n_charsperword    -8.69351    5.18980  -1.675  0.09391 . </span></a>
+<a class="sourceLine" id="cb8-35" data-line-number="35"><span class="co">#&gt; sent_bing         -1.39470    0.98145  -1.421  0.15530   </span></a>
+<a class="sourceLine" id="cb8-36" data-line-number="36"><span class="co">#&gt; n_polite           0.77719    1.32638   0.586  0.55791   </span></a>
+<a class="sourceLine" id="cb8-37" data-line-number="37"><span class="co">#&gt; n_first_person    -0.53525    0.97562  -0.549  0.58326   </span></a>
+<a class="sourceLine" id="cb8-38" data-line-number="38"><span class="co">#&gt; n_first_personp   -4.37591    2.49903  -1.751  0.07994 . </span></a>
+<a class="sourceLine" id="cb8-39" data-line-number="39"><span class="co">#&gt; n_second_person    3.61951  420.74574   0.009  0.99314   </span></a>
+<a class="sourceLine" id="cb8-40" data-line-number="40"><span class="co">#&gt; n_second_personp   0.64033    1.10899   0.577  0.56367   </span></a>
+<a class="sourceLine" id="cb8-41" data-line-number="41"><span class="co">#&gt; n_third_person     2.62604    1.09831   2.391  0.01680 * </span></a>
+<a class="sourceLine" id="cb8-42" data-line-number="42"><span class="co">#&gt; n_prepositions    -3.79526    2.60438  -1.457  0.14504   </span></a>
+<a class="sourceLine" id="cb8-43" data-line-number="43"><span class="co">#&gt; w1                -6.33094    4.35689  -1.453  0.14620   </span></a>
+<a class="sourceLine" id="cb8-44" data-line-number="44"><span class="co">#&gt; w3                -4.04730    3.62695  -1.116  0.26447   </span></a>
+<a class="sourceLine" id="cb8-45" data-line-number="45"><span class="co">#&gt; w7                 9.47842    3.52283   2.691  0.00713 **</span></a>
+<a class="sourceLine" id="cb8-46" data-line-number="46"><span class="co">#&gt; w8                -1.61217    2.90347  -0.555  0.57872   </span></a>
+<a class="sourceLine" id="cb8-47" data-line-number="47"><span class="co">#&gt; w9               -10.09777    3.34757  -3.016  0.00256 **</span></a>
+<a class="sourceLine" id="cb8-48" data-line-number="48"><span class="co">#&gt; w12               -1.77553    2.61442  -0.679  0.49706   </span></a>
+<a class="sourceLine" id="cb8-49" data-line-number="49"><span class="co">#&gt; w13               -6.34357    2.02108  -3.139  0.00170 **</span></a>
+<a class="sourceLine" id="cb8-50" data-line-number="50"><span class="co">#&gt; w14               26.65366    8.61008   3.096  0.00196 **</span></a>
+<a class="sourceLine" id="cb8-51" data-line-number="51"><span class="co">#&gt; w15                9.37647    3.90868   2.399  0.01645 * </span></a>
+<a class="sourceLine" id="cb8-52" data-line-number="52"><span class="co">#&gt; w17                3.20552    7.83511   0.409  0.68245   </span></a>
+<a class="sourceLine" id="cb8-53" data-line-number="53"><span class="co">#&gt; w19               -0.70731    1.56057  -0.453  0.65038   </span></a>
+<a class="sourceLine" id="cb8-54" data-line-number="54"><span class="co">#&gt; w20              -15.18666    6.37986  -2.380  0.01729 * </span></a>
+<a class="sourceLine" id="cb8-55" data-line-number="55"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb8-56" data-line-number="56"><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></a>
+<a class="sourceLine" id="cb8-57" data-line-number="57"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-58" data-line-number="58"><span class="co">#&gt; (Dispersion parameter for binomial family taken to be 1)</span></a>
+<a class="sourceLine" id="cb8-59" data-line-number="59"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-60" data-line-number="60"><span class="co">#&gt;     Null deviance: 465.795  on 335  degrees of freedom</span></a>
+<a class="sourceLine" id="cb8-61" data-line-number="61"><span class="co">#&gt; Residual deviance:  52.371  on 302  degrees of freedom</span></a>
+<a class="sourceLine" id="cb8-62" data-line-number="62"><span class="co">#&gt; AIC: 120.37</span></a>
+<a class="sourceLine" id="cb8-63" data-line-number="63"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-64" data-line-number="64"><span class="co">#&gt; Number of Fisher Scoring iterations: 17</span></a>
+<a class="sourceLine" id="cb8-65" data-line-number="65"></a>
+<a class="sourceLine" id="cb8-66" data-line-number="66"><span class="co">## how accurate was the model?</span></a>
+<a class="sourceLine" id="cb8-67" data-line-number="67"><span class="kw">table</span>(<span class="kw">predict</span>(m1, <span class="dt">type =</span> <span class="st">"response"</span>) <span class="op">&gt;</span><span class="st"> </span><span class="fl">.5</span>, nasa_tf<span class="op">$</span>nonpub)</a>
+<a class="sourceLine" id="cb8-68" data-line-number="68"><span class="co">#&gt;        </span></a>
+<a class="sourceLine" id="cb8-69" data-line-number="69"><span class="co">#&gt;         FALSE TRUE</span></a>
+<a class="sourceLine" id="cb8-70" data-line-number="70"><span class="co">#&gt;   FALSE   164    5</span></a>
+<a class="sourceLine" id="cb8-71" data-line-number="71"><span class="co">#&gt;   TRUE      4  163</span></a></code></pre></div>
 </div>
 </div>
   </div>

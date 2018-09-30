@@ -21,7 +21,8 @@ Imports:
     tibble,
     magrittr,
     tokenizers,
-    utils
+    utils,
+    stats
 Suggests: 
     knitr,
     roxygen2,

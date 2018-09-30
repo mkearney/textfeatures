@@ -115,7 +115,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>textfeatures</span>(<span class='no'>x</span>, <span class='kw'>sentiment</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>word2vec_dims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+    <pre class="usage"><span class='fu'>textfeatures</span>(<span class='no'>x</span>, <span class='kw'>sentiment</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>word_dims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>export</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -134,7 +134,7 @@ features, the variables <code>sent_afinn</code> and <code>sent_bing</code>. Defa
 FALSE. Setting this to true will speed things up a bit.</p></td>
     </tr>
     <tr>
-      <th>word2vec_dims</th>
+      <th>word_dims</th>
       <td><p>Integer indicating the desired number of word2vec dimension
 estimates. When NULL, the default, this function will pick a reasonable
 number of dimensions (ranging from 2 to 200) based on size of input. To
@@ -143,7 +143,7 @@ disable word2vec estimates, set this to 0 or FALSE.</p></td>
     <tr>
       <th>threads</th>
       <td><p>Integer, specifying the number of threads to use when generating
-word2vec estimates. Defaults to 1. Ignored if <code>word2vec_dims = 0</code>.</p></td>
+word2vec estimates. Defaults to 1. Ignored if <code>word_dims = 0</code>.</p></td>
     </tr>
     <tr>
       <th>normalize</th>
@@ -207,18 +207,18 @@ and the word2vec reference object, which can then be used to process new data).<
 )
 
 <span class='co'>## get text features of a data frame with "text" variable</span>
-<span class='fu'>textfeatures</span>(<span class='no'>df</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 28
+<span class='fu'>textfeatures</span>(<span class='no'>df</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 30
 #&gt;      id n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims
 #&gt;   &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
 #&gt; 1     1  1.15       1.15       1.15   -0.792        0        0      0.173
 #&gt; 2     2 -0.577     -0.577     -0.577  -0.332        0        0     -1.08 
 #&gt; 3     3 -0.577     -0.577     -0.577   1.12         0        0      0.902
-#&gt; # … with 20 more variables: n_extraspaces &lt;dbl&gt;, n_lowers &lt;dbl&gt;,
+#&gt; # … with 22 more variables: n_extraspaces &lt;dbl&gt;, n_lowers &lt;dbl&gt;,
 #&gt; #   n_lowersp &lt;dbl&gt;, n_periods &lt;dbl&gt;, n_words &lt;dbl&gt;, n_caps &lt;dbl&gt;,
 #&gt; #   n_nonasciis &lt;dbl&gt;, n_puncts &lt;dbl&gt;, n_capsp &lt;dbl&gt;, n_charsperword &lt;dbl&gt;,
 #&gt; #   sent_afinn &lt;dbl&gt;, sent_bing &lt;dbl&gt;, n_polite &lt;dbl&gt;, n_first_person &lt;dbl&gt;,
 #&gt; #   n_first_personp &lt;dbl&gt;, n_second_person &lt;dbl&gt;, n_second_personp &lt;dbl&gt;,
-#&gt; #   n_third_person &lt;dbl&gt;, n_tobe &lt;dbl&gt;, n_prepositions &lt;dbl&gt;</div><div class='input'>
+#&gt; #   n_third_person &lt;dbl&gt;, n_tobe &lt;dbl&gt;, n_prepositions &lt;dbl&gt;, w1 &lt;dbl&gt;, w2 &lt;dbl&gt;</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

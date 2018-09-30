@@ -1,3 +1,5 @@
+^README_cache/*$
+^README_cache$
 ^docs$
 ^_pkgdown\.yml$
 ^make\.R$

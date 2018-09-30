@@ -24,7 +24,7 @@ word2vec <- function(x, n_vectors, threads) {
     min_count = min_count,
     iter = "5",
     neg_samples = "5")))
-  x <- read.table(tmp_out, skip = 1)
+  x <- utils::read.table(tmp_out, skip = 1)
   nms <- x[, 1, drop = TRUE]
   x <- tibble::as_tibble(t(x[, -1]))
   names(x) <- nms
