@@ -8,7 +8,6 @@ body {
   font-size: 16px;
   line-height: 1.5;
   font-weight: 400;
-  max-width: 840px;
   margin: .5em auto 5em auto;
 }
 
@@ -17,41 +16,32 @@ h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
   font-weight: 900;
 }
 
-h1 {font-size: 2.5em}
-h2 {font-size: 2.0em}
-h3 {font-size: 1.5em}
-h4 {font-size: 1.25em}
-
-h4.author, h4.date {
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-
-h4.author em, h4.date em {
-  font-style: normal;
-  font-weight: 400;
-  font-size: .85em;
-  opacity: .6;
-}
+h1 {font-size: 2.1em}
+h2 {font-size: 1.8em}
+h3 {font-size: 1.6em}
+h4 {font-size: 1.3em}
 
 code {
   font-family: "Fira Code", Consolas, Monaco, Menlo, Inconsolata, monospace;
 }
+
 pre {
   box-shadow:
     rgba(0, 0, 0, 0.1) 0 2px 3px 1px,
     rgba(0, 0, 0, 0.1) 0 1px 3px 1px,
     rgba(0, 0, 0, 0.2) 0 1px 1px -1px;
-  font-size: .75em;
-  width: 95%;
+  font-size: .80em;
   margin-left: auto;
+  width: 98%;
   margin-right: auto;
-  line-height: 1.33em;
+  line-height: 1.4em;
   font-family: "Fira Code", Consolas, Monaco, Menlo, Inconsolata, monospace;
 }
+
 div.sourceCode {
   overflow: visible;
 }
+
 pre.sourceCode {
   margin-left: auto;
   margin-right: auto;
@@ -66,6 +56,10 @@ strong {
   font-weight: 900;
 }
 
+strong code {
+  font-family: "Fira Code", Consolas, Monaco, Menlo, Inconsolata, monospace;
+  font-weight: 700;
+}
 
 code span.co, .co {
   color: #828f96;
@@ -73,4 +67,13 @@ code span.co, .co {
 
 code span.ot, .ot {
   color: #ddaa00;
+}
+
+.navbar-default {
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0 2px 3px 1px,
+    rgba(0, 0, 0, 0.1) 0 1px 3px 1px,
+    rgba(0, 0, 0, 0.2) 0 1px 1px -1px;
+  background-color: #f3f3f3;
+  border-color: #eee;
 }
