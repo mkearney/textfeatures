@@ -1,4 +1,5 @@
 # textfeatures 0.2.0
++ Various bug fixes and improvements
 
 # textfeatures 0.1.4
 
