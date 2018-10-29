@@ -13,7 +13,7 @@ min_var(x, min = 1)
 }
 \value{
 Returns data frame (or matrix, depending on input class) with all non-numeric
-columns and only those numeric columns that meet the minimum amount of variance.
+  columns and only those numeric columns that meet the minimum amount of variance.
 }
 \description{
 Filters numeric columns by requiring a minimum amount of variance

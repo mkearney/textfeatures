@@ -5,8 +5,8 @@ Version: 0.2.0
 Authors@R: person("Michael Wayne", "Kearney", , 
     "kearneymw@missouri.edu", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-0730-4694"))
-Description: A tool for extracting some generic features (e.g., number of 
-    words, line breaks, characters per word, URLs, lower case, upper case, 
+Description: A tool for extracting some generic features (e.g., number of
+    words, line breaks, characters per word, URLs, lower case, upper case,
     commas, periods, exclamation points, etc.) from strings of text.
 License: MIT + file LICENSE
 URL: https://github.com/mkearney/textfeatures
@@ -30,5 +30,4 @@ Suggests:
     covr
 Encoding: UTF-8
 LazyData: yes
-Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.0.9000

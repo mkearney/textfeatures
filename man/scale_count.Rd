@@ -23,7 +23,7 @@ scale_sqrt(x)
 }
 \value{
 A data frame with the same dimensions but with the
-numeric/relevant variables transformed.
+  numeric/relevant variables transformed.
 }
 \description{
 scale_count: Transforms integer and integerlike columns using log
@@ -38,6 +38,6 @@ scale_sqrt: Transforms numeric columns using sqrt
 }
 \details{
 Scale transformations are applied only to numeric (or in the
-case of \code{scale_count} only integer or integerish) columns
-that are not named \code{"id"} or \code{"(\\.|_)?id"}.
+  case of \code{scale_count} only integer or integerish) columns
+  that are not named \code{"id"} or \code{"(\\.|_)?id"}.
 }
