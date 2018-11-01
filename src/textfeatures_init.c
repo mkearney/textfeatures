@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE 600
+
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
