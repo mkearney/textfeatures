@@ -1,3 +1,4 @@
+^\.gitattributes$
 ^CRAN-RELEASE$
 ^codecov\.yml$
 ^pkgdown$
