@@ -1,3 +1,5 @@
+# textfeatures 0.2.1
+
 # textfeatures 0.2.0
 + Various bug fixes and improvements
 
