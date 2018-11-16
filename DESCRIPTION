@@ -18,6 +18,8 @@ Imports:
     purrr,
     rlang,
     syuzhet,
+    text2vec,
+    tfse,
     tibble,
     tokenizers,
     utils,

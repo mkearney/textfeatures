@@ -1,2 +1,0 @@
-PKG_CFLAGS = -lm -pthread -O3 -march=native -Wall -funroll-loops -w
-PKG_LIBS = -pthread

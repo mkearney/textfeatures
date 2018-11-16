@@ -96,6 +96,6 @@ b64_to_char <- function(s) {
 
 prep_wordtokens <- function(x) {
   x <- iconv(x, to = "ASCII", sub = " ")
-  x <- trim_ws(x)
+  x <- tfse::trim_ws(x)
   tokenizers::tokenize_words(x, strip_numeric = TRUE)
 }
