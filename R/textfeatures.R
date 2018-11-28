@@ -242,4 +242,3 @@ textfeatures.list <- function(x, sentiment = TRUE, word_dims = NULL,
     "with a \"text\" variable?"), call. = FALSE)
 }
 
-
