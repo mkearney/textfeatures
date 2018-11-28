@@ -1,3 +1,5 @@
+# textfeatures 0.3.0
+
 # textfeatures 0.2.1
 
 # textfeatures 0.2.0
