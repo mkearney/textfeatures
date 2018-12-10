@@ -4,8 +4,8 @@
 \alias{textfeatures}
 \title{textfeatures}
 \usage{
-textfeatures(x, sentiment = TRUE, word_dims = NULL, threads = 1,
-  normalize = TRUE, export = FALSE)
+textfeatures(x, sentiment = TRUE, word_dims = NULL, normalize = TRUE,
+  export = FALSE)
 }
 \arguments{
 \item{x}{Input data. Should be character vector or data frame with character
@@ -20,9 +20,6 @@ FALSE. Setting this to true will speed things up a bit.}
 estimates. When NULL, the default, this function will pick a reasonable
 number of dimensions (ranging from 2 to 200) based on size of input. To
 disable word2vec estimates, set this to 0 or FALSE.}
-
-\item{threads}{Integer, specifying the number of threads to use when generating
-word2vec estimates. Defaults to 1. Ignored if \code{word_dims = 0}.}
 
 \item{normalize}{Logical indicating whether to normalize (mean center,
 sd = 1) features. Defaults to TRUE.}

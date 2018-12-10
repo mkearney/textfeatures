@@ -14,7 +14,7 @@ word_dims_newtext <- function(lda_model, text, n_iter = 20) {
   d
 }
 
-word_dims <- function(text, n = 10, n_iter = 20, export = FALSE) {
+word_dims <- function(text, n = 10, n_iter = 20) {
   tokens <- text2vec::word_tokenizer(tolower(text))
   it <- text2vec::itoken(tokens, ids = seq_along(text))
   v <- text2vec::create_vocabulary(it)
@@ -26,8 +26,6 @@ word_dims <- function(text, n = 10, n_iter = 20, export = FALSE) {
   d <- d[, c(ncol(d), 1:(ncol(d) - 1))]
   names(d)[-1] <- paste0("w", seq_along(names(d)[-1]))
   row.names(d) <- NULL
-  if (export) {
-    attr(d, "w2v_dict") <- lda_model
-  }
+  attr(d, "dict") <- lda_model
   d
 }

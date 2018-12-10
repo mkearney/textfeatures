@@ -15,9 +15,6 @@
 #'   disable word2vec estimates, set this to 0 or FALSE.
 #' @param normalize Logical indicating whether to normalize (mean center,
 #'   sd = 1) features. Defaults to TRUE.
-#' @param export Logical indicating whether to store sufficient information for
-#'   exporting the feature extraction process (stores the means, standard deviations,
-#'   and the word2vec reference object, which can then be used to process new data).
 #' @return A tibble data frame with extracted features as columns.
 #' @examples
 #'
@@ -53,29 +50,53 @@
 #' textfeatures(df)
 #'
 #' @export
-textfeatures <- function(x, sentiment = TRUE, word_dims = NULL,
-                         normalize = TRUE, export = FALSE) {
+textfeatures <- function(x,
+                         sentiment = TRUE,
+                         word_dims = NULL,
+                         normalize = TRUE,
+                         newdata = NULL) {
   UseMethod("textfeatures")
 }
 
 #' @export
-textfeatures.character <- function(x, sentiment = TRUE, word_dims = NULL,
-                                   normalize = TRUE, export = FALSE) {
-  textfeatures(data.frame(text = x, row.names = NULL, stringsAsFactors = FALSE),
-    sentiment = sentiment, word_dims = word_dims,
-    normalize = normalize, export = export)
+textfeatures.character <- function(x,
+                                   sentiment = TRUE,
+                                   word_dims = NULL,
+                                   normalize = TRUE,
+                                   newdata = NULL) {
+  textfeatures(
+    data.frame(
+      text = x,
+      row.names = NULL,
+      stringsAsFactors = FALSE),
+    sentiment = sentiment,
+    word_dims = word_dims,
+    normalize = normalize,
+    newdata = newdata
+  )
 }
 
 #' @export
-textfeatures.factor <- function(x, sentiment = TRUE, word_dims = NULL,
-                                normalize = TRUE, export = FALSE) {
-  textfeatures(as.character(x), sentiment = sentiment,
-    word_dims = word_dims, normalize = normalize, export = export)
+textfeatures.factor <- function(x,
+                                sentiment = TRUE,
+                                word_dims = NULL,
+                                normalize = TRUE,
+                                newdata = newdata) {
+  textfeatures(
+    as.character(x),
+    sentiment = sentiment,
+    word_dims = word_dims,
+    normalize = normalize,
+    newdata = newdata
+  )
 }
 
 #' @export
-textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
-                                    normalize = TRUE, export = FALSE) {
+textfeatures.data.frame <- function(x,
+                                    sentiment = TRUE,
+                                    word_dims = NULL,
+                                    normalize = TRUE,
+                                    newdata = newdata) {
   ## initialize output data
   o <- list()
 
@@ -168,7 +189,7 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
   if (identical(n_vectors, 0)) {
     w <- NULL
   } else {
-    w <- tryCatch(word_dims(text, n_vectors, export = export),
+    w <- tryCatch(word_dims(text, n_vectors),
       error = function(e) return(NULL))
   }
 
@@ -192,12 +213,10 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
   o <- dplyr::bind_cols(o, w)
 
   ## make exportable
-  if (export) {
-    m <- vapply(o[-1], mean, na.rm = TRUE, FUN.VALUE = numeric(1))
-    s <- vapply(o[-1], stats::sd, na.rm = TRUE, FUN.VALUE = numeric(1))
-    e <- list(means = m, sds = s)
-    e$w2v_dict <- attr(w, "w2v_dict")
-  }
+  m <- vapply(o[-1], mean, na.rm = TRUE, FUN.VALUE = numeric(1))
+  s <- vapply(o[-1], stats::sd, na.rm = TRUE, FUN.VALUE = numeric(1))
+  e <- list(avg = m, std_dev = s)
+  e$dict <- attr(w, "dict")
 
   ## normalize
   if (normalize) {
@@ -205,9 +224,9 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
   }
 
   ## store export list as attribute
-  if (export) {
-    attr(o, "tf_export") <- e
-  }
+  attr(o, "tf_export") <- structure(e,
+    class = c("textfeatures_model", "list")
+  )
 
   ## return
   o
@@ -217,28 +236,35 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
 
 
 #' @export
-textfeatures.list <- function(x, sentiment = TRUE, word_dims = NULL,
-                              normalize = TRUE, export = FALSE) {
+textfeatures.list <- function(x,
+                              sentiment = TRUE,
+                              word_dims = NULL,
+                              normalize = TRUE,
+                              newdata = newdata) {
 
   ## if named list with "text" element
   if (!is.null(names(x)) && "text" %in% names(x)) {
     x <- x$text
-    return(textfeatures(x, sentiment = sentiment,
-      word_dims = word_dims))
+    return(
+      textfeatures(x,
+        sentiment = sentiment,
+        word_dims = word_dims,
+        newdata = newdata)
+    )
 
     ## if all elements are character vectors, return list of DFs
   } else if (all(lengths(x) == 1L) &&
       all(purrr::map_lgl(x, is.character))) {
     ## (list in, list out)
     return(purrr::map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, normalize = normalize, export = export))
+      word_dims = word_dims, normalize = normalize))
   }
   ## if all elements are recursive objects containing "text" variable
   if (all(purrr::map_lgl(x, is.recursive)) &&
       all(purrr::map_lgl(x, ~ "text" %in% names(.x)))) {
     x <- purrr::map(x, ~ .x$text)
     return(purrr::map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, normalize = normalize, export = export))
+      word_dims = word_dims, normalize = normalize))
   }
 
   stop(paste0("Input is a list without a character vector named \"text\". ",
