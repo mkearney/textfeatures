@@ -25,7 +25,10 @@ min_var.default <- function(x, min = 1) {
 min_var.data.frame <- function(x, min = 1) {
   is_num <- vapply(x, is.numeric, FUN.VALUE = logical(1))
   non_num <- names(x)[!is_num]
-  yminvar <- names(x[is_num])[vapply(x[is_num],
-    function(.x) stats::var(.x, na.rm = TRUE) >= min, FUN.VALUE = logical(1))]
+  yminvar <- names(x[is_num])[
+    vapply(x[is_num],
+      function(.x) stats::var(.x, na.rm = TRUE) >= min,
+      FUN.VALUE = logical(1))
+  ]
   x[c(non_num, yminvar)]
 }

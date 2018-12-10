@@ -13,8 +13,6 @@
 #'   estimates. When NULL, the default, this function will pick a reasonable
 #'   number of dimensions (ranging from 2 to 200) based on size of input. To
 #'   disable word2vec estimates, set this to 0 or FALSE.
-#' @param threads Integer, specifying the number of threads to use when generating
-#'   word2vec estimates. Defaults to 1. Ignored if \code{word_dims = 0}.
 #' @param normalize Logical indicating whether to normalize (mean center,
 #'   sd = 1) features. Defaults to TRUE.
 #' @param export Logical indicating whether to store sufficient information for
@@ -56,39 +54,42 @@
 #'
 #' @export
 textfeatures <- function(x, sentiment = TRUE, word_dims = NULL,
-                         threads = 1, normalize = TRUE, export = FALSE) {
+                         normalize = TRUE, export = FALSE) {
   UseMethod("textfeatures")
 }
 
 #' @export
 textfeatures.character <- function(x, sentiment = TRUE, word_dims = NULL,
-                                   threads = 1, normalize = TRUE, export = FALSE) {
+                                   normalize = TRUE, export = FALSE) {
   textfeatures(data.frame(text = x, row.names = NULL, stringsAsFactors = FALSE),
-    sentiment = sentiment, word_dims = word_dims, threads = threads,
+    sentiment = sentiment, word_dims = word_dims,
     normalize = normalize, export = export)
 }
 
 #' @export
 textfeatures.factor <- function(x, sentiment = TRUE, word_dims = NULL,
-                                threads = 1, normalize = TRUE, export = FALSE) {
+                                normalize = TRUE, export = FALSE) {
   textfeatures(as.character(x), sentiment = sentiment,
-    word_dims = word_dims, threads = threads, normalize = normalize, export = export)
+    word_dims = word_dims, normalize = normalize, export = export)
 }
 
 #' @export
-#' @importFrom tibble as_tibble
-#' @importFrom tokenizers tokenize_words
 textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
-                                    threads = 1, normalize = TRUE, export = FALSE) {
+                                    normalize = TRUE, export = FALSE) {
   ## initialize output data
   o <- list()
 
   ## validate input
   stopifnot("text" %in% names(x))
+
   ## make sure "text" is character
   text <- as.character(x$text)
+
   ## validate text class
-  stopifnot(is.character(text), is.numeric(threads), is.logical(sentiment))
+  stopifnot(
+    is.character(text),
+    is.logical(sentiment)
+  )
 
   ## try to determine ID/ID-like variable, or create a new one
   if ("id" %in% names(x)) {
@@ -106,33 +107,33 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
   }
 
   ## number of URLs/hashtags/mentions
-  o$n_urls = n_urls(text)
-  o$n_hashtags = n_hashtags(text)
-  o$n_mentions = n_mentions(text)
+  o$n_urls <- n_urls(text)
+  o$n_hashtags <- n_hashtags(text)
+  o$n_mentions <- n_mentions(text)
 
   ## scrub urls, hashtags, mentions
-  text = text_cleaner(text)
+  text <- text_cleaner(text)
 
   ## count various character types
-  o$n_chars = n_charS(text)
-  o$n_commas = n_commas(text)
-  o$n_digits = n_digits(text)
-  o$n_exclaims = n_exclaims(text)
-  o$n_extraspaces = n_extraspaces(text)
-  o$n_lowers = n_lowers(text)
-  o$n_lowersp = (o$n_lowers + 1L) / (o$n_chars + 1L)
-  o$n_periods = n_periods(text)
-  o$n_words = n_words(text)
-  o$n_caps = n_caps(text)
-  o$n_nonasciis = n_nonasciis(text)
-  o$n_puncts = n_puncts(text)
-  o$n_capsp = (o$n_caps + 1L) / (o$n_chars + 1L)
-  o$n_charsperword = (o$n_chars + 1L) / (o$n_words + 1L)
+  o$n_chars <- n_charS(text)
+  o$n_commas <- n_commas(text)
+  o$n_digits <- n_digits(text)
+  o$n_exclaims <- n_exclaims(text)
+  o$n_extraspaces <- n_extraspaces(text)
+  o$n_lowers <- n_lowers(text)
+  o$n_lowersp <- (o$n_lowers + 1L) / (o$n_chars + 1L)
+  o$n_periods <- n_periods(text)
+  o$n_words <- n_words(text)
+  o$n_caps <- n_caps(text)
+  o$n_nonasciis <- n_nonasciis(text)
+  o$n_puncts <- n_puncts(text)
+  o$n_capsp <- (o$n_caps + 1L) / (o$n_chars + 1L)
+  o$n_charsperword <- (o$n_chars + 1L) / (o$n_words + 1L)
 
   ## estimate sentiment
   if (sentiment) {
-    o$sent_afinn = syuzhet::get_sentiment(text, method = "afinn")
-    o$sent_bing = syuzhet::get_sentiment(text, method = "bing")
+    o$sent_afinn <- syuzhet::get_sentiment(text, method = "afinn")
+    o$sent_bing <- syuzhet::get_sentiment(text, method = "bing")
   }
 
   ## tokenize into words
@@ -216,30 +217,36 @@ textfeatures.data.frame <- function(x, sentiment = TRUE, word_dims = NULL,
 
 
 #' @export
-#' @importFrom purrr map_lgl map
 textfeatures.list <- function(x, sentiment = TRUE, word_dims = NULL,
-                              threads = 1, normalize = TRUE, export = FALSE) {
+                              normalize = TRUE, export = FALSE) {
+
   ## if named list with "text" element
   if (!is.null(names(x)) && "text" %in% names(x)) {
     x <- x$text
     return(textfeatures(x, sentiment = sentiment,
-      word_dims = word_dims, threads = threads))
+      word_dims = word_dims))
+
     ## if all elements are character vectors, return list of DFs
-  } else if (all(lengths(x) == 1L) && all(map_lgl(x, is.character))) {
+  } else if (all(lengths(x) == 1L) &&
+      all(purrr::map_lgl(x, is.character))) {
     ## (list in, list out)
-    return(map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, threads = threads, normalize = normalize, export = export))
+    return(purrr::map(x, textfeatures, sentiment = sentiment,
+      word_dims = word_dims, normalize = normalize, export = export))
   }
   ## if all elements are recursive objects containing "text" variable
-  if (all(map_lgl(x, is.recursive)) &&
-      all(map_lgl(x, ~ "text" %in% names(.x)))) {
-    x <- map(x, ~ .x$text)
-    return(map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, threads = threads, normalize = normalize, export = export))
+  if (all(purrr::map_lgl(x, is.recursive)) &&
+      all(purrr::map_lgl(x, ~ "text" %in% names(.x)))) {
+    x <- purrr::map(x, ~ .x$text)
+    return(purrr::map(x, textfeatures, sentiment = sentiment,
+      word_dims = word_dims, normalize = normalize, export = export))
   }
+
   stop(paste0("Input is a list without a character vector named \"text\". ",
     "Are you sure the input shouldn't be a character vector or a data frame",
     "with a \"text\" variable?"), call. = FALSE)
 }
 
 
+textfeatures_new <- function(original, new) {
+
+}
