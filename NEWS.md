@@ -1,4 +1,6 @@
-# textfeatures 0.2.1
+# textfeatures 0.3.0
++ New implementation for estimating word vector dimensions for each string. Now
+uses the [text2vec](http://text2vec.org/) package
 
 # textfeatures 0.2.0
 + Various bug fixes and improvements

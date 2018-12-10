@@ -1,7 +1,7 @@
 Package: textfeatures
 Type: Package
 Title: Extracts Features from Text
-Version: 0.2.1
+Version: 0.3.0
 Authors@R: person("Michael Wayne", "Kearney", , 
     "kearneymw@missouri.edu", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-0730-4694"))
@@ -31,4 +31,4 @@ Suggests:
     covr
 Encoding: UTF-8
 LazyData: yes
-RoxygenNote: 6.1.0.9000
+RoxygenNote: 6.1.1

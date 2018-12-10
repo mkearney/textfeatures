@@ -245,8 +245,3 @@ textfeatures.list <- function(x, sentiment = TRUE, word_dims = NULL,
     "Are you sure the input shouldn't be a character vector or a data frame",
     "with a \"text\" variable?"), call. = FALSE)
 }
-
-
-textfeatures_new <- function(original, new) {
-
-}
