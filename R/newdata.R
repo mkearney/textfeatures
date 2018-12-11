@@ -1,7 +1,7 @@
 
 
 
-
+#' @export
 textfeatures.textfeatures_model <- function(x,
                                             sentiment = TRUE,
                                             word_dims = NULL,
