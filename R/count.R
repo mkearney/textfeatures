@@ -8,6 +8,18 @@ n_words <- function(x) {
   x
 }
 
+
+n_uq_words <- function(x) {
+  na <- is.na(x)
+  if (all(na)) return(0)
+  x <- gsub("\\d", "", x)
+  x <- strsplit(x, "\\s+")
+  x <- lapply(x, unique)
+  x <- lengths(x)
+  x[na] <- NA_integer_
+  x
+}
+
 n_charS <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
@@ -16,6 +28,18 @@ n_charS <- function(x) {
   x[na] <- NA_integer_
   x
 }
+
+n_uq_charS <- function(x) {
+  na <- is.na(x)
+  if (all(na)) return(0)
+  x <- gsub("\\s", "", x)
+  x <- strsplit(x, "")
+  x <- lapply(x, unique)
+  x <- lengths(x)
+  x[na] <- NA_integer_
+  x
+}
+
 
 n_digits <- function(x) {
   na <- is.na(x)
@@ -26,11 +50,23 @@ n_digits <- function(x) {
   x
 }
 
+
 n_hashtags <- function(x) {
   na <- is.na(x)
   if (all(na)) return(0)
-  m <- gregexpr("#\\S+", x)
+  m <- gregexpr("#[[:alnum:]_]+", x)
   x <- purrr::map_int(m, ~ sum(.x > 0, na.rm = TRUE))
+  x[na] <- NA_integer_
+  x
+}
+
+n_uq_hashtags <- function(x) {
+  na <- is.na(x)
+  if (all(na)) return(0)
+  m <- gregexpr("#[[:alnum:]_]+", x)
+  x <- regmatches(x, m)
+  x <- lapply(x, unique)
+  x <- lengths(x)
   x[na] <- NA_integer_
   x
 }
@@ -40,6 +76,17 @@ n_mentions <- function(x) {
   if (all(na)) return(0)
   m <- gregexpr("@\\S+", x)
   x <- purrr::map_int(m, ~ sum(.x > 0, na.rm = TRUE))
+  x[na] <- NA_integer_
+  x
+}
+
+n_uq_mentions <- function(x) {
+  na <- is.na(x)
+  if (all(na)) return(0)
+  m <- gregexpr("@\\S+", x)
+  x <- regmatches(x, m)
+  x <- lapply(x, unique)
+  x <- lengths(x)
   x[na] <- NA_integer_
   x
 }
@@ -103,6 +150,17 @@ n_urls <- function(x) {
   if (all(na)) return(0)
   m <- gregexpr("https?", x)
   x <- purrr::map_int(m, ~ sum(.x > 0, na.rm = TRUE))
+  x[na] <- NA_integer_
+  x
+}
+
+n_uq_urls <- function(x) {
+  na <- is.na(x)
+  if (all(na)) return(0)
+  m <- gregexpr("https?", x)
+  x <- regmatches(x, m)
+  x <- lapply(x, unique)
+  x <- lengths(x)
   x[na] <- NA_integer_
   x
 }
