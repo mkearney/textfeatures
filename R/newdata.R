@@ -67,14 +67,18 @@ textfeatures.textfeatures_model <- function(x,
 
   ## number of URLs/hashtags/mentions
   o$n_urls <- n_urls(text)
+  o$n_uq_urls <- n_uq_urls(text)
   o$n_hashtags <- n_hashtags(text)
+  o$n_uq_hashtags <- n_uq_hashtags(text)
   o$n_mentions <- n_mentions(text)
+  o$n_uq_mentions <- n_uq_mentions(text)
 
   ## scrub urls, hashtags, mentions
   text <- text_cleaner(text)
 
   ## count various character types
   o$n_chars <- n_charS(text)
+  o$n_uq_chars <- n_uq_charS(text)
   o$n_commas <- n_commas(text)
   o$n_digits <- n_digits(text)
   o$n_exclaims <- n_exclaims(text)
@@ -83,6 +87,7 @@ textfeatures.textfeatures_model <- function(x,
   o$n_lowersp <- (o$n_lowers + 1L) / (o$n_chars + 1L)
   o$n_periods <- n_periods(text)
   o$n_words <- n_words(text)
+  o$n_uq_words <- n_uq_words(text)
   o$n_caps <- n_caps(text)
   o$n_nonasciis <- n_nonasciis(text)
   o$n_puncts <- n_puncts(text)
@@ -92,7 +97,7 @@ textfeatures.textfeatures_model <- function(x,
   ## estimate sentiment
   if (sentiment) {
     o$sent_afinn <- syuzhet::get_sentiment(text, method = "afinn")
-    o$sent_bing <- syuzhet::get_sentiment(text, method = "bing")
+    #o$sent_bing <- syuzhet::get_sentiment(text, method = "bing")
   }
 
   ## tokenize into words
