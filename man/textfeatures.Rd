@@ -4,11 +4,11 @@
 \alias{textfeatures}
 \title{textfeatures}
 \usage{
-textfeatures(x, sentiment = TRUE, word_dims = NULL, normalize = TRUE,
-  newdata = NULL)
+textfeatures(text, sentiment = TRUE, word_dims = NULL,
+  normalize = TRUE, newdata = NULL)
 }
 \arguments{
-\item{x}{Input data. Should be character vector or data frame with character
+\item{text}{Input data. Should be character vector or data frame with character
 variable of interest named "text". If a data frame then the first "id|*_id"
 variable, if found, is assumed to be an ID variable.}
 

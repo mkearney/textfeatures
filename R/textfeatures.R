@@ -3,7 +3,7 @@
 #'
 #' Extracts features from text vector.
 #'
-#' @param x Input data. Should be character vector or data frame with character
+#' @param text Input data. Should be character vector or data frame with character
 #'   variable of interest named "text". If a data frame then the first "id|*_id"
 #'   variable, if found, is assumed to be an ID variable.
 #' @param sentiment Logical, indicating whether to return sentiment analysis
@@ -50,7 +50,7 @@
 #' textfeatures(df)
 #'
 #' @export
-textfeatures <- function(x,
+textfeatures <- function(text,
                          sentiment = TRUE,
                          word_dims = NULL,
                          normalize = TRUE,
@@ -59,74 +59,22 @@ textfeatures <- function(x,
 }
 
 #' @export
-textfeatures.character <- function(x,
+textfeatures.character <- function(text,
                                    sentiment = TRUE,
                                    word_dims = NULL,
                                    normalize = TRUE,
                                    newdata = NULL) {
-  textfeatures(
-    data.frame(
-      text = x,
-      row.names = NULL,
-      stringsAsFactors = FALSE),
-    sentiment = sentiment,
-    word_dims = word_dims,
-    normalize = normalize,
-    newdata = newdata
-  )
-}
 
-#' @export
-textfeatures.factor <- function(x,
-                                sentiment = TRUE,
-                                word_dims = NULL,
-                                normalize = TRUE,
-                                newdata = newdata) {
-  textfeatures(
-    as.character(x),
-    sentiment = sentiment,
-    word_dims = word_dims,
-    normalize = normalize,
-    newdata = newdata
-  )
-}
-
-#' @export
-textfeatures.data.frame <- function(x,
-                                    sentiment = TRUE,
-                                    word_dims = NULL,
-                                    normalize = TRUE,
-
-                                    newdata = newdata) {
-  ## initialize output data
-  o <- list()
-
-  ## validate input
-  stopifnot("text" %in% names(x))
-
-  ## make sure "text" is character
-  text <- as.character(x$text)
-
-  ## validate text class
+  ## validate inputs
   stopifnot(
     is.character(text),
-    is.logical(sentiment)
+    is.logical(sentiment),
+    is.atomic(word_dims),
+    is.logical(normalize)
   )
 
-  ## try to determine ID/ID-like variable, or create a new one
-  if ("id" %in% names(x)) {
-    idname <- "id"
-    o$id <- .subset2(x, "id")
-  } else if (any(grepl("[._]?id$", names(x)))) {
-    idname <- grep("[._]?id$", names(x), value = TRUE)[1]
-    o$id <- .subset2(x, grep("[._]?id$", names(x))[1])
-  } else if ((is.character(x[[1]]) || is.factor(x[[1]])) && names(x)[1] != "text") {
-    idname <- names(x)[1]
-    o$id <- as.character(x[[1]])
-  } else {
-    idname <- "id"
-    o$id <- as.character(seq_len(nrow(x)))
-  }
+  ## initialize output data
+  o <- list()
 
   ## number of URLs/hashtags/mentions
   o$n_urls <- n_urls(text)
@@ -159,25 +107,30 @@ textfeatures.data.frame <- function(x,
 
   ## estimate sentiment
   if (sentiment) {
-    o$sent_afinn <- syuzhet::get_sentiment(text, method = "afinn")
-    #o$sent_bing <- syuzhet::get_sentiment(text, method = "bing")
+    o$sent_afinn <- sentiment_afinn(text)
+    o$sent_bing <- sentiment_bing(text)
+    o$sent_syuzhet <- sentiment_syuzhet(text)
+    o$sent_vader <- sentiment_vader(text)
   }
+
+  ## length
+  n_obs <- length(text)
 
   ## tokenize into words
   text <- prep_wordtokens(text)
 
   ## if null, pick reasonable number of dims
   if (is.null(word_dims)) {
-    if (nrow(x) > 10000) {
+    if (n_obs > 10000) {
       n_vectors <- 200
-    } else if (nrow(x) > 1000) {
+    } else if (n_obs > 1000) {
       n_vectors <- 100
-    } else if (nrow(x) > 300) {
+    } else if (n_obs > 300) {
       n_vectors <- 50
-    } else if (nrow(x) > 60) {
+    } else if (n_obs > 60) {
       n_vectors <- 20
     } else {
-      n_vectors <- ceiling(nrow(x) / 2)
+      n_vectors <- ceiling(n_obs / 2)
     }
   }
 
@@ -195,8 +148,13 @@ textfeatures.data.frame <- function(x,
   if (identical(n_vectors, 0)) {
     w <- NULL
   } else {
-    w <- tryCatch(word_dims(text, n_vectors),
-      error = function(e) return(NULL))
+    sh <- TRUE
+    sh <- tryCatch(
+      capture.output(w <- word_dims(text, n_vectors)),
+      error = function(e) return(FALSE))
+    if (identical(sh, FALSE)) {
+      w <- NULL
+    }
   }
 
   ## count number of polite, POV, to-be, and preposition words.
@@ -212,15 +170,12 @@ textfeatures.data.frame <- function(x,
   ## convert to tibble
   o <- tibble::as_tibble(o)
 
-  ## name ID variable
-  names(o)[names(o) == "id"] <- idname
-
-  ## merge with w2v estimates
+  ## merge with word vectors
   o <- dplyr::bind_cols(o, w)
 
   ## make exportable
-  m <- vapply(o[-1], mean, na.rm = TRUE, FUN.VALUE = numeric(1))
-  s <- vapply(o[-1], stats::sd, na.rm = TRUE, FUN.VALUE = numeric(1))
+  m <- vapply(o, mean, na.rm = TRUE, FUN.VALUE = numeric(1))
+  s <- vapply(o, stats::sd, na.rm = TRUE, FUN.VALUE = numeric(1))
   e <- list(avg = m, std_dev = s)
   e$dict <- attr(w, "dict")
 
@@ -238,42 +193,35 @@ textfeatures.data.frame <- function(x,
   o
 }
 
-
-
+#' @export
+textfeatures.factor <- function(text,
+                                sentiment = TRUE,
+                                word_dims = NULL,
+                                normalize = TRUE,
+                                newdata = newdata) {
+  textfeatures(
+    as.character(text),
+    sentiment = sentiment,
+    word_dims = word_dims,
+    normalize = normalize,
+    newdata = newdata
+  )
+}
 
 #' @export
-textfeatures.list <- function(x,
-                              sentiment = TRUE,
-                              word_dims = NULL,
-                              normalize = TRUE,
-                              newdata = newdata) {
+textfeatures.data.frame <- function(text,
+                                    sentiment = TRUE,
+                                    word_dims = NULL,
+                                    normalize = TRUE,
+                                    newdata = newdata) {
 
-  ## if named list with "text" element
-  if (!is.null(names(x)) && "text" %in% names(x)) {
-    x <- x$text
-    return(
-      textfeatures(x,
-        sentiment = sentiment,
-        word_dims = word_dims,
-        newdata = newdata)
-    )
-
-    ## if all elements are character vectors, return list of DFs
-  } else if (all(lengths(x) == 1L) &&
-      all(purrr::map_lgl(x, is.character))) {
-    ## (list in, list out)
-    return(purrr::map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, normalize = normalize))
-  }
-  ## if all elements are recursive objects containing "text" variable
-  if (all(purrr::map_lgl(x, is.recursive)) &&
-      all(purrr::map_lgl(x, ~ "text" %in% names(.x)))) {
-    x <- purrr::map(x, ~ .x$text)
-    return(purrr::map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, normalize = normalize))
-  }
-
-  stop(paste0("Input is a list without a character vector named \"text\". ",
-    "Are you sure the input shouldn't be a character vector or a data frame",
-    "with a \"text\" variable?"), call. = FALSE)
+  ## validate input
+  stopifnot("text" %in% names(text))
+  textfeatures(
+    text$text,
+    sentiment = sentiment,
+    word_dims = word_dims,
+    normalize = normalize,
+    newdata = newdata
+  )
 }
