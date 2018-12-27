@@ -3,7 +3,6 @@
 S3method(textfeatures,character)
 S3method(textfeatures,data.frame)
 S3method(textfeatures,factor)
-S3method(textfeatures,list)
 S3method(textfeatures,textfeatures_model)
 export(scale_count)
 export(scale_log)

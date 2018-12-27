@@ -2,7 +2,7 @@
 
 
 #' @export
-textfeatures.textfeatures_model <- function(x,
+textfeatures.textfeatures_model <- function(text,
                                             sentiment = TRUE,
                                             word_dims = NULL,
                                             normalize = TRUE,
@@ -15,55 +15,33 @@ textfeatures.textfeatures_model <- function(x,
     )
   }
   ## rename objects
-  tf_model <- x$dict
-  x <- newdata
+  tf_model <- text$dict
+  text <- newdata
 
   ## fix newdata format
-  if (is.factor(x)) {
-    x <- as.character(x)
+  if (is.factor(text)) {
+    text <- as.character(text)
   }
-  if (is.character(x)) {
-    x <- data.frame(
-      text = x,
-      row.names = NULL,
-      stringsAsFactors = FALSE)
+  if (is.data.frame(text)) {
+    text <- text$text
   }
   ## validate newdata
-  if (!is.data.frame(x)) {
+  if (!is.character(x)) {
     stop("`newdata` must be a character vector or data frame with a character ",
       "vector column named 'text'.",
       call. = FALSE)
   }
 
-  ## validate input
-  stopifnot("text" %in% names(x))
+  ## validate inputs
+  stopifnot(
+    is.character(text),
+    is.logical(sentiment),
+    is.atomic(word_dims),
+    is.logical(normalize)
+  )
 
   ## initialize output data
   o <- list()
-
-  ## make sure "text" is character
-  text <- as.character(x$text)
-
-  ## validate text class
-  stopifnot(
-    is.character(text),
-    is.logical(sentiment)
-  )
-
-  ## try to determine ID/ID-like variable, or create a new one
-  if ("id" %in% names(x)) {
-    idname <- "id"
-    o$id <- .subset2(x, "id")
-  } else if (any(grepl("[._]?id$", names(x)))) {
-    idname <- grep("[._]?id$", names(x), value = TRUE)[1]
-    o$id <- .subset2(x, grep("[._]?id$", names(x))[1])
-  } else if ((is.character(x[[1]]) || is.factor(x[[1]])) && names(x)[1] != "text") {
-    idname <- names(x)[1]
-    o$id <- as.character(x[[1]])
-  } else {
-    idname <- "id"
-    o$id <- as.character(seq_len(nrow(x)))
-  }
 
   ## number of URLs/hashtags/mentions
   o$n_urls <- n_urls(text)
@@ -96,9 +74,14 @@ textfeatures.textfeatures_model <- function(x,
 
   ## estimate sentiment
   if (sentiment) {
-    o$sent_afinn <- syuzhet::get_sentiment(text, method = "afinn")
-    #o$sent_bing <- syuzhet::get_sentiment(text, method = "bing")
+    o$sent_afinn <- sentiment_afinn(text)
+    o$sent_bing <- sentiment_bing(text)
+    o$sent_syuzhet <- sentiment_syuzhet(text)
+    o$sent_vader <- sentiment_vader(text)
   }
+
+  ## length
+  n_obs <- length(text)
 
   ## tokenize into words
   text <- prep_wordtokens(text)
@@ -122,15 +105,12 @@ textfeatures.textfeatures_model <- function(x,
   ## convert to tibble
   o <- tibble::as_tibble(o)
 
-  ## name ID variable
-  names(o)[names(o) == "id"] <- idname
-
   ## merge with w2v estimates
   o <- dplyr::bind_cols(o, w)
 
   ## make exportable
-  m <- vapply(o[-1], mean, na.rm = TRUE, FUN.VALUE = numeric(1))
-  s <- vapply(o[-1], stats::sd, na.rm = TRUE, FUN.VALUE = numeric(1))
+  m <- vapply(o, mean, na.rm = TRUE, FUN.VALUE = numeric(1))
+  s <- vapply(o, stats::sd, na.rm = TRUE, FUN.VALUE = numeric(1))
   e <- list(avg = m, std_dev = s)
   e$dict <- attr(w, "dict")
 
@@ -144,43 +124,6 @@ textfeatures.textfeatures_model <- function(x,
 
   ## return
   o
-}
-
-
-
-
-#' @export
-textfeatures.list <- function(x,
-  sentiment = TRUE,
-  word_dims = NULL,
-  normalize = TRUE) {
-
-  ## if named list with "text" element
-  if (!is.null(names(x)) && "text" %in% names(x)) {
-    x <- x$text
-    return(textfeatures(x,
-      sentiment = sentiment,
-      word_dims = word_dims))
-
-    ## if all elements are character vectors, return list of DFs
-  } else if (all(lengths(x) == 1L) &&
-      all(purrr::map_lgl(x, is.character))) {
-    ## (list in, list out)
-    return(purrr::map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, normalize = normalize))
-  }
-  ## if all elements are recursive objects containing "text" variable
-  if (all(purrr::map_lgl(x, is.recursive)) &&
-      all(purrr::map_lgl(x, ~ "text" %in% names(.x)))) {
-    x <- purrr::map(x, ~ .x$text)
-    return(purrr::map(x, textfeatures, sentiment = sentiment,
-      word_dims = word_dims, normalize = normalize))
-  }
-
-  stop(paste0("Input is a list without a character vector named \"text\". ",
-    "Are you sure the input shouldn't be a character vector or a data frame",
-    "with a \"text\" variable?"), call. = FALSE)
-
 }
 
 
