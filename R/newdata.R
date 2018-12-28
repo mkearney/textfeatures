@@ -78,6 +78,15 @@ textfeatures.textfeatures_model <- function(text,
     o$sent_bing <- sentiment_bing(text)
     o$sent_syuzhet <- sentiment_syuzhet(text)
     o$sent_vader <- sentiment_vader(text)
+    o$sent_nrc_positive <- sentiment_nrc_positive(text)
+    o$sent_nrc_negative <- sentiment_nrc_negative(text)
+    o$sent_nrc_anger <- sentiment_nrc_anger(text)
+    o$sent_nrc_anticipation <- sentiment_nrc_anticipation(text)
+    o$sent_nrc_disgust <- sentiment_nrc_disgust(text)
+    o$sent_nrc_fear <- sentiment_nrc_fear(text)
+    o$sent_nrc_sadness <- sentiment_nrc_sadness(text)
+    o$sent_nrc_surprise <- sentiment_nrc_surprise(text)
+    o$sent_nrc_trust <- sentiment_nrc_trust(text)
   }
 
   ## length

@@ -31,3 +31,33 @@ sentiment_vader <- function(x) {
   sentiment_est(x, vader_dict)
 }
 
+
+
+sentiment_nrc_positive <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "positive", ])
+}
+sentiment_nrc_negative <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "negative", ])
+}
+sentiment_nrc_anger <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "anger", ])
+}
+sentiment_nrc_anticipation <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "anticipation", ])
+}
+sentiment_nrc_disgust <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "disgust", ])
+}
+sentiment_nrc_fear <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "fear", ])
+}
+sentiment_nrc_sadness <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "sadness", ])
+}
+sentiment_nrc_surprise <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "surprise", ])
+}
+sentiment_nrc_trust <- function(x) {
+  sentiment_est(x, nrc_dict[nrc_dict$sentiment == "trust", ])
+}
+
