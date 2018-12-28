@@ -26,7 +26,7 @@ textfeatures.textfeatures_model <- function(text,
     text <- text$text
   }
   ## validate newdata
-  if (!is.character(x)) {
+  if (!is.character(text)) {
     stop("`newdata` must be a character vector or data frame with a character ",
       "vector column named 'text'.",
       call. = FALSE)
@@ -87,10 +87,13 @@ textfeatures.textfeatures_model <- function(text,
   text <- prep_wordtokens(text)
 
   ## if applicable, get w2v estimates
-  w <- tryCatch(
-    word_dims_newtext(tf_model, text),
-    error = function(e) return(NULL)
-  )
+  sh <- TRUE
+  sh <- tryCatch(
+    capture.output(w <- word_dims_newtext(tf_model, text)),
+    error = function(e) return(FALSE))
+  if (identical(sh, FALSE)) {
+    w <- NULL
+  }
 
   ## count number of polite, POV, to-be, and preposition words.
   o$n_polite <- politeness(text)
