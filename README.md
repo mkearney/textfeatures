@@ -7,6 +7,7 @@ status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://
 status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)
 [![Coverage
 Status](https://codecov.io/gh/mkearney/textfeatures/branch/master/graph/badge.svg)](https://codecov.io/gh/mkearney/textfeatures?branch=master)
+[![DOI](https://zenodo.org/badge/123046986.svg)](https://zenodo.org/badge/latestdoi/123046986)
 
 ![Downloads](https://cranlogs.r-pkg.org/badges/textfeatures)
 ![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/textfeatures)
