@@ -50,6 +50,7 @@ textfeatures.textfeatures_model <- function(text,
   o$n_uq_hashtags <- n_uq_hashtags(text)
   o$n_mentions <- n_mentions(text)
   o$n_uq_mentions <- n_uq_mentions(text)
+  tfse::print_complete("Tweet text entities (URLs, mentions, etc)")
 
   ## scrub urls, hashtags, mentions
   text <- text_cleaner(text)
@@ -71,29 +72,43 @@ textfeatures.textfeatures_model <- function(text,
   o$n_puncts <- n_puncts(text)
   o$n_capsp <- (o$n_caps + 1L) / (o$n_chars + 1L)
   o$n_charsperword <- (o$n_chars + 1L) / (o$n_words + 1L)
-
-  ## estimate sentiment
-  if (sentiment) {
-    o$sent_afinn <- sentiment_afinn(text)
-    o$sent_bing <- sentiment_bing(text)
-    o$sent_syuzhet <- sentiment_syuzhet(text)
-    o$sent_vader <- sentiment_vader(text)
-    o$sent_nrc_positive <- sentiment_nrc_positive(text)
-    o$sent_nrc_negative <- sentiment_nrc_negative(text)
-    o$sent_nrc_anger <- sentiment_nrc_anger(text)
-    o$sent_nrc_anticipation <- sentiment_nrc_anticipation(text)
-    o$sent_nrc_disgust <- sentiment_nrc_disgust(text)
-    o$sent_nrc_fear <- sentiment_nrc_fear(text)
-    o$sent_nrc_sadness <- sentiment_nrc_sadness(text)
-    o$sent_nrc_surprise <- sentiment_nrc_surprise(text)
-    o$sent_nrc_trust <- sentiment_nrc_trust(text)
-  }
+  tfse::print_complete("Punctuation, characters, words, numbers, etc.")
 
   ## length
   n_obs <- length(text)
 
   ## tokenize into words
   text <- prep_wordtokens(text)
+
+  ## estimate sentiment
+  if (sentiment) {
+    o$sent_afinn <- sentiment_afinn(text)
+    tfse::print_complete("Sentiment via 'afinn'")
+    o$sent_bing <- sentiment_bing(text)
+    tfse::print_complete("Sentiment via 'bing'")
+    o$sent_syuzhet <- sentiment_syuzhet(text)
+    tfse::print_complete("Sentiment via 'syuzhet'")
+    o$sent_vader <- sentiment_vader(text)
+    tfse::print_complete("Sentiment via 'vader'")
+    o$sent_nrc_positive <- sentiment_nrc_positive(text)
+    tfse::print_complete("Positive via 'nrc'")
+    o$sent_nrc_negative <- sentiment_nrc_negative(text)
+    tfse::print_complete("Negative via 'nrc'")
+    o$sent_nrc_anger <- sentiment_nrc_anger(text)
+    tfse::print_complete("Anger via 'nrc'")
+    o$sent_nrc_anticipation <- sentiment_nrc_anticipation(text)
+    tfse::print_complete("Anicipation via 'nrc'")
+    o$sent_nrc_disgust <- sentiment_nrc_disgust(text)
+    tfse::print_complete("Disgust via 'nrc'")
+    o$sent_nrc_fear <- sentiment_nrc_fear(text)
+    tfse::print_complete("Fear via 'nrc'")
+    o$sent_nrc_sadness <- sentiment_nrc_sadness(text)
+    tfse::print_complete("Sadness via 'nrc'")
+    o$sent_nrc_surprise <- sentiment_nrc_surprise(text)
+    tfse::print_complete("Surprise via 'nrc'")
+    o$sent_nrc_trust <- sentiment_nrc_trust(text)
+    tfse::print_complete("Trust via 'nrc'")
+  }
 
   ## if applicable, get w2v estimates
   sh <- TRUE
@@ -106,6 +121,8 @@ textfeatures.textfeatures_model <- function(text,
 
   ## count number of polite, POV, to-be, and preposition words.
   o$n_polite <- politeness(text)
+  tfse::print_complete("Politeness")
+
   o$n_first_person <- first_person(text)
   o$n_first_personp <- first_personp(text)
   o$n_second_person <- second_person(text)
@@ -113,6 +130,7 @@ textfeatures.textfeatures_model <- function(text,
   o$n_third_person <- third_person(text)
   o$n_tobe <- to_be(text)
   o$n_prepositions <- prepositions(text)
+  tfse::print_complete("Parts of speech")
 
   ## convert to tibble
   o <- tibble::as_tibble(o)
@@ -128,6 +146,7 @@ textfeatures.textfeatures_model <- function(text,
 
   ## normalize
   if (normalize) {
+    tfse::print_complete("Normalizing data")
     o <- scale_normal(scale_count(o))
   }
 

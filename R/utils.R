@@ -2,8 +2,8 @@
 text_cleaner <- function(x) {
   stopifnot(is.character(x))
 
-  ## remove URLs, mentions, and hashtags
-  x <- gsub("https?:[[:graph:]]+|@\\S+|#\\S+", "", x)
+  ## remove URLs, mentions (not hashtags, keep those)
+  x <- gsub("https?:[[:graph:]]+|@\\S+", "", x)
 
   ## convert non-ascii into ascii exclamation marks
   x <- gsub("\u00A1", "\u0021", x, fixed = TRUE)
