@@ -1,7 +1,7 @@
 tweet_features <- function(text) {
   ## initialize output data with message
   o <- list()
-  tfse::print_start("Tweet-text features")
+  tfse::print_start("Counting features in text...")
 
   ## number of URLs/hashtags/mentions
   o$n_urls <- n_urls(text)

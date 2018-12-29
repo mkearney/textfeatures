@@ -38,4 +38,5 @@ estimate_word_dims <- function(text, word_dims, n_obs) {
       tfse::print_start("Word dimensions estimated")
     }
   }
+  w
 }
