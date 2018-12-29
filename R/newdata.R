@@ -41,38 +41,7 @@ textfeatures.textfeatures_model <- function(text,
   )
 
   ## initialize output data
-  o <- list()
-
-  ## number of URLs/hashtags/mentions
-  o$n_urls <- n_urls(text)
-  o$n_uq_urls <- n_uq_urls(text)
-  o$n_hashtags <- n_hashtags(text)
-  o$n_uq_hashtags <- n_uq_hashtags(text)
-  o$n_mentions <- n_mentions(text)
-  o$n_uq_mentions <- n_uq_mentions(text)
-  tfse::print_complete("Tweet text entities (URLs, mentions, etc)")
-
-  ## scrub urls, hashtags, mentions
-  text <- text_cleaner(text)
-
-  ## count various character types
-  o$n_chars <- n_charS(text)
-  o$n_uq_chars <- n_uq_charS(text)
-  o$n_commas <- n_commas(text)
-  o$n_digits <- n_digits(text)
-  o$n_exclaims <- n_exclaims(text)
-  o$n_extraspaces <- n_extraspaces(text)
-  o$n_lowers <- n_lowers(text)
-  o$n_lowersp <- (o$n_lowers + 1L) / (o$n_chars + 1L)
-  o$n_periods <- n_periods(text)
-  o$n_words <- n_words(text)
-  o$n_uq_words <- n_uq_words(text)
-  o$n_caps <- n_caps(text)
-  o$n_nonasciis <- n_nonasciis(text)
-  o$n_puncts <- n_puncts(text)
-  o$n_capsp <- (o$n_caps + 1L) / (o$n_chars + 1L)
-  o$n_charsperword <- (o$n_chars + 1L) / (o$n_words + 1L)
-  tfse::print_complete("Punctuation, characters, words, numbers, etc.")
+  o <- tweet_features(text)
 
   ## length
   n_obs <- length(text)
@@ -82,33 +51,23 @@ textfeatures.textfeatures_model <- function(text,
 
   ## estimate sentiment
   if (sentiment) {
+    tfse::print_start("Sentiment analysis...")
     o$sent_afinn <- sentiment_afinn(text)
-    tfse::print_complete("Sentiment via 'afinn'")
     o$sent_bing <- sentiment_bing(text)
-    tfse::print_complete("Sentiment via 'bing'")
     o$sent_syuzhet <- sentiment_syuzhet(text)
-    tfse::print_complete("Sentiment via 'syuzhet'")
     o$sent_vader <- sentiment_vader(text)
-    tfse::print_complete("Sentiment via 'vader'")
-    o$sent_nrc_positive <- sentiment_nrc_positive(text)
-    tfse::print_complete("Positive via 'nrc'")
-    o$sent_nrc_negative <- sentiment_nrc_negative(text)
-    tfse::print_complete("Negative via 'nrc'")
-    o$sent_nrc_anger <- sentiment_nrc_anger(text)
-    tfse::print_complete("Anger via 'nrc'")
-    o$sent_nrc_anticipation <- sentiment_nrc_anticipation(text)
-    tfse::print_complete("Anicipation via 'nrc'")
-    o$sent_nrc_disgust <- sentiment_nrc_disgust(text)
-    tfse::print_complete("Disgust via 'nrc'")
-    o$sent_nrc_fear <- sentiment_nrc_fear(text)
-    tfse::print_complete("Fear via 'nrc'")
-    o$sent_nrc_sadness <- sentiment_nrc_sadness(text)
-    tfse::print_complete("Sadness via 'nrc'")
-    o$sent_nrc_surprise <- sentiment_nrc_surprise(text)
-    tfse::print_complete("Surprise via 'nrc'")
-    o$sent_nrc_trust <- sentiment_nrc_trust(text)
-    tfse::print_complete("Trust via 'nrc'")
+    o$n_polite <- politeness(text)
   }
+
+  ## parts of speech
+  tfse::print_start("Parts of speech...")
+  o$n_first_person <- first_person(text)
+  o$n_first_personp <- first_personp(text)
+  o$n_second_person <- second_person(text)
+  o$n_second_personp <- second_personp(text)
+  o$n_third_person <- third_person(text)
+  o$n_tobe <- to_be(text)
+  o$n_prepositions <- prepositions(text)
 
   ## if applicable, get w2v estimates
   sh <- TRUE
@@ -119,23 +78,8 @@ textfeatures.textfeatures_model <- function(text,
     w <- NULL
   }
 
-  ## count number of polite, POV, to-be, and preposition words.
-  o$n_polite <- politeness(text)
-  tfse::print_complete("Politeness")
-
-  o$n_first_person <- first_person(text)
-  o$n_first_personp <- first_personp(text)
-  o$n_second_person <- second_person(text)
-  o$n_second_personp <- second_personp(text)
-  o$n_third_person <- third_person(text)
-  o$n_tobe <- to_be(text)
-  o$n_prepositions <- prepositions(text)
-  tfse::print_complete("Parts of speech")
-
-  ## convert to tibble
+  ## convert 'o' into to tibble and merge with w
   o <- tibble::as_tibble(o)
-
-  ## merge with w2v estimates
   o <- dplyr::bind_cols(o, w)
 
   ## make exportable
@@ -146,12 +90,17 @@ textfeatures.textfeatures_model <- function(text,
 
   ## normalize
   if (normalize) {
-    tfse::print_complete("Normalizing data")
+    tfse::print_start("Normalizing data")
     o <- scale_normal(scale_count(o))
   }
 
   ## store export list as attribute
-  attr(o, "tf_export") <- e
+  attr(o, "tf_export") <- structure(e,
+    class = c("textfeatures_model", "list")
+  )
+
+  ## done!
+  tfse::print_complete("Job's done!")
 
   ## return
   o

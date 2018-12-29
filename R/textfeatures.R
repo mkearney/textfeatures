@@ -74,38 +74,7 @@ textfeatures.character <- function(text,
   )
 
   ## initialize output data
-  o <- list()
-
-  ## number of URLs/hashtags/mentions
-  o$n_urls <- n_urls(text)
-  o$n_uq_urls <- n_uq_urls(text)
-  o$n_hashtags <- n_hashtags(text)
-  o$n_uq_hashtags <- n_uq_hashtags(text)
-  o$n_mentions <- n_mentions(text)
-  o$n_uq_mentions <- n_uq_mentions(text)
-  tfse::print_start("Tweet text entities (URLs, mentions, etc)")
-
-  ## scrub urls, hashtags, mentions
-  text <- text_cleaner(text)
-
-  ## count various character types
-  o$n_chars <- n_charS(text)
-  o$n_uq_chars <- n_uq_charS(text)
-  o$n_commas <- n_commas(text)
-  o$n_digits <- n_digits(text)
-  o$n_exclaims <- n_exclaims(text)
-  o$n_extraspaces <- n_extraspaces(text)
-  o$n_lowers <- n_lowers(text)
-  o$n_lowersp <- (o$n_lowers + 1L) / (o$n_chars + 1L)
-  o$n_periods <- n_periods(text)
-  o$n_words <- n_words(text)
-  o$n_uq_words <- n_uq_words(text)
-  o$n_caps <- n_caps(text)
-  o$n_nonasciis <- n_nonasciis(text)
-  o$n_puncts <- n_puncts(text)
-  o$n_capsp <- (o$n_caps + 1L) / (o$n_chars + 1L)
-  o$n_charsperword <- (o$n_chars + 1L) / (o$n_words + 1L)
-  tfse::print_start("Punctuation, characters, words, numbers, etc.")
+  o <- tweet_features(text)
 
   ## length
   n_obs <- length(text)
@@ -115,60 +84,16 @@ textfeatures.character <- function(text,
 
   ## estimate sentiment
   if (sentiment) {
+    tfse::print_start("Sentiment analysis...")
     o$sent_afinn <- sentiment_afinn(text)
-    tfse::print_start("Sentiment via 'afinn'")
     o$sent_bing <- sentiment_bing(text)
-    tfse::print_start("Sentiment via 'bing'")
     o$sent_syuzhet <- sentiment_syuzhet(text)
-    tfse::print_start("Sentiment via 'syuzhet'")
     o$sent_vader <- sentiment_vader(text)
-    tfse::print_start("Sentiment via 'vader'")
+    o$n_polite <- politeness(text)
   }
 
-  ## if null, pick reasonable number of dims
-  if (is.null(word_dims)) {
-    if (n_obs > 10000) {
-      n_vectors <- 200
-    } else if (n_obs > 1000) {
-      n_vectors <- 100
-    } else if (n_obs > 300) {
-      n_vectors <- 50
-    } else if (n_obs > 60) {
-      n_vectors <- 20
-    } else {
-      n_vectors <- ceiling(n_obs / 2)
-    }
-  }
-
-  ## if specified, set as n_vectors
-  if (is.numeric(word_dims)) {
-    n_vectors <- word_dims
-  }
-
-  ## if false, set to 0
-  if (identical(word_dims, FALSE)) {
-    n_vectors <- 0
-  }
-
-  ## if applicable, get w2v estimates
-  if (identical(n_vectors, 0)) {
-    w <- NULL
-  } else {
-    sh <- TRUE
-    sh <- tryCatch(
-      capture.output(w <- word_dims(text, n_vectors)),
-      error = function(e) return(FALSE))
-    if (identical(sh, FALSE)) {
-      w <- NULL
-    } else {
-      tfse::print_start("Word dimensions estimated")
-    }
-  }
-
-  ## count number of polite, POV, to-be, and preposition words.
-  o$n_polite <- politeness(text)
-  tfse::print_start("Politeness")
-
+  ## parts of speech
+  tfse::print_start("Parts of speech...")
   o$n_first_person <- first_person(text)
   o$n_first_personp <- first_personp(text)
   o$n_second_person <- second_person(text)
@@ -176,12 +101,12 @@ textfeatures.character <- function(text,
   o$n_third_person <- third_person(text)
   o$n_tobe <- to_be(text)
   o$n_prepositions <- prepositions(text)
-  tfse::print_start("Parts of speech")
 
-  ## convert to tibble
+  ## get word dim estimates
+  w <- estimate_word_dims(text, word_dims, n_obs)
+
+  ## convert 'o' into to tibble and merge with w
   o <- tibble::as_tibble(o)
-
-  ## merge with word vectors
   o <- dplyr::bind_cols(o, w)
 
   ## make exportable
@@ -203,7 +128,6 @@ textfeatures.character <- function(text,
 
   ## done!
   tfse::print_complete("Job's done!")
-
 
   ## return
   o
