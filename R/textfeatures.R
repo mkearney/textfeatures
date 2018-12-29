@@ -83,7 +83,7 @@ textfeatures.character <- function(text,
   o$n_uq_hashtags <- n_uq_hashtags(text)
   o$n_mentions <- n_mentions(text)
   o$n_uq_mentions <- n_uq_mentions(text)
-  tfse::print_complete("Tweet text entities (URLs, mentions, etc)")
+  tfse::print_start("Tweet text entities (URLs, mentions, etc)")
 
   ## scrub urls, hashtags, mentions
   text <- text_cleaner(text)
@@ -105,7 +105,7 @@ textfeatures.character <- function(text,
   o$n_puncts <- n_puncts(text)
   o$n_capsp <- (o$n_caps + 1L) / (o$n_chars + 1L)
   o$n_charsperword <- (o$n_chars + 1L) / (o$n_words + 1L)
-  tfse::print_complete("Punctuation, characters, words, numbers, etc.")
+  tfse::print_start("Punctuation, characters, words, numbers, etc.")
 
   ## length
   n_obs <- length(text)
@@ -116,31 +116,13 @@ textfeatures.character <- function(text,
   ## estimate sentiment
   if (sentiment) {
     o$sent_afinn <- sentiment_afinn(text)
-    tfse::print_complete("Sentiment via 'afinn'")
+    tfse::print_start("Sentiment via 'afinn'")
     o$sent_bing <- sentiment_bing(text)
-    tfse::print_complete("Sentiment via 'bing'")
+    tfse::print_start("Sentiment via 'bing'")
     o$sent_syuzhet <- sentiment_syuzhet(text)
-    tfse::print_complete("Sentiment via 'syuzhet'")
+    tfse::print_start("Sentiment via 'syuzhet'")
     o$sent_vader <- sentiment_vader(text)
-    tfse::print_complete("Sentiment via 'vader'")
-    o$sent_nrc_positive <- sentiment_nrc_positive(text)
-    tfse::print_complete("Positive via 'nrc'")
-    o$sent_nrc_negative <- sentiment_nrc_negative(text)
-    tfse::print_complete("Negative via 'nrc'")
-    o$sent_nrc_anger <- sentiment_nrc_anger(text)
-    tfse::print_complete("Anger via 'nrc'")
-    o$sent_nrc_anticipation <- sentiment_nrc_anticipation(text)
-    tfse::print_complete("Anicipation via 'nrc'")
-    o$sent_nrc_disgust <- sentiment_nrc_disgust(text)
-    tfse::print_complete("Disgust via 'nrc'")
-    o$sent_nrc_fear <- sentiment_nrc_fear(text)
-    tfse::print_complete("Fear via 'nrc'")
-    o$sent_nrc_sadness <- sentiment_nrc_sadness(text)
-    tfse::print_complete("Sadness via 'nrc'")
-    o$sent_nrc_surprise <- sentiment_nrc_surprise(text)
-    tfse::print_complete("Surprise via 'nrc'")
-    o$sent_nrc_trust <- sentiment_nrc_trust(text)
-    tfse::print_complete("Trust via 'nrc'")
+    tfse::print_start("Sentiment via 'vader'")
   }
 
   ## if null, pick reasonable number of dims
@@ -179,13 +161,13 @@ textfeatures.character <- function(text,
     if (identical(sh, FALSE)) {
       w <- NULL
     } else {
-      tfse::print_complete("Word dimensions estimated")
+      tfse::print_start("Word dimensions estimated")
     }
   }
 
   ## count number of polite, POV, to-be, and preposition words.
   o$n_polite <- politeness(text)
-  tfse::print_complete("Politeness")
+  tfse::print_start("Politeness")
 
   o$n_first_person <- first_person(text)
   o$n_first_personp <- first_personp(text)
@@ -194,7 +176,7 @@ textfeatures.character <- function(text,
   o$n_third_person <- third_person(text)
   o$n_tobe <- to_be(text)
   o$n_prepositions <- prepositions(text)
-  tfse::print_complete("Parts of speech")
+  tfse::print_start("Parts of speech")
 
   ## convert to tibble
   o <- tibble::as_tibble(o)
@@ -210,7 +192,7 @@ textfeatures.character <- function(text,
 
   ## normalize
   if (normalize) {
-    tfse::print_complete("Normalizing data")
+    tfse::print_start("Normalizing data")
     o <- scale_normal(scale_count(o))
   }
 
@@ -218,6 +200,10 @@ textfeatures.character <- function(text,
   attr(o, "tf_export") <- structure(e,
     class = c("textfeatures_model", "list")
   )
+
+  ## done!
+  tfse::print_complete("Job's done!")
+
 
   ## return
   o
