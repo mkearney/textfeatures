@@ -30,7 +30,7 @@ estimate_word_dims <- function(text, word_dims, n_obs) {
   } else {
     sh <- TRUE
     sh <- tryCatch(
-      capture.output(w <- word_dims(text, n_vectors)),
+      utils::capture.output(w <- word_dims(text, n_vectors)),
       error = function(e) return(FALSE))
     if (identical(sh, FALSE)) {
       w <- NULL

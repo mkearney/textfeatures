@@ -17,7 +17,6 @@ Imports:
     dplyr,
     purrr,
     rlang,
-    syuzhet,
     text2vec,
     tfse,
     tibble,

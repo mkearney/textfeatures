@@ -15,6 +15,8 @@
 #'   disable word2vec estimates, set this to 0 or FALSE.
 #' @param normalize Logical indicating whether to normalize (mean center,
 #'   sd = 1) features. Defaults to TRUE.
+#' @param newdata If a textfeatures_model is supplied to text, supply this with
+#'   new data to which you would like to apply the textfeatures_model.
 #' @return A tibble data frame with extracted features as columns.
 #' @examples
 #'
@@ -154,6 +156,24 @@ textfeatures.data.frame <- function(text,
                                     word_dims = NULL,
                                     normalize = TRUE,
                                     newdata = newdata) {
+
+  ## validate input
+  stopifnot("text" %in% names(text))
+  textfeatures(
+    text$text,
+    sentiment = sentiment,
+    word_dims = word_dims,
+    normalize = normalize,
+    newdata = newdata
+  )
+}
+
+#' @export
+textfeatures.list <- function(text,
+  sentiment = TRUE,
+  word_dims = NULL,
+  normalize = TRUE,
+  newdata = newdata) {
 
   ## validate input
   stopifnot("text" %in% names(text))

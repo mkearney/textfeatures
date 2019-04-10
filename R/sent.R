@@ -1,15 +1,15 @@
 
-
 sentiment_est <- function(x, dict) {
   if (is.character(x)) {
-    x <- gsub("https?://\\S+|@\\S+", "", x)
+    ## this removes URLs
+    x <- gsub("https?://\\S+", "", x)
     x <- tokenizers::tokenize_words(
       x, lowercase = TRUE, strip_punct = TRUE, strip_numeric = FALSE
     )
   }
   vapply(
     x,
-    function(.x) sum(dict$value[match(dict$word, .x)], na.rm = TRUE),
+    function(.x) sum(dict$value[match(.x, dict$word)], na.rm = TRUE),
     FUN.VALUE = numeric(1),
     USE.NAMES = FALSE
   )

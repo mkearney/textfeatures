@@ -72,7 +72,7 @@ textfeatures.textfeatures_model <- function(text,
   ## if applicable, get w2v estimates
   sh <- TRUE
   sh <- tryCatch(
-    capture.output(w <- word_dims_newtext(tf_model, text)),
+    utils::capture.output(w <- word_dims_newtext(tf_model, text)),
     error = function(e) return(FALSE))
   if (identical(sh, FALSE)) {
     w <- NULL

@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textfeatures</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -117,14 +117,14 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>textfeatures</span>(<span class='no'>x</span>, <span class='kw'>sentiment</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>word_dims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>export</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>textfeatures</span>(<span class='no'>text</span>, <span class='kw'>sentiment</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>word_dims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>newdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
+      <th>text</th>
       <td><p>Input data. Should be character vector or data frame with character
 variable of interest named "text". If a data frame then the first "id|*_id"
 variable, if found, is assumed to be an ID variable.</p></td>
@@ -143,20 +143,14 @@ number of dimensions (ranging from 2 to 200) based on size of input. To
 disable word2vec estimates, set this to 0 or FALSE.</p></td>
     </tr>
     <tr>
-      <th>threads</th>
-      <td><p>Integer, specifying the number of threads to use when generating
-word2vec estimates. Defaults to 1. Ignored if <code>word_dims = 0</code>.</p></td>
-    </tr>
-    <tr>
       <th>normalize</th>
       <td><p>Logical indicating whether to normalize (mean center,
 sd = 1) features. Defaults to TRUE.</p></td>
     </tr>
     <tr>
-      <th>export</th>
-      <td><p>Logical indicating whether to store sufficient information for
-exporting the feature extraction process (stores the means, standard deviations,
-and the word2vec reference object, which can then be used to process new data).</p></td>
+      <th>newdata</th>
+      <td><p>If a textfeatures_model is supplied to text, supply this with
+new data to which you would like to apply the textfeatures_model.</p></td>
     </tr>
     </table>
     
@@ -184,23 +178,27 @@ and the word2vec reference object, which can then be used to process new data).<
 )
 
 <span class='co'>## get the text features of a character vector</span>
-<span class='fu'>textfeatures</span>(<span class='no'>trump_tweets</span>)</div><div class='output co'>#&gt; INFO [2018-11-28 17:11:02] iter 10 loglikelihood = -11.817
-#&gt; INFO [2018-11-28 17:11:02] iter 20 loglikelihood = -12.426
-#&gt; INFO [2018-11-28 17:11:02] early stopping at 20 iteration</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 31</span><span>
-#&gt;   id    n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> 1      1.79       1.79           0  -</span><span style='color: #BB0000;'>1.68</span><span>    -</span><span style='color: #BB0000;'>0.730</span><span>        0     -</span><span style='color: #BB0000;'>1.79</span><span> 
-#&gt; </span><span style='color: #555555;'>2</span><span> 2     -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>          0  -</span><span style='color: #BB0000;'>0.141</span><span>   -</span><span style='color: #BB0000;'>0.730</span><span>        0      0.447
-#&gt; </span><span style='color: #555555;'>3</span><span> 3     -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>          0   0.559    1.10         0      0.447
-#&gt; </span><span style='color: #555555;'>4</span><span> 4     -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>          0   0.478   -</span><span style='color: #BB0000;'>0.730</span><span>        0      0.447
-#&gt; </span><span style='color: #555555;'>5</span><span> 5     -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>          0   0.784    1.10         0      0.447
-#&gt; </span><span style='color: #555555;'># ... with 23 more variables: n_extraspaces </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_lowers </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   n_lowersp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_periods </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_words </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_caps </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+<span class='fu'>textfeatures</span>(<span class='no'>trump_tweets</span>)</div><div class='output co'>#&gt; <span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Counting features in text...</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Sentiment analysis...</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Parts of speech...</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Word dimensions estimated</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Normalizing data</span><span>
+#&gt; </span><span style='color: #00BB00;'>✔</span><span> Job's done!</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 5 x 37</span><span>
+#&gt;   n_urls n_uq_urls n_hashtags n_uq_hashtags n_mentions n_uq_mentions n_chars
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>  1.79      1.79       1.79          1.79           0             0  -</span><span style='color: #BB0000;'>1.57</span><span> 
+#&gt; </span><span style='color: #555555;'>2</span><span> -</span><span style='color: #BB0000;'>0.447</span><span>    -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>        -</span><span style='color: #BB0000;'>0.447</span><span>          0             0  -</span><span style='color: #BB0000;'>0.411</span><span>
+#&gt; </span><span style='color: #555555;'>3</span><span> -</span><span style='color: #BB0000;'>0.447</span><span>    -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>        -</span><span style='color: #BB0000;'>0.447</span><span>          0             0   0.608
+#&gt; </span><span style='color: #555555;'>4</span><span> -</span><span style='color: #BB0000;'>0.447</span><span>    -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>        -</span><span style='color: #BB0000;'>0.447</span><span>          0             0   0.515
+#&gt; </span><span style='color: #555555;'>5</span><span> -</span><span style='color: #BB0000;'>0.447</span><span>    -</span><span style='color: #BB0000;'>0.447</span><span>     -</span><span style='color: #BB0000;'>0.447</span><span>        -</span><span style='color: #BB0000;'>0.447</span><span>          0             0   0.857
+#&gt; </span><span style='color: #555555;'># … with 30 more variables: n_uq_chars </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_commas </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_digits </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_exclaims </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_extraspaces </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_lowers </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_lowersp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_periods </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_words </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_uq_words </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_caps </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   n_nonasciis </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_puncts </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_capsp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_charsperword </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   sent_afinn </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_bing </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_polite </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_first_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   n_first_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_second_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_second_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   n_third_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_tobe </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_prepositions </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, V3 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   w1 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, w2 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
+#&gt; #   sent_afinn </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_bing </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_syuzhet </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_vader </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_polite </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_first_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_first_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_second_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_second_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_third_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_tobe </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_prepositions </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, w1 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, w2 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, w3 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
 <span class='co'>## data frame with a character vector named "text"</span>
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(
   <span class='kw'>id</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>),
@@ -211,20 +209,25 @@ and the word2vec reference object, which can then be used to process new data).<
 )
 
 <span class='co'>## get text features of a data frame with "text" variable</span>
-<span class='fu'>textfeatures</span>(<span class='no'>df</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: dtm has 0 rows. Empty iterator?</span></div><div class='output co'>#&gt; INFO [2018-11-28 17:11:02] iter 10 loglikelihood = 0.000
-#&gt; INFO [2018-11-28 17:11:02] early stopping at 10 iteration</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 30</span><span>
-#&gt;      id n_urls n_hashtags n_mentions n_chars n_commas n_digits n_exclaims
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span>     1  1.15       1.15       1.15   -</span><span style='color: #BB0000;'>0.792</span><span>        0        0      0.173
-#&gt; </span><span style='color: #555555;'>2</span><span>     2 -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>  -</span><span style='color: #BB0000;'>0.332</span><span>        0        0     -</span><span style='color: #BB0000;'>1.08</span><span> 
-#&gt; </span><span style='color: #555555;'>3</span><span>     3 -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>   1.12         0        0      0.902
-#&gt; </span><span style='color: #555555;'># ... with 22 more variables: n_extraspaces </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_lowers </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   n_lowersp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_periods </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_words </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_caps </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+<span class='fu'>textfeatures</span>(<span class='no'>df</span>)</div><div class='output co'>#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Counting features in text...</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Sentiment analysis...</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Parts of speech...</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Word dimensions estimated</span><span>
+#&gt; </span><span style='color: #00BB00;'>↪</span><span> </span><span style='color: #808080;'>Normalizing data</span><span>
+#&gt; </span><span style='color: #00BB00;'>✔</span><span> Job's done!</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 36</span><span>
+#&gt;   n_urls n_uq_urls n_hashtags n_uq_hashtags n_mentions n_uq_mentions n_chars
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>  1.15      1.15       1.15          1.15       1.15          1.15    0.243
+#&gt; </span><span style='color: #555555;'>2</span><span> -</span><span style='color: #BB0000;'>0.577</span><span>    -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>        -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>        -</span><span style='color: #BB0000;'>0.577</span><span>  -</span><span style='color: #BB0000;'>1.10</span><span> 
+#&gt; </span><span style='color: #555555;'>3</span><span> -</span><span style='color: #BB0000;'>0.577</span><span>    -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>        -</span><span style='color: #BB0000;'>0.577</span><span>     -</span><span style='color: #BB0000;'>0.577</span><span>        -</span><span style='color: #BB0000;'>0.577</span><span>   0.856
+#&gt; </span><span style='color: #555555;'># … with 29 more variables: n_uq_chars </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_commas </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_digits </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_exclaims </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_extraspaces </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_lowers </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_lowersp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_periods </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_words </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_uq_words </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_caps </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   n_nonasciis </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_puncts </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_capsp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_charsperword </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   sent_afinn </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_bing </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_polite </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_first_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   n_first_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_second_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_second_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   n_third_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_tobe </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_prepositions </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, V2 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   w1 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
+#&gt; #   sent_afinn </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_bing </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_syuzhet </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, sent_vader </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_polite </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_first_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_first_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_second_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_second_personp </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_third_person </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   n_tobe </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, n_prepositions </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, w1 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, w2 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -246,7 +249,7 @@ and the word2vec reference object, which can then be used to process new data).<
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
    </div>

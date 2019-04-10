@@ -26,9 +26,8 @@ test_that("main textfeatures function", {
   o_df <- textfeatures(df, sentiment = FALSE, word_dims = 0)
   expect_true(is.data.frame(o_df))
 
-  ## get text features of list of DFs with "text" vars
-  o_lst <- textfeatures(lst)
-  expect_true(all(vapply(o_lst, is.data.frame, FUN.VALUE = logical(1))))
+  ## this should break if a list of text-containing objects is supplied
+  expect_error(textfeatures(lst))
 
   ## shouldn't work if no variable named text
   expect_error(textfeatures(mtcars))

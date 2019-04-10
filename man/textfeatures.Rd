@@ -23,6 +23,9 @@ disable word2vec estimates, set this to 0 or FALSE.}
 
 \item{normalize}{Logical indicating whether to normalize (mean center,
 sd = 1) features. Defaults to TRUE.}
+
+\item{newdata}{If a textfeatures_model is supplied to text, supply this with
+new data to which you would like to apply the textfeatures_model.}
 }
 \value{
 A tibble data frame with extracted features as columns.
