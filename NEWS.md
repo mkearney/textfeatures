@@ -1,3 +1,5 @@
+# textfeatures 0.3.2
+
 # textfeatures 0.3.1
 + `textfeatures()` now exports the word vector model by default
 + Added `newdata` argument to allow feature extraction using previously defined
