@@ -5,7 +5,7 @@
 \title{textfeatures}
 \usage{
 textfeatures(text, sentiment = TRUE, word_dims = NULL,
-  normalize = TRUE, newdata = NULL)
+  normalize = TRUE, newdata = NULL, verbose = TRUE)
 }
 \arguments{
 \item{text}{Input data. Should be character vector or data frame with character
@@ -26,6 +26,9 @@ sd = 1) features. Defaults to TRUE.}
 
 \item{newdata}{If a textfeatures_model is supplied to text, supply this with
 new data to which you would like to apply the textfeatures_model.}
+
+\item{verbose}{A single logical for printing logging messages as work
+progresses.}
 }
 \value{
 A tibble data frame with extracted features as columns.

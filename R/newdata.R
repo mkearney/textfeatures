@@ -6,7 +6,8 @@ textfeatures.textfeatures_model <- function(text,
                                             sentiment = TRUE,
                                             word_dims = NULL,
                                             normalize = TRUE,
-                                            newdata = NULL) {
+                                            newdata = NULL,
+                                            verbose = TRUE) {
   if (is.null(newdata)) {
     stop(
       "Failed to supply value to `newdata` (a character vector or data frame ",
@@ -51,7 +52,8 @@ textfeatures.textfeatures_model <- function(text,
 
   ## estimate sentiment
   if (sentiment) {
-    tfse::print_start("Sentiment analysis...")
+    if (verbose)
+      tfse::print_start("Sentiment analysis...")
     o$sent_afinn <- sentiment_afinn(text)
     o$sent_bing <- sentiment_bing(text)
     o$sent_syuzhet <- sentiment_syuzhet(text)
@@ -60,7 +62,8 @@ textfeatures.textfeatures_model <- function(text,
   }
 
   ## parts of speech
-  tfse::print_start("Parts of speech...")
+  if (verbose)
+    tfse::print_start("Parts of speech...")
   o$n_first_person <- first_person(text)
   o$n_first_personp <- first_personp(text)
   o$n_second_person <- second_person(text)
@@ -90,7 +93,8 @@ textfeatures.textfeatures_model <- function(text,
 
   ## normalize
   if (normalize) {
-    tfse::print_start("Normalizing data")
+    if (verbose)
+      tfse::print_start("Normalizing data")
     o <- scale_normal(scale_count(o))
   }
 
@@ -100,7 +104,8 @@ textfeatures.textfeatures_model <- function(text,
   )
 
   ## done!
-  tfse::print_complete("Job's done!")
+  if (verbose)
+    tfse::print_complete("Job's done!")
 
   ## return
   o

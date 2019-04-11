@@ -1,5 +1,7 @@
 # textfeatures 0.3.2
 
++ A `verbose` options was added to control message logs. Defaults to `TRUE`. 
+
 # textfeatures 0.3.1
 + `textfeatures()` now exports the word vector model by default
 + Added `newdata` argument to allow feature extraction using previously defined
