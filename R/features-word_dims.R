@@ -34,8 +34,6 @@ estimate_word_dims <- function(text, word_dims, n_obs) {
       error = function(e) return(FALSE))
     if (identical(sh, FALSE)) {
       w <- NULL
-    } else {
-      tfse::print_start("Word dimensions estimated")
     }
   }
   w

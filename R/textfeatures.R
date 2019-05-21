@@ -17,6 +17,8 @@
 #'   sd = 1) features. Defaults to TRUE.
 #' @param newdata If a textfeatures_model is supplied to text, supply this with
 #'   new data to which you would like to apply the textfeatures_model.
+#' @param verbose A single logical for printing logging messages as work
+#'  progresses.
 #' @return A tibble data frame with extracted features as columns.
 #' @examples
 #'
@@ -56,7 +58,8 @@ textfeatures <- function(text,
                          sentiment = TRUE,
                          word_dims = NULL,
                          normalize = TRUE,
-                         newdata = NULL) {
+                         newdata = NULL,
+                         verbose = TRUE) {
   UseMethod("textfeatures")
 }
 
@@ -65,7 +68,8 @@ textfeatures.character <- function(text,
                                    sentiment = TRUE,
                                    word_dims = NULL,
                                    normalize = TRUE,
-                                   newdata = NULL) {
+                                   newdata = NULL,
+                                   verbose = TRUE) {
 
   ## validate inputs
   stopifnot(
@@ -76,6 +80,8 @@ textfeatures.character <- function(text,
   )
 
   ## initialize output data
+  if (verbose)
+    tfse::print_start("Counting features in text...")
   o <- tweet_features(text)
 
   ## length
@@ -86,7 +92,8 @@ textfeatures.character <- function(text,
 
   ## estimate sentiment
   if (sentiment) {
-    tfse::print_start("Sentiment analysis...")
+    if (verbose)
+      tfse::print_start("Sentiment analysis...")
     o$sent_afinn <- sentiment_afinn(text)
     o$sent_bing <- sentiment_bing(text)
     o$sent_syuzhet <- sentiment_syuzhet(text)
@@ -95,7 +102,8 @@ textfeatures.character <- function(text,
   }
 
   ## parts of speech
-  tfse::print_start("Parts of speech...")
+  if (verbose)
+    tfse::print_start("Parts of speech...")
   o$n_first_person <- first_person(text)
   o$n_first_personp <- first_personp(text)
   o$n_second_person <- second_person(text)
@@ -105,6 +113,8 @@ textfeatures.character <- function(text,
   o$n_prepositions <- prepositions(text)
 
   ## get word dim estimates
+  if (verbose)
+    tfse::print_start("Word dimensions started")
   w <- estimate_word_dims(text, word_dims, n_obs)
 
   ## convert 'o' into to tibble and merge with w
@@ -119,7 +129,8 @@ textfeatures.character <- function(text,
 
   ## normalize
   if (normalize) {
-    tfse::print_start("Normalizing data")
+    if (verbose)
+      tfse::print_start("Normalizing data")
     o <- scale_normal(scale_count(o))
   }
 
@@ -129,7 +140,8 @@ textfeatures.character <- function(text,
   )
 
   ## done!
-  tfse::print_complete("Job's done!")
+  if (verbose)
+    tfse::print_complete("Job's done!")
 
   ## return
   o
@@ -140,13 +152,15 @@ textfeatures.factor <- function(text,
                                 sentiment = TRUE,
                                 word_dims = NULL,
                                 normalize = TRUE,
-                                newdata = newdata) {
+                                newdata = newdata,
+                                verbose = TRUE) {
   textfeatures(
     as.character(text),
     sentiment = sentiment,
     word_dims = word_dims,
     normalize = normalize,
-    newdata = newdata
+    newdata = newdata,
+    verbose = verbose
   )
 }
 
@@ -155,7 +169,8 @@ textfeatures.data.frame <- function(text,
                                     sentiment = TRUE,
                                     word_dims = NULL,
                                     normalize = TRUE,
-                                    newdata = newdata) {
+                                    newdata = newdata,
+                                    verbose = TRUE) {
 
   ## validate input
   stopifnot("text" %in% names(text))
@@ -164,7 +179,8 @@ textfeatures.data.frame <- function(text,
     sentiment = sentiment,
     word_dims = word_dims,
     normalize = normalize,
-    newdata = newdata
+    newdata = newdata,
+    verbose = verbose
   )
 }
 
@@ -173,7 +189,8 @@ textfeatures.list <- function(text,
   sentiment = TRUE,
   word_dims = NULL,
   normalize = TRUE,
-  newdata = newdata) {
+  newdata = newdata,
+  verbose = TRUE) {
 
   ## validate input
   stopifnot("text" %in% names(text))
@@ -182,6 +199,7 @@ textfeatures.list <- function(text,
     sentiment = sentiment,
     word_dims = word_dims,
     normalize = normalize,
-    newdata = newdata
+    newdata = newdata,
+    verbose = verbose
   )
 }
