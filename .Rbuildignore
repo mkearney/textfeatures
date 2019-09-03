@@ -13,3 +13,5 @@
 ^README.Rmd$
 ^cran-comments\.md$
 ^\.travis\.yml$
+^appveyor\.yml$
+^\.nasa\.rds$

@@ -6,3 +6,4 @@ make.R
 inst/doc
 .DS_Store
 README_cache
+.nasa.rds

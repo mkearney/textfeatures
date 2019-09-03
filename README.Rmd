@@ -20,6 +20,7 @@ skimrskim <- function(x) {
 # 👷 textfeatures 👷<img src="man/figures/logo.png" width="160px" align="right" /> 
 
 [![Build status](https://travis-ci.org/mkearney/textfeatures.svg?branch=master)](https://travis-ci.org/mkearney/textfeatures)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/mkearney/textfeatures?branch=master&svg=true)](https://ci.appveyor.com/project/mkearney/textfeatures)
 [![CRAN status](https://www.r-pkg.org/badges/version/textfeatures)](https://cran.r-project.org/package=textfeatures)
 [![Coverage Status](https://codecov.io/gh/mkearney/textfeatures/branch/master/graph/badge.svg)](https://codecov.io/gh/mkearney/textfeatures?branch=master)
 [![DOI](https://zenodo.org/badge/123046986.svg)](https://zenodo.org/badge/latestdoi/123046986)
@@ -70,7 +71,7 @@ Or input a data frame with a column named `text`.
 rt <- rtweet::search_tweets("rstats", n = 2000, verbose = FALSE)
 
 ## get text features
-tf <- textfeatures(rt, threads = 20)
+tf <- textfeatures(rt)
 
 ## preview data
 tf
@@ -85,7 +86,7 @@ news <- rtweet::get_timelines(
   n = 2000)
 
 ## get text features (including ests for 20 word dims) for all observations
-news_features <- textfeatures(news, word_dims = 20, threads = 3)
+news_features <- textfeatures(news, word_dims = 20)
 ```
 
 
@@ -146,7 +147,33 @@ textfeatures(rt, sentiment = FALSE, word_dims = 0)
 Extract text features from NASA meta data:
 
 
-```{r nasa}
+```{r, include=FALSE}
+if (!file.exists(".nasa.rds")) {
+  ## read NASA meta data
+  nasa <- jsonlite::fromJSON("https://data.nasa.gov/data.json")
+  
+  ## identify non-public or restricted data sets
+  nonpub <- grepl("Not publicly available|must register", 
+    nasa$data$rights, ignore.case = TRUE) | 
+    nasa$dataset$accessLevel %in% c("restricted public", "non-public")
+  
+  ## create data frame with ID, description (name it "text"), and nonpub
+  nd <- data.frame(text = nasa$dataset$description, nonpub = nonpub, 
+    stringsAsFactors = FALSE)
+  
+  ## drop duplicates (truncate text to ensure more distinct obs)
+  nd <- nd[!duplicated(tolower(substr(nd$text, 1, 100))), ]
+  
+  ## filter via sampling to create equal number of pub/nonpub
+  nd <- nd[c(sample(which(!nd$nonpub), sum(nd$nonpub)), which(nd$nonpub)), ]
+  saveRDS(nd, ".nasa.rds")
+} else {
+  nd <- readRDS(".nasa.rds")
+}
+```
+
+
+```{r nd, eval=FALSE}
 ## read NASA meta data
 nasa <- jsonlite::fromJSON("https://data.nasa.gov/data.json")
 
@@ -164,11 +191,21 @@ nd <- nd[!duplicated(tolower(substr(nd$text, 1, 100))), ]
 
 ## filter via sampling to create equal number of pub/nonpub
 nd <- nd[c(sample(which(!nd$nonpub), sum(nd$nonpub)), which(nd$nonpub)), ]
+```
 
+
+```{r nasafinal}
 ## get text features
-nasa_tf <- textfeatures(nd, word_dims = 20, threads = 10)
+nasa_tf <- textfeatures(nd, word_dims = 20, normalize = FALSE)
 
 ## drop columns with little to no variance
+min_var <- function(x, min = 1) {
+  is_num <- vapply(x, is.numeric, logical(1))
+  non_num <- names(x)[!is_num]
+  yminvar <- names(x[is_num])[vapply(x[is_num], function(.x) stats::var(.x, 
+      na.rm = TRUE) >= min, logical(1))]
+  x[c(non_num, yminvar)]
+}
 nasa_tf <- min_var(nasa_tf)
 
 ## view summary
