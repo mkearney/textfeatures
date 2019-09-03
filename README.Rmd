@@ -61,7 +61,7 @@ x <- c(
 )
 
 ## get text features
-textfeatures(x)
+textfeatures(x, verbose = FALSE)
 ```
 
 Or input a data frame with a column named `text`.
@@ -71,7 +71,7 @@ Or input a data frame with a column named `text`.
 rt <- rtweet::search_tweets("rstats", n = 2000, verbose = FALSE)
 
 ## get text features
-tf <- textfeatures(rt)
+tf <- textfeatures(rt, verbose = FALSE)
 
 ## preview data
 tf
@@ -86,7 +86,7 @@ news <- rtweet::get_timelines(
   n = 2000)
 
 ## get text features (including ests for 20 word dims) for all observations
-news_features <- textfeatures(news, word_dims = 20)
+news_features <- textfeatures(news, word_dims = 20, verbose = FALSE)
 ```
 
 
@@ -138,7 +138,7 @@ If you're looking for something faster try setting `sentiment = FALSE` and `word
 
 ```{r fast}
 ## get non-substantive text features
-textfeatures(rt, sentiment = FALSE, word_dims = 0)
+textfeatures(rt, sentiment = FALSE, word_dims = 0, verbose = FALSE)
 ```
 
 
@@ -196,7 +196,7 @@ nd <- nd[c(sample(which(!nd$nonpub), sum(nd$nonpub)), which(nd$nonpub)), ]
 
 ```{r nasafinal}
 ## get text features
-nasa_tf <- textfeatures(nd, word_dims = 20, normalize = FALSE)
+nasa_tf <- textfeatures(nd, word_dims = 20, normalize = FALSE, verbose = FALSE)
 
 ## drop columns with little to no variance
 min_var <- function(x, min = 1) {

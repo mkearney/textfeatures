@@ -47,13 +47,7 @@ x <- c(
 )
 
 ## get text features
-textfeatures(x)
-#> [32m↪[39m [38;5;244mCounting features in text...[39m
-#> [32m↪[39m [38;5;244mSentiment analysis...[39m
-#> [32m↪[39m [38;5;244mParts of speech...[39m
-#> [32m↪[39m [38;5;244mWord dimensions started[39m
-#> [32m↪[39m [38;5;244mNormalizing data[39m
-#> [32m✔[39m Job's done!
+textfeatures(x, verbose = FALSE)
 #> # A tibble: 3 x 36
 #>   n_urls n_uq_urls n_hashtags n_uq_hashtags n_mentions n_uq_mentions n_chars n_uq_chars n_commas
 #>    <dbl>     <dbl>      <dbl>         <dbl>      <dbl>         <dbl>   <dbl>      <dbl>    <dbl>
@@ -75,29 +69,23 @@ Or input a data frame with a column named `text`.
 rt <- rtweet::search_tweets("rstats", n = 2000, verbose = FALSE)
 
 ## get text features
-tf <- textfeatures(rt)
-#> [32m↪[39m [38;5;244mCounting features in text...[39m
-#> [32m↪[39m [38;5;244mSentiment analysis...[39m
-#> [32m↪[39m [38;5;244mParts of speech...[39m
-#> [32m↪[39m [38;5;244mWord dimensions started[39m
-#> [32m↪[39m [38;5;244mNormalizing data[39m
-#> [32m✔[39m Job's done!
+tf <- textfeatures(rt, verbose = FALSE)
 
 ## preview data
 tf
 #> # A tibble: 2,000 x 134
 #>    n_urls n_uq_urls n_hashtags n_uq_hashtags n_mentions n_uq_mentions n_chars n_uq_chars n_commas
 #>     <dbl>     <dbl>      <dbl>         <dbl>      <dbl>         <dbl>   <dbl>      <dbl>    <dbl>
-#>  1 -0.360     0.328     -0.126        -0.124     -0.556        -0.556  -0.539     -0.429   -0.602
-#>  2  0.829     0.328      1.31          1.31      -0.556        -0.556   0.778      0.745   -0.602
-#>  3  0.829     0.328      1.31          1.31      -0.556        -0.556   0.630      0.496   -0.602
-#>  4  0.829     0.328      1.25          1.25      -0.556        -0.556   0.865      0.664   -0.602
-#>  5  0.829     0.328      1.31          1.31      -0.556        -0.556   0.858      0.973   -0.602
-#>  6  0.829     0.328      1.31          1.31      -0.556        -0.556   0.872      0.823   -0.602
-#>  7  0.829     0.328      1.31          1.31      -0.556        -0.556   0.808      0.664   -0.602
-#>  8  0.829     0.328      1.31          1.31      -0.556        -0.556   0.815      0.823   -0.602
-#>  9  0.829     0.328      1.25          1.25      -0.556        -0.556   0.808      0.745   -0.602
-#> 10  0.829     0.328      1.36          1.36      -0.556        -0.556   0.793      0.823   -0.602
+#>  1 -0.351     0.331     -1.07         -1.06       3.32          3.32    0.400      0.826    1.74 
+#>  2 -0.351     0.331     -0.347        -0.345      1.11          1.11    0.670     -0.302    1.74 
+#>  3 -0.351     0.331     -0.645        -0.643     -0.562        -0.562  -0.201      0.975    2.36 
+#>  4 -0.351     0.331     -0.115        -0.114      2.09          2.09    0.554      0.412    2.84 
+#>  5  0.832     0.331     -0.115        -0.114      2.09          2.09    0.270      0.129   -0.604
+#>  6 -0.351     0.331     -0.347        -0.345      1.11          1.11   -0.173     -0.677   -0.604
+#>  7 -0.351     0.331     -0.347        -0.345      1.11          1.11   -0.566     -0.187    1.74 
+#>  8 -0.351     0.331     -0.645        -0.643     -0.562        -0.562  -1.68      -1.28    -0.604
+#>  9 -0.351     0.331     -0.115        -0.114     -0.562        -0.562  -0.531     -0.421   -0.604
+#> 10 -2.37     -2.96      -0.347        -0.345      1.11          1.11   -1.26      -0.815    0.877
 #> # … with 1,990 more rows, and 125 more variables: n_digits <dbl>, n_exclaims <dbl>,
 #> #   n_extraspaces <dbl>, n_lowers <dbl>, n_lowersp <dbl>, n_periods <dbl>, n_words <dbl>,
 #> #   n_uq_words <dbl>, n_caps <dbl>, n_nonasciis <dbl>, n_puncts <dbl>, n_capsp <dbl>,
@@ -125,7 +113,7 @@ news <- rtweet::get_timelines(
   n = 2000)
 
 ## get text features (including ests for 20 word dims) for all observations
-news_features <- textfeatures(news, word_dims = 20)
+news_features <- textfeatures(news, word_dims = 20, verbose = FALSE)
 ```
 
 <p style="align:center">
@@ -141,25 +129,20 @@ and `word2vec = 0`.
 
 ``` r
 ## get non-substantive text features
-textfeatures(rt, sentiment = FALSE, word_dims = 0)
-#> [32m↪[39m [38;5;244mCounting features in text...[39m
-#> [32m↪[39m [38;5;244mParts of speech...[39m
-#> [32m↪[39m [38;5;244mWord dimensions started[39m
-#> [32m↪[39m [38;5;244mNormalizing data[39m
-#> [32m✔[39m Job's done!
+textfeatures(rt, sentiment = FALSE, word_dims = 0, verbose = FALSE)
 #> # A tibble: 2,000 x 29
 #>    n_urls n_uq_urls n_hashtags n_uq_hashtags n_mentions n_uq_mentions n_chars n_uq_chars n_commas
 #>     <dbl>     <dbl>      <dbl>         <dbl>      <dbl>         <dbl>   <dbl>      <dbl>    <dbl>
-#>  1 -0.360     0.328     -0.126        -0.124     -0.556        -0.556  -0.539     -0.429   -0.602
-#>  2  0.829     0.328      1.31          1.31      -0.556        -0.556   0.778      0.745   -0.602
-#>  3  0.829     0.328      1.31          1.31      -0.556        -0.556   0.630      0.496   -0.602
-#>  4  0.829     0.328      1.25          1.25      -0.556        -0.556   0.865      0.664   -0.602
-#>  5  0.829     0.328      1.31          1.31      -0.556        -0.556   0.858      0.973   -0.602
-#>  6  0.829     0.328      1.31          1.31      -0.556        -0.556   0.872      0.823   -0.602
-#>  7  0.829     0.328      1.31          1.31      -0.556        -0.556   0.808      0.664   -0.602
-#>  8  0.829     0.328      1.31          1.31      -0.556        -0.556   0.815      0.823   -0.602
-#>  9  0.829     0.328      1.25          1.25      -0.556        -0.556   0.808      0.745   -0.602
-#> 10  0.829     0.328      1.36          1.36      -0.556        -0.556   0.793      0.823   -0.602
+#>  1 -0.351     0.331     -1.07         -1.06       3.32          3.32    0.400      0.826    1.74 
+#>  2 -0.351     0.331     -0.347        -0.345      1.11          1.11    0.670     -0.302    1.74 
+#>  3 -0.351     0.331     -0.645        -0.643     -0.562        -0.562  -0.201      0.975    2.36 
+#>  4 -0.351     0.331     -0.115        -0.114      2.09          2.09    0.554      0.412    2.84 
+#>  5  0.832     0.331     -0.115        -0.114      2.09          2.09    0.270      0.129   -0.604
+#>  6 -0.351     0.331     -0.347        -0.345      1.11          1.11   -0.173     -0.677   -0.604
+#>  7 -0.351     0.331     -0.347        -0.345      1.11          1.11   -0.566     -0.187    1.74 
+#>  8 -0.351     0.331     -0.645        -0.643     -0.562        -0.562  -1.68      -1.28    -0.604
+#>  9 -0.351     0.331     -0.115        -0.114     -0.562        -0.562  -0.531     -0.421   -0.604
+#> 10 -2.37     -2.96      -0.347        -0.345      1.11          1.11   -1.26      -0.815    0.877
 #> # … with 1,990 more rows, and 20 more variables: n_digits <dbl>, n_exclaims <dbl>,
 #> #   n_extraspaces <dbl>, n_lowers <dbl>, n_lowersp <dbl>, n_periods <dbl>, n_words <dbl>,
 #> #   n_uq_words <dbl>, n_caps <dbl>, n_nonasciis <dbl>, n_puncts <dbl>, n_capsp <dbl>,
@@ -193,12 +176,7 @@ nd <- nd[c(sample(which(!nd$nonpub), sum(nd$nonpub)), which(nd$nonpub)), ]
 
 ``` r
 ## get text features
-nasa_tf <- textfeatures(nd, word_dims = 20, normalize = FALSE)
-#> [32m↪[39m [38;5;244mCounting features in text...[39m
-#> [32m↪[39m [38;5;244mSentiment analysis...[39m
-#> [32m↪[39m [38;5;244mParts of speech...[39m
-#> [32m↪[39m [38;5;244mWord dimensions started[39m
-#> [32m✔[39m Job's done!
+nasa_tf <- textfeatures(nd, word_dims = 20, normalize = FALSE, verbose = FALSE)
 
 ## drop columns with little to no variance
 min_var <- function(x, min = 1) {
