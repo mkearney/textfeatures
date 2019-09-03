@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Apply various transformations to numeric (and non-id) data — scale_count • textfeatures</title>
+<title>Calculates word2vec dimension estimates — word_dims_newtext • textfeatures</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,13 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Apply various transformations to numeric (and non-id) data — scale_count" />
+<meta property="og:title" content="Calculates word2vec dimension estimates — word_dims_newtext" />
 
-<meta property="og:description" content="scale_count: Transforms integer and integerlike columns using log
-scale_log: Transforms numeric columns using log
-scale_normal: Transforms numeric columns using mean centering and dividing by standard deviation
-scale_standard: Transforms numeric columns onto 0-1 scales with 0 and 1 set empirically
-scale_sqrt: Transforms numeric columns using sqrt" />
+<meta property="og:description" content="Calculates word2vec dimension estimates" />
 
 <meta property="og:image" content="https://textfeatures.mikewk.com/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -110,52 +106,78 @@ scale_sqrt: Transforms numeric columns using sqrt" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Apply various transformations to numeric (and non-id) data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mkearney/textfeatures/blob/master/R/scale.R'><code>R/scale.R</code></a></small>
-    <div class="hidden name"><code>scale_count.Rd</code></div>
+    <h1>Calculates word2vec dimension estimates</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mkearney/textfeatures/blob/master/R/word2vec.R'><code>R/word2vec.R</code></a></small>
+    <div class="hidden name"><code>word_dims.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>scale_count: Transforms integer and integerlike columns using log</p>
-<p>scale_log: Transforms numeric columns using log</p>
-<p>scale_normal: Transforms numeric columns using mean centering and dividing by standard deviation</p>
-<p>scale_standard: Transforms numeric columns onto 0-1 scales with 0 and 1 set empirically</p>
-<p>scale_sqrt: Transforms numeric columns using sqrt</p>
+    <p>Calculates word2vec dimension estimates</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>scale_count</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>word_dims_newtext</span>(<span class='no'>lda_model</span>, <span class='no'>text</span>, <span class='kw'>n_iter</span> <span class='kw'>=</span> <span class='fl'>20</span>)
 
-<span class='fu'>scale_log</span>(<span class='no'>x</span>)
-
-<span class='fu'>scale_normal</span>(<span class='no'>x</span>)
-
-<span class='fu'>scale_standard</span>(<span class='no'>x</span>)
-
-<span class='fu'>scale_sqrt</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>word_dims</span>(<span class='no'>text</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>n_iter</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Input data frame containing numeric columns.</p></td>
+      <th>lda_model</th>
+      <td><p>A pretrained <code><a href='https://www.rdocumentation.org/packages/text2vec/topics/LatentDirichletAllocation'>LDA</a></code> model from
+<span class="pkg">text2vec</span>.</p></td>
+    </tr>
+    <tr>
+      <th>text</th>
+      <td><p>Input data. Should be character vector.</p></td>
+    </tr>
+    <tr>
+      <th>n_iter</th>
+      <td><p>Integer, number of sampling iterations.</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Integer, determines the number of latent topics.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with the same dimensions but with the
-  numeric/relevant variables transformed.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Scale transformations are applied only to numeric (or in the
-  case of <code>scale_count</code> only integer or integerish) columns
-  that are not named <code>"id"</code> or <code>"(\.|_)?id"</code>.</p>
+    <p>A tibble data frame</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>trump_tweets</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(
+<span class='st'>"#FraudNewsCNN #FNN https://t.co/WYUnHjjUjg"</span>,
+<span class='st'>"TODAY WE MAKE AMERICA GREAT AGAIN!"</span>,
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Why would Kim Jong-un insult me by calling me \"old,\" when I would"</span>,
+      <span class='st'>"NEVER call him \"short and fat?\" Oh well, I try so hard to be his"</span>,
+      <span class='st'>"friend - and maybe someday that will happen!"</span>),
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Such a beautiful and important evening! The forgotten man and woman"</span>,
+      <span class='st'>"will never be forgotten again. We will all come together as never before"</span>),
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"North Korean Leader Kim Jong Un just stated that the \"Nuclear"</span>,
+      <span class='st'>"Button is on his desk at all times.\" Will someone from his depleted and"</span>,
+      <span class='st'>"food starved regime please inform him that I too have a Nuclear Button,"</span>,
+      <span class='st'>"but it is a much bigger &amp;amp; more powerful one than his, and my Button"</span>,
+      <span class='st'>"works!"</span>)
+)
+<span class='fu'>word_dims</span>(<span class='no'>trump_tweets</span>)</div><div class='output co'>#&gt; INFO [2019-09-03 11:36:58] iter 10 loglikelihood = -73.730
+#&gt; INFO [2019-09-03 11:36:58] iter 20 loglikelihood = -73.776
+#&gt; INFO [2019-09-03 11:36:58] early stopping at 20 iteration</div><div class='output co'>#&gt;           w1         w2         w3        w4        w5         w6        w7
+#&gt; 1 0.00000000 0.00000000 0.00000000 0.0000000 0.0000000 0.00000000 0.0000000
+#&gt; 2 0.50000000 0.00000000 0.00000000 0.5000000 0.0000000 0.00000000 0.0000000
+#&gt; 3 0.05882353 0.05882353 0.11764706 0.1176471 0.1176471 0.11764706 0.1176471
+#&gt; 4 0.28571429 0.14285714 0.07142857 0.0000000 0.0000000 0.07142857 0.1428571
+#&gt; 5 0.08333333 0.04166667 0.16666667 0.1250000 0.0000000 0.08333333 0.1250000
+#&gt;           w8         w9        w10
+#&gt; 1 0.00000000 0.00000000 0.00000000
+#&gt; 2 0.00000000 0.00000000 0.00000000
+#&gt; 3 0.23529412 0.00000000 0.05882353
+#&gt; 4 0.21428571 0.07142857 0.00000000
+#&gt; 5 0.08333333 0.20833333 0.08333333</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -163,9 +185,9 @@ scale_sqrt: Transforms numeric columns using sqrt" />
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

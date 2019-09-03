@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Apply various transformations to numeric (and non-id) data — scale_count • textfeatures</title>
+<title>List of all feature counting functions — count_functions • textfeatures</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,13 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Apply various transformations to numeric (and non-id) data — scale_count" />
+<meta property="og:title" content="List of all feature counting functions — count_functions" />
 
-<meta property="og:description" content="scale_count: Transforms integer and integerlike columns using log
-scale_log: Transforms numeric columns using log
-scale_normal: Transforms numeric columns using mean centering and dividing by standard deviation
-scale_standard: Transforms numeric columns onto 0-1 scales with 0 and 1 set empirically
-scale_sqrt: Transforms numeric columns using sqrt" />
+<meta property="og:description" content="List of all feature counting functions" />
 
 <meta property="og:image" content="https://textfeatures.mikewk.com/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -110,59 +106,76 @@ scale_sqrt: Transforms numeric columns using sqrt" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Apply various transformations to numeric (and non-id) data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mkearney/textfeatures/blob/master/R/scale.R'><code>R/scale.R</code></a></small>
-    <div class="hidden name"><code>scale_count.Rd</code></div>
+    <h1>List of all feature counting functions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mkearney/textfeatures/blob/master/R/count.R'><code>R/count.R</code></a></small>
+    <div class="hidden name"><code>count_functions.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>scale_count: Transforms integer and integerlike columns using log</p>
-<p>scale_log: Transforms numeric columns using log</p>
-<p>scale_normal: Transforms numeric columns using mean centering and dividing by standard deviation</p>
-<p>scale_standard: Transforms numeric columns onto 0-1 scales with 0 and 1 set empirically</p>
-<p>scale_sqrt: Transforms numeric columns using sqrt</p>
+    <p>List of all feature counting functions</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>scale_count</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='no'>count_functions</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-<span class='fu'>scale_log</span>(<span class='no'>x</span>)
-
-<span class='fu'>scale_normal</span>(<span class='no'>x</span>)
-
-<span class='fu'>scale_standard</span>(<span class='no'>x</span>)
-
-<span class='fu'>scale_sqrt</span>(<span class='no'>x</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>Input data frame containing numeric columns.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A data frame with the same dimensions but with the
-  numeric/relevant variables transformed.</p>
+    <p>Named list of all ferature counting functions</p><dl class='dl-horizontal'>
+<dt><code>n_words</code></dt><dd><p>Number of words.</p></dd>
+<dt><code>n_uq_words</code></dt><dd><p>Number of unique words.</p></dd>
+<dt><code>n_charS</code></dt><dd><p>Number of characters. Not counting urls, hashtags, mentions or white spaces.</p></dd>
+<dt><code>n_uq_charS</code></dt><dd><p>Number of unique characters. Not counting urls, hashtags, mentions or white spaces.</p></dd>
+<dt><code>n_digits</code></dt><dd><p>Number of digits.</p></dd>
+<dt><code>n_hashtags</code></dt><dd><p>Number of hashtags, word preceded by a '#'.</p></dd>
+<dt><code>n_uq_hashtags</code></dt><dd><p>Number of unique hashtags, word preceded by a '#'.</p></dd>
+<dt><code>n_mentions</code></dt><dd><p>Number of mentions, word preceded by a '@'.</p></dd>
+<dt><code>n_uq_mentions</code></dt><dd><p>Number of unique mentions, word preceded by a '@'.</p></dd>
+<dt><code>n_commas</code></dt><dd><p>Number of commas.</p></dd>
+<dt><code>n_periods</code></dt><dd><p>Number of periods.</p></dd>
+<dt><code>n_exclaims</code></dt><dd><p>Number of exclamation points.</p></dd>
+<dt><code>n_extraspaces</code></dt><dd><p>Number of times more then 1 consecutive space have been used.</p></dd>
+<dt><code>n_caps</code></dt><dd><p>Number of upper case characters.</p></dd>
+<dt><code>n_lowers</code></dt><dd><p>Number of lower case characters.</p></dd>
+<dt><code>n_urls</code></dt><dd><p>Number of urls.</p></dd>
+<dt><code>n_uq_urls</code></dt><dd><p>Number of unique urls.</p></dd>
+<dt><code>n_nonasciis</code></dt><dd><p>Number of non ascii characters.</p></dd>
+<dt><code>n_puncts</code></dt><dd><p>Number of punctuations characters, not including exclamation points, periods and commas.</p></dd>
+<dt><code>politeness</code></dt><dd><p>Summed sentiment value calculated using politeness_dict.</p></dd>
+<dt><code>first_person</code></dt><dd><p>Number of "first person" words.</p></dd>
+<dt><code>first_personp</code></dt><dd><p>Number of "first person plural" words.</p></dd>
+<dt><code>second_person</code></dt><dd><p>Number of "second person" words.</p></dd>
+<dt><code>second_personp</code></dt><dd><p>Number of "second person plural" words.</p></dd>
+<dt><code>third_person</code></dt><dd><p>Number of "third person" words.</p></dd>
+<dt><code>to_be</code></dt><dd><p>Number of "to be" words.</p></dd>
+<dt><code>prepositions</code></dt><dd><p>Number of preposition words.</p></dd>
+</dl>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Scale transformations are applied only to numeric (or in the
-  case of <code>scale_count</code> only integer or integerish) columns
-  that are not named <code>"id"</code> or <code>"(\.|_)?id"</code>.</p>
+    <p>In this function we refer to "first person", "first person plural" and
+so on. This list describes what words are contained in each group.</p><dl class='dl-horizontal'>
+<dt>first person</dt><dd><p>I, me, myself, my, mine, this.</p></dd>
+<dt>first person plural</dt><dd><p>we, us, our, ours, these.</p></dd>
+<dt>second person</dt><dd><p>you, yours, your, yourself.</p></dd>
+<dt>second person plural</dt><dd><p>he, she, it, its, his, hers.</p></dd>
+<dt>third person</dt><dd><p>they, them, theirs, their, they're, their's, those, that.</p></dd>
+<dt>to be</dt><dd><p>am, is, are, was, were, being, been, be, were, be.</p></dd>
+<dt>prepositions</dt><dd><p>about, below,
+excepting, off, toward, above, beneath, on, under, across, from, onto,
+underneath, after, between, in, out, until, against, beyond, outside, up,
+along, but, inside, over, upon, among, by, past, around, concerning,
+regarding, with, at, despite, into, since, within, down, like, through,
+without, before, during, near, throughout, behind, except, of, to, for.</p></dd>
+</dl>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
+      <li><a href="#format">Format</a></li>
 
       <li><a href="#details">Details</a></li>
           </ul>
