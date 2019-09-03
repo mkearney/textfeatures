@@ -1,3 +1,7 @@
+# textfeatures 0.3.3
+
++ Export more functions for use in textrecipes and/or other packages.
+
 # textfeatures 0.3.2
 
 + A `verbose` options was added to control message logs. Defaults to `TRUE`. 
